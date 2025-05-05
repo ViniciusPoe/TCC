@@ -1,0 +1,12 @@
+{% extends 'layouts/base_doador.html' %}
+
+{% block conteudo_principal %}
+    <h2>Hemocentros Próximos</h2>
+    <ul class="list-group">
+        {% for local in hemocentros %}
+            <li class="list-group-item">
+                <strong>{{ local.nome }}</strong> - {{ local.distancia_km }} km
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

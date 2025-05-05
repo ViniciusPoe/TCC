@@ -1,0 +1,24 @@
+{% extends "layouts/base_instituicao.html" %}
+{% block conteudo_principal %}
+<div class="container mt-4">
+    <h2 class="mb-4">Notícias sobre Doação de Sangue</h2>
+    <div class="row">
+        {% for i in range(6) %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <img src="{{ url_for('static', filename='imagens/noticia' ~ i ~ '.jpg') }}" class="card-img-top" alt="Notícia {{ i+1 }}">
+                <div class="card-body">
+                    <h5 class="card-title">Campanha de Doação no Hemocentro {{ i+1 }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Publicado em {{ '05/05/2025' }}</h6>
+                    <p class="card-text">Uma nova campanha está mobilizando a cidade para aumentar os estoques de sangue após uma queda preocupante...</p>
+                    <a class="btn btn-outline-danger" data-bs-toggle="collapse" href="#noticia{{ i }}" role="button">Saiba mais</a>
+                    <div class="collapse mt-2" id="noticia{{ i }}">
+                        <p class="mt-2">A campanha acontecerá em várias regiões, incluindo hospitais e centros de saúde, com horários estendidos para facilitar a participação...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

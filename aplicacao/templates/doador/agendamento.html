@@ -1,0 +1,26 @@
+{% extends 'layouts/base_doador.html' %}
+
+{% block conteudo_principal %}
+    <h2>Agendar Nova Doação</h2>
+    {% if apto %}
+        <form method="post" action="#" class="mt-4">
+            <div class="form-group">
+                <label for="data">Data da Doação</label>
+                <input type="date" class="form-control" id="data" name="data">
+            </div>
+            <div class="form-group">
+                <label for="local">Escolha o Local</label>
+                <select class="form-control" id="local" name="local">
+                    <option value="hemocentro_x">Hemocentro X</option>
+                    <option value="hemocentro_y">Hemocentro Y</option>
+                    <option value="hemocentro_z">Hemocentro Z</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-danger">Agendar</button>
+        </form>
+    {% else %}
+        <div class="alert alert-warning mt-4" role="alert">
+            Você não está apto para doar no momento. Verifique o intervalo mínimo entre as doações.
+        </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "layouts/base_instituicao.html" %}
+{% block conteudo_principal %}
+<div class="container mt-4">
+    <h2 class="mb-4">Pacientes Necessitando de Sangue</h2>
+    <div class="list-group">
+        {% for i in range(5) %}
+        <div class="list-group-item mb-3 border">
+            <h5>Paciente {{ i+1 }}</h5>
+            <p><strong>Hospital:</strong> Hospital Central</p>
+            <p><strong>Tipo Necessário:</strong> {{ ['A+', 'B-', 'O+', 'AB+', 'O-'][i] }}</p>
+            <p><strong>Quantidade:</strong> {{ 2 + i }} bolsas</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'layouts/base_doador.html' %}
+
+{% block conteudo_principal %}
+    <!-- Carteira do Doador -->
+    <div class="card card-carteira">
+        <div class="card-body">
+            <h5 class="card-title">Carteira de Doador</h5>
+            <p class="card-text"><strong>Nome:</strong> {{ doador.nome }}</p>
+            <p class="card-text"><strong>Tipo Sanguíneo:</strong> {{ doador.tipo_sanguineo }}</span></p>
+            <p class="card-text"><strong>Última Doação:</strong> {{ doador.ultima_doacao }}</p>
+            <p class="card-text"><strong>Próxima Doação Possível:</strong> {{ doador.proxima_doacao_possivel }}</p>
+            <a href="{{ url_for('doador.agendamento') }}" class="btn btn-danger mt-3">Agendar Doação</a>
+            <a href="{{ url_for('doador.historico') }}" class="btn btn-outline-danger mt-3">Consultar Histórico</a>
+        </div>
+    </div>
+
+    <!-- Notícias sobre Doação de Sangue -->
+    <h3>Notícias sobre Doação de Sangue</h3>
+    <div class="news-item">
+        <img src="https://via.placeholder.com/800x400" alt="Imagem da Notícia">
+        <h4>Como a Doação de Sangue Salva Vidas</h4>
+        <p>Doar sangue é um ato simples e fundamental para a manutenção da saúde de muitos pacientes em tratamento...</p>
+        <button class="btn btn-danger btn-sm" data-toggle="collapse" data-target="#noticia1">Saiba mais</button>
+        <div id="noticia1" class="collapse">
+            <p>Além de salvar vidas, a doação de sangue ajuda em diversos tratamentos de saúde, como em pacientes com doenças crônicas, cirurgias e no combate ao câncer. Contribua para a sociedade doando sangue regularmente!</p>
+        </div>
+    </div>
+
+    <div class="news-item">
+        <img src="https://via.placeholder.com/800x400" alt="Imagem da Notícia">
+        <h4>A Importância do Tipo Sanguíneo</h4>
+        <p>Você sabia que o tipo sanguíneo influencia diretamente na hora de fazer uma transfusão? Conheça as informações essenciais sobre os tipos sanguíneos e sua importância...</p>
+        <button class="btn btn-danger btn-sm" data-toggle="collapse" data-target="#noticia2">Saiba mais</button>
+        <div id="noticia2" class="collapse">
+            <p>Os tipos sanguíneos A, B, AB e O têm diferentes características. Doadores e receptores precisam estar cientes da compatibilidade sanguínea para garantir a segurança da transfusão.</p>
+        </div>
+    </div>
+{% endblock %}

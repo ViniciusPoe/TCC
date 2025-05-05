@@ -1,0 +1,128 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+}
+
+h2 {
+    color: #343a40;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+h3 {
+    font-size: 1.6rem;
+    margin-top: 20px;
+}
+
+.card {
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: #dc3545;
+    color: white;
+}
+
+.card-body {
+    background-color: #ffffff;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+.navbar-brand {
+    font-size: 1.8rem;
+}
+
+.nav-link {
+    font-size: 1.2rem;
+}
+
+footer {
+    margin-top: 20px;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+    border-color: #c82333;
+}
+
+.container {
+    margin-top: 40px;
+}
+
+.card {
+    border: none;
+    border-radius: 15px;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+.news-item {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    padding: 20px;
+}
+
+.news-item img {
+    max-width: 100%;
+    border-radius: 10px;
+}
+
+.news-item h4 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.news-item p {
+    font-size: 1rem;
+    color: #555;
+}
+
+.card-carteira {
+    border: 2px solid #dc3545;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.card-carteira .card-body {
+    padding: 2rem;
+}
+
+.card-carteira .card-title {
+    font-size: 1.5rem;
+    color: #dc3545;
+}
+
+.card-carteira .card-subtitle {
+    font-size: 1.2rem;
+    color: #555;
+}
+
+.card-carteira .card-text {
+    font-size: 1rem;
+    color: #555;
+}
+
+.card-carteira .btn {
+    width: auto;
+    margin-right: 10px;
+}
+
+/* Espaçamento entre os cards e seções */
+.section-space {
+    margin-bottom: 40px;
+}
+
+.card + .card {
+    margin-top: 30px;
+}

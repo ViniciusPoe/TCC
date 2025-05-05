@@ -1,0 +1,34 @@
+{% extends "layouts/base_login.html" %}
+
+{% block conteudo_principal %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4>Login ou Cadastro</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('autenticacao.login') }}">
+                        <div class="form-group">
+                            <label for="tipo_usuario">Escolha seu tipo de usuário</label>
+                            <select class="form-control" id="tipo_usuario" name="tipo_usuario">
+                                <option value="doador">Doador</option>
+                                <option value="instituicao">Instituição</option>
+                            </select>
+                        </div>
+                        <div class="form-group mt-3">
+                            <a href="{{ url_for('autenticacao.login_doador') }}" class="btn btn-danger btn-block">Login como Doador</a>
+                            <a href="{{ url_for('autenticacao.login_instituicao') }}" class="btn btn-success btn-block">Login como Instituição</a>
+                        </div>
+                        <div class="form-group mt-3">
+                            <a href="{{ url_for('autenticacao.cadastro_doador') }}" class="btn btn-danger btn-block">Cadastrar como Doador</a>
+                            <a href="{{ url_for('autenticacao.cadastro_instituicao') }}" class="btn btn-success btn-block">Cadastrar como Instituição</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

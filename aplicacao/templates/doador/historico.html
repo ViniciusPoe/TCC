@@ -1,0 +1,13 @@
+{% extends 'layouts/base_doador.html' %}
+
+{% block conteudo_principal %}
+    <h2>Histórico de Doações</h2>
+    <ul class="list-group">
+        {% for doacao in doacoes %}
+            <li class="list-group-item">
+                <strong>{{ doacao.data }}</strong> - {{ doacao.local }}
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('doador.agendamento') }}" class="btn btn-danger mt-4">Agendar Nova Doação</a>
+{% endblock %}

@@ -1,0 +1,743 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    background: linear-gradient(to right, #ff416c, #ff4b2b);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+}
+
+.doador-login {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+}
+
+.doador-login-card {
+    padding: 2.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid #e0e0e0;
+    background: white;
+}
+
+.doador-title {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.doador-label {
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+.doador-input .input-group-text {
+    background-color: #f8f9fa;
+    border-right: none;
+}
+
+.doador-input .form-control {
+    border-left: none;
+}
+
+.doador-btn {
+    background: #ff416c !important;
+    color: white !important;
+    border: none;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.doador-btn:hover {
+    background-color: #ff4b2b !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.doador-forgot-password {
+    color: #7f8c8d;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.doador-forgot-password:hover {
+    color: #3498db;
+}
+
+.doador-register-link {
+    color: #3498db;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.doador-footer {
+    font-size: 0.9rem;
+}
+
+/* Estilo Institucional */
+.institution-login-container {
+    padding: 5rem 1rem;
+    background: linear-gradient(135deg, #24c6dc, #514a9d);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.institution-login-card {
+    background: white;
+    border-radius: 10px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    max-width: 500px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.institution-header {
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.institution-logo {
+    height: 70px;
+    width: auto;
+}
+
+.institution-title {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.institution-subtitle {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.institution-label {
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.institution-input .input-group-text {
+    background-color: #f8f9fa;
+    border-right: none;
+    color: #514a9d;
+}
+
+.institution-input .form-control {
+    border-left: none;
+    padding: 10px 15px;
+}
+
+.institution-login-btn {
+    background-color: #24c6dc !important;
+    color: white !important;
+    border: none;
+    font-weight: 500;
+    transition: all 0.3s;
+    border-radius: 6px;
+}
+
+.institution-login-btn:hover {
+    background-color: #514a9d !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.institution-forgot-password {
+    color: #6c757d;
+    font-size: 0.85rem;
+    text-decoration: none;
+}
+
+.institution-forgot-password:hover {
+    color: #514a9d;
+}
+
+.institution-register-link {
+    color: #514a9d;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.institution-copyright {
+    color: #6c757d;
+    border-top: 1px solid #e9ecef;
+    padding-top: 1rem;
+    margin-top: 1rem;
+}
+
+/* Validação */
+.was-validated .form-control:invalid,
+.form-control.is-invalid {
+    border-color: #dc3545;
+}
+
+.invalid-feedback {
+    color: #dc3545;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+}
+
+/* Cadastro */
+
+.cadastro-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.cadastro-card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 100%;
+    max-width: 800px;
+    margin: 20px 0;
+}
+
+.cadastro-card h2 {
+    font-weight: 700;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* Estilos para seções */
+.cadastro-card h5 {
+    font-weight: 600;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #dc3545;
+    color: #dc3545;
+}
+
+/* Estilos para formulário */
+.form-control {
+    border-radius: 5px;
+    padding: 12px 15px;
+    border: 1px solid #ced4da;
+    transition: all 0.3s;
+}
+
+.form-control:focus {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.form-label {
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+/* Botão de cadastro */
+.btn-danger {
+    background-color: #dc3545;
+    border: none;
+    padding: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+}
+
+/* Validação do formulário */
+.is-invalid {
+    border-color: #dc3545;
+}
+
+.invalid-feedback {
+    color: #dc3545;
+    font-size: 0.85rem;
+}
+
+.was-validated .form-control:invalid {
+    border-color: #dc3545;
+}
+
+.was-validated .form-control:valid {
+    border-color: #28a745;
+}
+
+/* Checkbox de termos */
+.form-check-input {
+    margin-top: 0.3rem;
+}
+
+.form-check-label {
+    margin-left: 5px;
+    font-size: 0.9rem;
+}
+
+/* Links */
+a {
+    color: #dc3545;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+a:hover {
+    color: #c82333;
+    text-decoration: underline;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .cadastro-card {
+        padding: 20px;
+    }
+    
+    .form-row {
+        flex-direction: column;
+    }
+    
+    .form-row .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-row .form-group:last-child {
+        margin-bottom: 0;
+    }
+}
+
+/* Efeitos especiais para campos importantes */
+#tipo_sanguineo {
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Estilo para campos obrigatórios */
+label[required]:after {
+    content: " *";
+    color: #dc3545;
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.cadastro-card {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Estilos Gerais */
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #2980b9;
+    --accent-color: #e74c3c;
+    --text-color: #2c3e50;
+    --light-gray: #ecf0f1;
+    --medium-gray: #bdc3c7;
+    --dark-gray: #7f8c8d;
+    --success-color: #2ecc71;
+    --error-color: #e74c3c;
+}
+
+/* Container Principal */
+.institution-register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+/* Card de Cadastro */
+.institution-register-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 900px;
+    margin: 2rem auto;
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* Cabeçalho */
+.institution-register-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.institution-logo {
+    height: 80px;
+    margin-bottom: 1rem;
+}
+
+.institution-register-title {
+    color: var(--primary-color) !important;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.institution-register-subtitle {
+    color: var(--dark-gray);
+    font-size: 0.95rem;
+}
+
+/* Seções do Formulário */
+.register-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background-color: rgba(236, 240, 241, 0.3);
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.section-title {
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Campos do Formulário */
+.form-control {
+    border-radius: 6px;
+    padding: 12px 15px;
+    border: 1px solid var(--medium-gray);
+    transition: all 0.3s ease;
+    margin-bottom: 0.5rem;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    display: block;
+    color: var(--text-color);
+}
+
+select.form-control {
+    height: auto;
+    padding: 12px 15px;
+}
+
+.select-multiple {
+    min-height: 120px;
+}
+
+/* Botão de Cadastro */
+.btn-register {
+    background-color: var(--primary-color);
+    border: none;
+    padding: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s;
+    margin-top: 1rem;
+    border-radius: 6px;
+    text-transform: uppercase;
+    font-size: 1rem;
+}
+
+.btn-register:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Links */
+.login-link {
+    color: var(--dark-gray);
+    font-size: 0.95rem;
+}
+
+.login-link a {
+    color: var(--primary-color);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.login-link a:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+}
+
+/* Validação */
+.invalid-feedback {
+    color: var(--error-color);
+    font-size: 0.85rem;
+    margin-top: -0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.was-validated .form-control:invalid,
+.form-control.is-invalid {
+    border-color: var(--error-color);
+}
+
+.was-validated .form-control:valid {
+    border-color: #28a745;
+}
+
+/* Checkbox de Termos */
+.form-check-input {
+    margin-top: 0.3rem;
+}
+
+.form-check-label {
+    font-size: 0.9rem;
+    color: var(--dark-gray);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .institution-register-container {
+        padding: 1rem;
+    }
+    
+    .institution-register-card {
+        padding: 1.5rem;
+    }
+    
+    .register-section {
+        padding: 1rem;
+    }
+    
+    .form-row {
+        flex-direction: column;
+    }
+    
+    .form-row .form-group {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+:root {
+    --primary-color: #e63946;
+    --secondary-color: #1d3557;
+    --accent-color: #457b9d;
+    --light-color: #f1faee;
+    --dark-color: #2b2d42;
+    --text-color: #333;
+    --light-gray: #f8f9fa;
+    --medium-gray: #e9ecef;
+    --white: #ffffff;
+}
+
+/* Container principal */
+.professional-login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(230, 57, 70, 0.1) 0%, rgba(29, 53, 87, 0.1) 100%);
+}
+
+/* Card principal */
+.professional-login-card {
+    background-color: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    padding: 3rem;
+    width: 100%;
+    max-width: 900px;
+    margin: 2rem auto;
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* Cabeçalho */
+.login-header {
+    margin-bottom: 3rem;
+}
+
+.login-logo {
+    height: 80px;
+    width: auto;
+}
+
+.login-title {
+    color: var(--primary-color);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    font-size: 1.8rem;
+}
+
+.login-subtitle {
+    color: var(--dark-color);
+    font-size: 1.1rem;
+    opacity: 0.8;
+}
+
+/* Opções de login */
+.login-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.login-option-card {
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    transition: all 0.3s ease;
+    background-color: var(--light-gray);
+    border: 1px solid var(--medium-gray);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.login-option-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.option-donor {
+    border-top: 4px solid var(--primary-color);
+}
+
+.option-institution {
+    border-top: 4px solid var(--secondary-color);
+}
+
+.option-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--primary-color);
+}
+
+.option-institution .option-icon {
+    color: var(--secondary-color);
+}
+
+.option-title {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    color: var(--dark-color);
+    font-weight: 600;
+}
+
+.option-description {
+    color: var(--text-color);
+    opacity: 0.8;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+}
+
+.option-btn {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.3s;
+    width: 100%;
+    margin-top: auto;
+}
+
+.option-donor .option-btn {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.option-institution .option-btn {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.option-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: white;
+}
+
+/* Rodapé */
+.login-footer {
+    border-top: 1px solid var(--medium-gray);
+    padding-top: 2rem;
+}
+
+.register-text {
+    color: var(--dark-color);
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+.register-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.register-link {
+    color: var(--accent-color);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.register-link:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+}
+
+.separator {
+    color: var(--medium-gray);
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .professional-login-container {
+        padding: 1rem;
+    }
+    
+    .professional-login-card {
+        padding: 1.5rem;
+    }
+    
+    .login-options {
+        grid-template-columns: 1fr;
+    }
+    
+    .register-links {
+        flex-direction: column;
+    }
+    
+    .separator {
+        display: none;
+    }
+}

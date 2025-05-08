@@ -1,20 +1,270 @@
 {% extends "layouts/base_instituicao.html" %}
 {% block conteudo_principal %}
-<div class="container mt-4">
-    <h2 class="mb-4">Doadores Aptos</h2>
-    <div class="row g-4">
-        {% for i in range(6) %}
-        <div class="col-md-4">
-            <div class="card border-success">
-                <div class="card-body">
-                    <h5 class="card-title">João {{ i+1 }} da Silva</h5>
-                    <p><strong>Tipo:</strong> {{ ['A+', 'B-', 'O+', 'AB+'][i % 4] }}</p>
-                    <p><strong>Última Doação:</strong> {{ '10/01/2025' }}</p>
-                    <p><strong>Email:</strong> joao{{ i+1 }}@exemplo.com</p>
+<div class="container-fluid px-4 py-5 bg-light">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <h1 class="display-5 fw-bold text-primary mb-2">Doadores Aptos</h1>
+                <p class="lead text-muted">Lista de doadores elegíveis para nova doação</p>
+            </div>
+            <div>
+                <button class="btn btn-primary me-2">
+                    <i class="bi bi-funnel-fill me-2"></i>Filtrar
+                </button>
+                <button class="btn btn-outline-primary">
+                    <i class="bi bi-download me-2"></i>Exportar
+                </button>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card border-start border-4 border-success shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted">Doadores Aptos</h6>
+                        <h3 class="card-title text-success">42</h3>
+                        <p class="card-text small">Elegíveis para doar hoje</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-start border-4 border-warning shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted">Doadores Frequentes</h6>
+                        <h3 class="card-title text-warning">18</h3>
+                        <p class="card-text small">3+ doações no último ano</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-start border-4 border-info shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted">Novos Doadores</h6>
+                        <h3 class="card-title text-info">7</h3>
+                        <p class="card-text small">Primeira doação recente</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-start border-4 border-danger shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted">Inaptos</h6>
+                        <h3 class="card-title text-danger">5</h3>
+                        <p class="card-text small">Aguardando liberação</p>
+                    </div>
                 </div>
             </div>
         </div>
-        {% endfor %}
+
+        <div class="card shadow-sm mb-5">
+            <div class="card-header bg-white border-bottom-0">
+                <ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#aptos" data-bs-toggle="tab">Aptos para Doar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#historicos" data-bs-toggle="tab">Histórico de Doações</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body p-0">
+                <div class="tab-content">
+                    <!-- Tab Doadores Aptos -->
+                    <div class="tab-pane fade show active" id="aptos">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Doador</th>
+                                        <th>Tipo Sanguíneo</th>
+                                        <th>Última Doação</th>
+                                        <th>Próxima Doação</th>
+                                        <th>Contato</th>
+                                        <th>Frequência</th>
+                                        <th width="150px">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i in range(6) %}
+                                    {% set tipos = ['A+', 'B-', 'O+', 'AB+', 'A-', 'O-'] %}
+                                    {% set ultima_doacao = ['10/01/2025', '15/12/2024', '05/02/2025', '20/01/2025', '08/02/2025', '25/01/2025'] %}
+                                    {% set proxima_doacao = ['10/04/2025', '15/03/2025', '05/05/2025', '20/04/2025', '08/05/2025', '25/04/2025'] %}
+                                    {% set frequencias = ['Frequente', 'Ocasional', 'Novo', 'Frequente', 'Ocasional', 'Frequente'] %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar bg-primary text-white rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                                    {{ (i+1)|string }}
+                                                </div>
+                                                <div>
+                                                    <strong>João {{ i+1 }} da Silva</strong><br>
+                                                    <small class="text-muted">ID: {{ 5000 + i }}</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-primary rounded-pill px-3 py-2">
+                                                {{ tipos[i] }}
+                                            </span>
+                                        </td>
+                                        <td>{{ ultima_doacao[i] }}</td>
+                                        <td>
+                                            {% if i % 2 == 0 %}
+                                            <span class="badge bg-success bg-opacity-10 text-success">
+                                                {{ proxima_doacao[i] }}
+                                            </span>
+                                            {% else %}
+                                            <span class="badge bg-warning bg-opacity-10 text-warning">
+                                                {{ proxima_doacao[i] }}
+                                            </span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <small>joao{{ i+1 }}@exemplo.com</small><br>
+                                            <small>(11) 9{{ i }}876-54{{ i }}2</small>
+                                        </td>
+                                        <td>
+                                            {% if frequencias[i] == 'Frequente' %}
+                                            <span class="badge bg-success bg-opacity-10 text-success">
+                                                <i class="bi bi-star-fill me-1"></i> {{ frequencias[i] }}
+                                            </span>
+                                            {% elif frequencias[i] == 'Novo' %}
+                                            <span class="badge bg-info bg-opacity-10 text-info">
+                                                <i class="bi bi-person-plus-fill me-1"></i> {{ frequencias[i] }}
+                                            </span>
+                                            {% else %}
+                                            <span class="badge bg-secondary bg-opacity-10 text-secondary">
+                                                <i class="bi bi-person-fill me-1"></i> {{ frequencias[i] }}
+                                            </span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1" 
+                                                    data-bs-toggle="tooltip" 
+                                                    title="Entrar em contato">
+                                                <i class="bi bi-telephone-fill"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-success me-1" 
+                                                    data-bs-toggle="tooltip" 
+                                                    title="Agendar doação">
+                                                <i class="bi bi-calendar-plus-fill"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-info" 
+                                                    data-bs-toggle="tooltip" 
+                                                    title="Ver histórico">
+                                                <i class="bi bi-clock-history"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Tab Histórico de Doações -->
+                    <div class="tab-pane fade" id="historicos">
+                        <div class="p-4">
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <h5 class="mb-3">Histórico Completo de Doações</h5>
+                                </div>
+                                <div class="col-md-6 text-md-end">
+                                    <div class="input-group" style="max-width: 300px;">
+                                        <input type="text" class="form-control" placeholder="Buscar doador...">
+                                        <button class="btn btn-outline-secondary" type="button">
+                                            <i class="bi bi-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card mb-4">
+                                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">João 1 da Silva</h6>
+                                    <span class="badge bg-primary">A+</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Data</th>
+                                                    <th>Local</th>
+                                                    <th>Volume</th>
+                                                    <th>Status</th>
+                                                    <th>Ações</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>10/01/2025</td>
+                                                    <td>Hemocentro Local</td>
+                                                    <td>450ml</td>
+                                                    <td><span class="badge bg-success">Processado</span></td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-primary">
+                                                            <i class="bi bi-file-earmark-text"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>15/09/2024</td>
+                                                    <td>Hemocentro Local</td>
+                                                    <td>450ml</td>
+                                                    <td><span class="badge bg-success">Utilizado</span></td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-primary">
+                                                            <i class="bi bi-file-earmark-text"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>20/05/2024</td>
+                                                    <td>Hemocentro Local</td>
+                                                    <td>450ml</td>
+                                                    <td><span class="badge bg-success">Utilizado</span></td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-primary">
+                                                            <i class="bi bi-file-earmark-text"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card">
+                                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">Maria Souza</h6>
+                                    <span class="badge bg-danger">O-</span>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Histórico similar para outro doador -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-white border-top-0">
+                <nav aria-label="Navegação de doadores">
+                    <ul class="pagination justify-content-center mb-0">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Anterior</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Próxima</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

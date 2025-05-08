@@ -1,29 +1,71 @@
 {% extends "layouts/base_login.html" %}
 
 {% block conteudo_principal %}
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-6 offset-md-3">
-            <div class="card">
-                <div class="card-header bg-danger text-white">
-                    <h4>Login - Doador</h4>
+<div class="container doador-login">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="doador-login-card shadow">
+                <!-- Cabeçalho com logo -->
+                <div class="text-center mb-4">
+                    <img src="{{ url_for('static', filename='img/logo-empresa.svg') }}" alt="Logo Empresa" class="login-logo" width="180">
+                    <h4 class="mt-3 doador-title">Acesso ao Sistema</h4>
+                    <p class="text-muted">Entre com suas credenciais para acessar a plataforma</p>
                 </div>
-                <div class="card-body">
-                    <form method="POST" action="{{ url_for('autenticacao.login_doador') }}">
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Digite seu e-mail" required>
+
+                <!-- Formulário -->
+                <form id="loginForm" class="needs-validation" novalidate>
+                    <!-- Campo Usuário -->
+                    <div class="mb-3">
+                        <label for="username" class="form-label doador-label">Usuário</label>
+                        <div class="input-group doador-input">
+                            <input type="text" class="form-control" id="username" name="username" 
+                                   placeholder="Digite seu usuário" required>
+                            <div class="invalid-feedback">
+                                Por favor, insira seu usuário.
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="senha">Senha</label>
-                            <input type="password" class="form-control" id="senha" name="senha" placeholder="Digite sua senha" required>
-                        </div>
-                        <button type="submit" class="btn btn-danger btn-block">Login</button>
-                    </form>
-                    <div class="mt-3">
-                        <a href="{{ url_for('autenticacao.cadastro_doador') }}">Ainda não tem uma conta? Cadastre-se</a>
                     </div>
-                </div>
+
+                    <!-- Campo Senha -->
+                    <div class="mb-4">
+                        <label for="password" class="form-label doador-label">Senha</label>
+                        <div class="input-group doador-input">
+                            <input type="password" class="form-control" id="password" name="password" 
+                                   placeholder="Digite sua senha" required>
+                            <div class="invalid-feedback">
+                                Por favor, insira sua senha.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lembrar de mim + Esqueci a senha -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="rememberMe">
+                            <label class="form-check-label doador-remember" for="rememberMe">
+                                Lembrar de mim
+                            </label>
+                        </div>
+                        <a href="#" class="doador-forgot-password">
+                            Esqueceu a senha?
+                        </a>
+                    </div>
+
+                    <!-- Botão de Login -->
+                    <button type="submit" class="btn doador-btn w-100 py-2 mb-3">
+                        <i class="fas fa-sign-in-alt me-2"></i> ENTRAR
+                    </button>
+
+                    <div id="errorMessage" class="alert alert-danger d-none" role="alert">
+                        Usuário ou senha incorretos. Tente novamente.
+                    </div>
+
+                    <!-- Rodapé -->
+                    <div class="text-center mt-4 doador-footer">
+                        <p class="mb-2">Não tem uma conta? <a href="{{ url_for('autenticacao.cadastro_doador') }}" class="doador-register-link">Cadastre-se</a></p>
+                        <p class="small text-muted">© 2023 Nome da Empresa. Todos os direitos reservados.</p>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

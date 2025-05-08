@@ -1,12 +1,250 @@
 {% extends 'layouts/base_doador.html' %}
 
 {% block conteudo_principal %}
-    <h2>Hemocentros Próximos</h2>
-    <ul class="list-group">
-        {% for local in hemocentros %}
-            <li class="list-group-item">
-                <strong>{{ local.nome }}</strong> - {{ local.distancia_km }} km
-            </li>
-        {% endfor %}
-    </ul>
+<div class="container-fluid px-4 py-5">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <h1 class="display-5 fw-bold text-danger mb-2"><i class="bi bi-geo-alt-fill me-3"></i>Hemocentros Próximos</h1>
+                <p class="lead text-muted">Encontre os locais mais próximos para sua doação</p>
+            </div>
+            <div>
+                <button class="btn btn-outline-danger" id="btnAtualizarLocalizacao">
+                    <i class="bi bi-arrow-clockwise me-2"></i>Atualizar Localização
+                </button>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="row mb-4">
+            <div class="col-md-4 mb-3">
+                <div class="input-group">
+                    <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control" placeholder="Buscar hemocentro..." id="buscaHemocentro">
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <select class="form-select" id="filtroUrgencia">
+                    <option value="todos">Todos os hemocentros</option>
+                    <option value="urgente" selected>Com urgência no meu tipo</option>
+                    <option value="estoque-baixo">Estoque baixo</option>
+                </select>
+            </div>
+            <div class="col-md-4 mb-3">
+                <select class="form-select" id="filtroDistancia">
+                    <option value="5">Até 5 km</option>
+                    <option value="10" selected>Até 10 km</option>
+                    <option value="20">Até 20 km</option>
+                    <option value="50">Até 50 km</option>
+                    <option value="todos">Qualquer distância</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Cards de Hemocentros (dados fictícios) -->
+        <div class="row">
+            <!-- Hemocentro 1 -->
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-header bg-white border-bottom-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="bi bi-building me-2"></i>Hemocentro Central
+                                <span class="badge bg-danger ms-2">URGENTE</span>
+                            </h5>
+                            <span class="badge bg-secondary">2.5 km</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <p class="mb-1"><i class="bi bi-geo-alt text-danger me-2"></i>Av. Dr. Enéas Carvalho, 500 - São Paulo/SP</p>
+                                    <p class="mb-1"><i class="bi bi-telephone text-danger me-2"></i>(11) 1234-5678</p>
+                                    <p class="mb-0"><i class="bi bi-clock text-danger me-2"></i>Seg-Sex: 7h-18h | Sáb: 8h-14h</p>
+                                </div>
+                                
+                                <!-- Status do Estoque -->
+                                <h6 class="mt-3"><i class="bi bi-droplet text-danger me-2"></i>Status do Estoque (O+)</h6>
+                                <div class="progress mb-2" style="height: 10px;">
+                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 25%"></div>
+                                </div>
+                                <small class="text-muted">Estoque crítico (25%)</small>
+                                
+                                <!-- Tipos em Urgência -->
+                                <div class="alert alert-danger mt-3 p-2">
+                                    <p class="mb-1 small"><i class="bi bi-exclamation-triangle-fill me-2"></i><strong>Tipos em urgência:</strong> O+, O-, A-</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-flex flex-column h-100">
+                                    <div class="mb-3 text-center">
+                                        <div class="display-6 fw-bold text-danger">12</div>
+                                        <small class="text-muted">minutos de carro</small>
+                                    </div>
+                                    <div class="mt-auto">
+                                        <a href="#" class="btn btn-danger w-100 mb-2">
+                                            <i class="bi bi-calendar-plus me-1"></i>Agendar
+                                        </a>
+                                        <button class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#mapaModal1">
+                                            <i class="bi bi-map me-1"></i>Ver Mapa
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hemocentro 2 -->
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-header bg-white border-bottom-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="bi bi-building me-2"></i>Hemocentro Zona Norte
+                            </h5>
+                            <span class="badge bg-secondary">4.8 km</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <p class="mb-1"><i class="bi bi-geo-alt text-danger me-2"></i>Rua Voluntários da Pátria, 2000 - São Paulo/SP</p>
+                                    <p class="mb-1"><i class="bi bi-telephone text-danger me-2"></i>(11) 2345-6789</p>
+                                    <p class="mb-0"><i class="bi bi-clock text-danger me-2"></i>Seg-Sex: 8h-17h | Sáb: 9h-13h</p>
+                                </div>
+                                
+                                <!-- Status do Estoque -->
+                                <h6 class="mt-3"><i class="bi bi-droplet text-danger me-2"></i>Status do Estoque (O+)</h6>
+                                <div class="progress mb-2" style="height: 10px;">
+                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 45%"></div>
+                                </div>
+                                <small class="text-muted">Estoque baixo (45%)</small>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-flex flex-column h-100">
+                                    <div class="mb-3 text-center">
+                                        <div class="display-6 fw-bold text-danger">18</div>
+                                        <small class="text-muted">minutos de carro</small>
+                                    </div>
+                                    <div class="mt-auto">
+                                        <a href="#" class="btn btn-danger w-100 mb-2">
+                                            <i class="bi bi-calendar-plus me-1"></i>Agendar
+                                        </a>
+                                        <button class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#mapaModal2">
+                                            <i class="bi bi-map me-1"></i>Ver Mapa
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hemocentro 3 -->
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-header bg-white border-bottom-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="bi bi-building me-2"></i>Unidade Móvel - Praça da Sé
+                            </h5>
+                            <span class="badge bg-secondary">5.2 km</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <p class="mb-1"><i class="bi bi-geo-alt text-danger me-2"></i>Praça da Sé - Centro, São Paulo/SP</p>
+                                    <p class="mb-1"><i class="bi bi-telephone text-danger me-2"></i>(11) 9876-5432</p>
+                                    <p class="mb-0"><i class="bi bi-clock text-danger me-2"></i>Ter-Qui: 9h-15h</p>
+                                </div>
+                                
+                                <!-- Status do Estoque -->
+                                <h6 class="mt-3"><i class="bi bi-droplet text-danger me-2"></i>Status do Estoque (O+)</h6>
+                                <div class="progress mb-2" style="height: 10px;">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 75%"></div>
+                                </div>
+                                <small class="text-muted">Estoque adequado (75%)</small>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-flex flex-column h-100">
+                                    <div class="mb-3 text-center">
+                                        <div class="display-6 fw-bold text-danger">15</div>
+                                        <small class="text-muted">minutos de carro</small>
+                                    </div>
+                                    <div class="mt-auto">
+                                        <a href="#" class="btn btn-danger w-100 mb-2">
+                                            <i class="bi bi-calendar-plus me-1"></i>Agendar
+                                        </a>
+                                        <button class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#mapaModal3">
+                                            <i class="bi bi-map me-1"></i>Ver Mapa
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mapa com Todos os Hemocentros -->
+        <div class="card border-0 shadow-sm mt-5">
+            <div class="card-header bg-white border-bottom-0">
+                <h5 class="mb-0"><i class="bi bi-map-fill me-2"></i>Mapa de Hemocentros</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="ratio ratio-16x9">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3657.0754267452926!2d-46.6534265844076!3d-23.56573436763838!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce59c8da0aa315%3A0xd59f9431f2c9776a!2sAv.%20Paulista%2C%20S%C3%A3o%20Paulo%20-%20SP!5e0!3m2!1spt-BR!2sbr!4v1623869204761!5m2!1spt-BR!2sbr" 
+                            allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Mapa 1 -->
+<div class="modal fade" id="mapaModal1" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Hemocentro Central</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="ratio ratio-16x9">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3657.0754267452926!2d-46.6534265844076!3d-23.56573436763838!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce59c8da0aa315%3A0xd59f9431f2c9776a!2sAv.%20Paulista%2C%20S%C3%A3o%20Paulo%20-%20SP!5e0!3m2!1spt-BR!2sbr!4v1623869204761!5m2!1spt-BR!2sbr" 
+                            allowfullscreen></iframe>
+                </div>
+                <div class="mt-3">
+                    <p class="mb-1"><strong>Endereço:</strong> Av. Dr. Enéas Carvalho, 500 - São Paulo/SP</p>
+                    <p class="mb-1"><strong>Telefone:</strong> (11) 1234-5678</p>
+                    <p class="mb-1"><strong>Horário:</strong> Seg-Sex: 7h-18h | Sáb: 8h-14h</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-danger">
+                    <i class="bi bi-calendar-plus me-1"></i>Agendar Visita
+                </a>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Mapa 2 -->
+<div class="modal fade" id="mapaModal2" tabindex="-1" aria-hidden="true">
+    <!-- Conteúdo similar ao Modal 1 com dados do Hemocentro 2 -->
+</div>
+
+<!-- Modal Mapa 3 -->
+<div class="modal fade" id="mapaModal3" tabindex="-1" aria-hidden="true">
+    <!-- Conteúdo similar ao Modal 1 com dados do Hemocentro 3 -->
+</div>
 {% endblock %}

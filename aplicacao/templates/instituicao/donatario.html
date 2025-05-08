@@ -1,16 +1,177 @@
 {% extends "layouts/base_instituicao.html" %}
 {% block conteudo_principal %}
-<div class="container mt-4">
-    <h2 class="mb-4">Pacientes Necessitando de Sangue</h2>
-    <div class="list-group">
-        {% for i in range(5) %}
-        <div class="list-group-item mb-3 border">
-            <h5>Paciente {{ i+1 }}</h5>
-            <p><strong>Hospital:</strong> Hospital Central</p>
-            <p><strong>Tipo Necessário:</strong> {{ ['A+', 'B-', 'O+', 'AB+', 'O-'][i] }}</p>
-            <p><strong>Quantidade:</strong> {{ 2 + i }} bolsas</p>
+<div class="container-fluid px-4 py-5 bg-light">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <h1 class="display-5 fw-bold text-primary mb-2">Pacientes Necessitando de Sangue</h1>
+                <p class="lead text-muted">Lista de pacientes prioritários aguardando doações compatíveis</p>
+            </div>
+            <div>
+                <button class="btn btn-primary me-2">
+                    <i class="bi bi-plus-circle-fill me-2"></i>Novo Paciente
+                </button>
+                <button class="btn btn-outline-primary">
+                    <i class="bi bi-funnel-fill me-2"></i>Filtrar
+                </button>
+            </div>
         </div>
-        {% endfor %}
+
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card border-start border-4 border-danger shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted">Emergência Crítica</h6>
+                        <h3 class="card-title text-danger">5</h3>
+                        <p class="card-text small">Pacientes em situação de risco iminente</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-start border-4 border-warning shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted">Alta Prioridade</h6>
+                        <h3 class="card-title text-warning">12</h3>
+                        <p class="card-text small">Pacientes com necessidade urgente</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-start border-4 border-info shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted">Prioridade Média</h6>
+                        <h3 class="card-title text-info">8</h3>
+                        <p class="card-text small">Pacientes com cirurgias agendadas</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-start border-4 border-success shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted">Estável</h6>
+                        <h3 class="card-title text-success">3</h3>
+                        <p class="card-text small">Pacientes em manutenção</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-white border-bottom-0">
+                <ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#emergencia" data-bs-toggle="tab">Emergência</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#alta-prioridade" data-bs-toggle="tab">Alta Prioridade</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#media-prioridade" data-bs-toggle="tab">Média Prioridade</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#estavel" data-bs-toggle="tab">Estável</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body p-0">
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="emergencia">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th width="50px">Prioridade</th>
+                                        <th>Paciente</th>
+                                        <th>Tipo Sanguíneo</th>
+                                        <th>Bolsas Necessárias</th>
+                                        <th>Hospital</th>
+                                        <th>Prazo</th>
+                                        <th>Status</th>
+                                        <th width="120px">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i in range(5) %}
+                                    {% set prioridades = ['Crítica', 'Alta', 'Alta', 'Média', 'Estável'] %}
+                                    {% set cores = ['danger', 'warning', 'warning', 'info', 'success'] %}
+                                    <tr>
+                                        <td>
+                                            <span class="badge bg-{{ cores[i] }} rounded-pill p-2">
+                                                <i class="bi bi-exclamation-triangle-fill"></i>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <strong>Paciente {{ i+1 }}</strong><br>
+                                            <small class="text-muted">ID: {{ 1000 + i }}</small>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-primary rounded-pill px-3 py-2">
+                                                {{ ['A+', 'B-', 'O+', 'AB+', 'O-'][i] }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="progress flex-grow-1 me-2" style="height: 8px;">
+                                                    <div class="progress-bar bg-{{ cores[i] }}"></div>
+                                                </div>
+                                                <span>{{ 2 + i }}/{{ 4 + i }}</span>
+                                            </div>
+                                        </td>
+                                        <td>Hospital {{ ['Central', 'Universitário', 'Infantil', 'Regional', 'Municipal'][i] }}</td>
+                                        <td>
+                                            <span class="badge bg-danger bg-opacity-10 text-danger">
+                                                <i class="bi bi-clock me-1"></i> Urgente
+                                            </span>
+                                            <span class="badge bg-secondary bg-opacity-10 text-secondary">
+                                                {{ ['24h', '48h', '72h', '5d'][i-2] }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{{ cores[i] }}-subtle text-{{ cores[i] }}">
+                                                {{ prioridades[i] }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1" 
+                                                    data-bs-toggle="tooltip" 
+                                                    title="Ver detalhes">
+                                                <i class="bi bi-eye-fill"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-success" 
+                                                    data-bs-toggle="tooltip" 
+                                                    title="Atribuir doação">
+                                                <i class="bi bi-check-circle-fill"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Outras abas (conteúdo similar) -->
+                    <div class="tab-pane fade" id="alta-prioridade">...</div>
+                    <div class="tab-pane fade" id="media-prioridade">...</div>
+                    <div class="tab-pane fade" id="estavel">...</div>
+                </div>
+            </div>
+            <div class="card-footer bg-white border-top-0">
+                <nav aria-label="Navegação de pacientes">
+                    <ul class="pagination justify-content-center mb-0">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Anterior</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Próxima</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

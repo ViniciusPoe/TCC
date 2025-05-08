@@ -1,40 +1,179 @@
 {% extends "layouts/base_login.html" %}
 
 {% block conteudo_principal %}
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-6 offset-md-3">
-            <div class="card">
-                <div class="card-header bg-success text-white">
-                    <h4>Cadastro - Instituição</h4>
+<div class="institution-register-container">
+    <div class="institution-register-card">
+        <div class="institution-register-header">
+            <img src="{{ url_for('static', filename='images/blood-donation-logo.png') }}" alt="Logo Doação de Sangue" class="institution-logo">
+            <h2 class="institution-register-title">Cadastro de Instituição de Saúde</h2>
+            <p class="institution-register-subtitle">Preencha todos os campos para registrar seu hospital ou hemocentro</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('autenticacao.cadastro_instituicao') }}" class="needs-validation" novalidate>
+            <!-- Dados da Instituição -->
+            <div class="register-section">
+                <h5 class="section-title">Dados da Instituição</h5>
+                <div class="form-row">
+                    <div class="form-group col-md-8">
+                        <label for="nome_instituicao">Nome da Instituição *</label>
+                        <input type="text" class="form-control" id="nome_instituicao" name="nome_instituicao" required>
+                        <div class="invalid-feedback">Por favor, informe o nome completo da instituição.</div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="tipo_instituicao">Tipo de Instituição *</label>
+                        <select class="form-control" id="tipo_instituicao" name="tipo_instituicao" required>
+                            <option value="" selected disabled>Selecione</option>
+                            <option value="hospital">Hospital</option>
+                            <option value="hemocentro">Hemocentro</option>
+                            <option value="clinica">Clínica</option>
+                            <option value="laboratorio">Laboratório</option>
+                            <option value="outro">Outro</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <form method="POST" action="{{ url_for('autenticacao.cadastro_instituicao') }}">
-                        <div class="form-group">
-                            <label for="nome">Nome da Instituição</label>
-                            <input type="text" class="form-control" id="nome" name="nome" placeholder="Digite o nome da instituição" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Digite o e-mail da instituição" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="senha">Senha</label>
-                            <input type="password" class="form-control" id="senha" name="senha" placeholder="Digite sua senha" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="telefone">Telefone</label>
-                            <input type="text" class="form-control" id="telefone" name="telefone" placeholder="Digite o telefone da instituição" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="endereco">Endereço</label>
-                            <input type="text" class="form-control" id="endereco" name="endereco" placeholder="Digite o endereço da instituição" required>
-                        </div>
-                        <button type="submit" class="btn btn-success btn-block">Cadastrar</button>
-                    </form>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="cnpj">CNPJ *</label>
+                        <input type="text" class="form-control cnpj-mask" id="cnpj" name="cnpj" required>
+                        <div class="invalid-feedback">Informe um CNPJ válido.</div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="inscricao_estadual">Inscrição Estadual</label>
+                        <input type="text" class="form-control" id="inscricao_estadual" name="inscricao_estadual">
+                    </div>
                 </div>
             </div>
-        </div>
+
+            <!-- Contato -->
+            <div class="register-section">
+                <h5 class="section-title">Informações de Contato</h5>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="email">E-mail Institucional *</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                        <div class="invalid-feedback">Informe um e-mail válido.</div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="telefone">Telefone Principal *</label>
+                        <input type="tel" class="form-control phone-mask" id="telefone" name="telefone" required>
+                        <div class="invalid-feedback">Informe um telefone válido.</div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="responsavel">Responsável Legal *</label>
+                        <input type="text" class="form-control" id="responsavel" name="responsavel" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="cargo_responsavel">Cargo do Responsável *</label>
+                        <input type="text" class="form-control" id="cargo_responsavel" name="cargo_responsavel" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Endereço -->
+            <div class="register-section">
+                <h5 class="section-title">Endereço</h5>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="cep">CEP *</label>
+                        <input type="text" class="form-control cep-mask" id="cep" name="cep" required>
+                        <div class="invalid-feedback">Informe um CEP válido.</div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="cidade">Cidade *</label>
+                        <input type="text" class="form-control" id="cidade" name="cidade" required>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="estado">Estado *</label>
+                        <select class="form-control" id="estado" name="estado" required>
+                            <option value="" selected disabled>Selecione</option>
+                            <!-- Todos os estados brasileiros -->
+                            <option value="AC">Acre</option>
+                            <!-- ... outros estados ... -->
+                            <option value="SP">São Paulo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-8">
+                        <label for="logradouro">Logradouro *</label>
+                        <input type="text" class="form-control" id="logradouro" name="logradouro" required>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="numero">Número *</label>
+                        <input type="text" class="form-control" id="numero" name="numero" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="complemento">Complemento</label>
+                    <input type="text" class="form-control" id="complemento" name="complemento">
+                </div>
+            </div>
+
+            <!-- Informações de Saúde -->
+            <div class="register-section">
+                <h5 class="section-title">Informações de Saúde</h5>
+                <div class="form-group">
+                    <label for="tipos_sanguineos">Tipos Sanguíneos Aceitos *</label>
+                    <select class="form-control select-multiple" id="tipos_sanguineos" name="tipos_sanguineos" multiple required>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                    </select>
+                    <small class="form-text text-muted">Segure Ctrl para selecionar múltiplos tipos</small>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="horario_funcionamento">Horário de Funcionamento *</label>
+                        <input type="text" class="form-control" id="horario_funcionamento" name="horario_funcionamento" placeholder="Ex: 08:00 às 17:00" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="capacidade_coleta">Capacidade Diária de Coleta (bolsas)</label>
+                        <input type="number" class="form-control" id="capacidade_coleta" name="capacidade_coleta">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Credenciais de Acesso -->
+            <div class="register-section">
+                <h5 class="section-title">Credenciais de Acesso</h5>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="senha">Senha *</label>
+                        <input type="password" class="form-control" id="senha" name="senha" required>
+                        <div class="invalid-feedback">Crie uma senha segura.</div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="confirmar_senha">Confirmar Senha *</label>
+                        <input type="password" class="form-control" id="confirmar_senha" name="confirmar_senha" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Termos e Condições -->
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="termos" required>
+                <label class="form-check-label" for="termos">Declaro que todas as informações são verdadeiras e que nossa instituição está autorizada a coletar e armazenar sangue *</label>
+                <div class="invalid-feedback">Você deve concordar com os termos para continuar.</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block btn-register">Cadastrar Instituição</button>
+            
+            <div class="text-center mt-4">
+                <p class="login-link">Já possui cadastro? <a href="{{ url_for('autenticacao.login_instituicao') }}">Acesse sua conta</a></p>
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}

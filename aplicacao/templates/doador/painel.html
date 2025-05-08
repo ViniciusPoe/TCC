@@ -1,38 +1,249 @@
 {% extends 'layouts/base_doador.html' %}
 
 {% block conteudo_principal %}
-    <!-- Carteira do Doador -->
-    <div class="card card-carteira">
-        <div class="card-body">
-            <h5 class="card-title">Carteira de Doador</h5>
-            <p class="card-text"><strong>Nome:</strong> {{ doador.nome }}</p>
-            <p class="card-text"><strong>Tipo Sanguíneo:</strong> {{ doador.tipo_sanguineo }}</span></p>
-            <p class="card-text"><strong>Última Doação:</strong> {{ doador.ultima_doacao }}</p>
-            <p class="card-text"><strong>Próxima Doação Possível:</strong> {{ doador.proxima_doacao_possivel }}</p>
-            <a href="{{ url_for('doador.agendamento') }}" class="btn btn-danger mt-3">Agendar Doação</a>
-            <a href="{{ url_for('doador.historico') }}" class="btn btn-outline-danger mt-3">Consultar Histórico</a>
+<div class="container-fluid px-4 py-5">
+    <div class="container">
+        <!-- Carteira do Doador - Versão Profissional -->
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto">
+                <div class="card border-0 shadow-lg" style="border-radius: 15px; overflow: hidden;">
+                    <div class="card-header py-3" style="background: linear-gradient(135deg, #d32f2f 0%, #c2185b 100%);">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h4 class="mb-0 text-white"><i class="bi bi-heart-pulse me-2"></i> Carteira Nacional de Doador de Sangue</h4>
+                            <span class="badge bg-white text-danger">Válido</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 text-center">
+                                <div class="mb-4">
+                                    <div class="avatar-lg mx-auto bg-light-danger text-danger rounded-circle d-flex align-items-center justify-content-center mb-3" style="width: 100px; height: 100px;">
+                                        <i class="bi bi-droplet-fill fs-1"></i>
+                                    </div>
+                                    <h5 class="mb-1">{{ doador.nome }}</h5>
+                                    <p class="text-muted small">Doador desde 2019</p>
+                                </div>
+                                <div class="qr-code p-2 border rounded d-inline-block">
+                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ doador.id }}" alt="QR Code" class="img-fluid" style="width: 120px;">
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <p class="text-muted small mb-1">CPF</p>
+                                            <p class="fs-5">123.456.789.10</p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <p class="text-muted small mb-1">Data de Nascimento</p>
+                                            <p class="fs-5">06/10/1987</p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <p class="text-muted small mb-1">Tipo Sanguíneo</p>
+                                            <p class="fs-5">
+                                                <span class="badge bg-danger bg-opacity-10 py-2 px-3">{{ doador.tipo_sanguineo }}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <p class="text-muted small mb-1">Última Doação</p>
+                                            <p class="fs-5">
+                                                {% if doador.ultima_doacao %}
+                                                    03/04/2021
+                                                    <span class="badge bg-success bg-opacity-10 ms-2">Confirmada</span>
+                                                {% else %}
+                                                    <span class="text-muted">Nenhuma doação registrada</span>
+                                                {% endif %}
+                                            </p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <p class="text-muted small mb-1">Próxima Doação</p>
+                                            <p class="fs-5">
+                                                {% if doador.proxima_doacao_possivel %}
+                                                    10/10/2025
+                                                    <span class="badge bg-info bg-opacity-10 ms-2">Elegível</span>
+                                                {% else %}
+                                                    <span class="text-muted">Consulte um hemocentro</span>
+                                                {% endif %}
+                                            </p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <p class="text-muted small mb-1">Status</p>
+                                            <p class="fs-5">
+                                                <span class="badge 
+                                                    bg-success bg-opacity-10">
+                                                    Doador Frequente
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <p class="text-muted small mb-1">Número de Registro</p>
+                                        <p class="fw-bold">{{ doador.id }}</p>
+                                    </div>
+                                    <div class="text-end">
+                                        <a href="{{ url_for('doador.agendamento') }}" class="btn btn-danger me-2">
+                                            <i class="bi bi-calendar-plus me-1"></i> Agendar Doação
+                                        </a>
+                                        <a href="{{ url_for('doador.historico') }}" class="btn btn-outline-danger">
+                                            <i class="bi bi-clock-history me-1"></i> Histórico
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <!-- Notícias sobre Doação de Sangue -->
-    <h3>Notícias sobre Doação de Sangue</h3>
-    <div class="news-item">
-        <img src="https://via.placeholder.com/800x400" alt="Imagem da Notícia">
-        <h4>Como a Doação de Sangue Salva Vidas</h4>
-        <p>Doar sangue é um ato simples e fundamental para a manutenção da saúde de muitos pacientes em tratamento...</p>
-        <button class="btn btn-danger btn-sm" data-toggle="collapse" data-target="#noticia1">Saiba mais</button>
-        <div id="noticia1" class="collapse">
-            <p>Além de salvar vidas, a doação de sangue ajuda em diversos tratamentos de saúde, como em pacientes com doenças crônicas, cirurgias e no combate ao câncer. Contribua para a sociedade doando sangue regularmente!</p>
-        </div>
-    </div>
+        <!-- Campanhas e Notícias -->
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="mb-0"><i class="bi bi-megaphone-fill text-danger me-2"></i> Campanhas e Notícias</h3>
+                    <a href="#" class="btn btn-sm btn-outline-danger">Ver todas</a>
+                </div>
 
-    <div class="news-item">
-        <img src="https://via.placeholder.com/800x400" alt="Imagem da Notícia">
-        <h4>A Importância do Tipo Sanguíneo</h4>
-        <p>Você sabia que o tipo sanguíneo influencia diretamente na hora de fazer uma transfusão? Conheça as informações essenciais sobre os tipos sanguíneos e sua importância...</p>
-        <button class="btn btn-danger btn-sm" data-toggle="collapse" data-target="#noticia2">Saiba mais</button>
-        <div id="noticia2" class="collapse">
-            <p>Os tipos sanguíneos A, B, AB e O têm diferentes características. Doadores e receptores precisam estar cientes da compatibilidade sanguínea para garantir a segurança da transfusão.</p>
+                <!-- Campanha em Destaque -->
+                <div class="card mb-4 border-0 shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="card-img-top" alt="Campanha de Doação" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <span class="badge bg-danger mb-2">Campanha Ativa</span>
+                                <h4 class="card-title">Doe Sangue, Salve Vidas!</h4>
+                                <p class="card-text">Participe da nossa campanha nacional e ajude a manter os estoques de sangue em níveis seguros.</p>
+                            </div>
+                            <div class="text-end">
+                                <small class="text-muted">Até 30/06/2025</small>
+                            </div>
+                        </div>
+                        <div class="collapse" id="detalhesCampanha">
+                            <div class="pt-3">
+                                <h5>Locais de Coleta:</h5>
+                                <ul>
+                                    <li>Hemocentro Central - Segunda a Sexta, 8h às 17h</li>
+                                    <li>Unidade Móvel - Praça Central - Sábados, 9h às 15h</li>
+                                    <li>Hospital Municipal - Terças e Quintas, 10h às 16h</li>
+                                </ul>
+                                <h5 class="mt-3">Requisitos:</h5>
+                                <ul>
+                                    <li>Estar em boas condições de saúde</li>
+                                    <li>Ter entre 16 e 69 anos (menores com autorização)</li>
+                                    <li>Pesar no mínimo 50kg</li>
+                                    <li>Apresentar documento original com foto</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline-danger mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#detalhesCampanha" aria-expanded="false">
+                            <i class="bi bi-chevron-down me-1"></i> Mais informações
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Lista de Notícias -->
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <img src="https://images.unsplash.com/photo-1579165466741-6d2f1e352b39?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="card-img-top" alt="Importância da Doação" style="height: 150px; object-fit: cover;">
+                            <div class="card-body">
+                                <h5 class="card-title">A Importância da Doação Regular</h5>
+                                <p class="card-text text-muted small">Saiba como sua doação periódica pode fazer a diferença para pacientes que necessitam de transfusões constantes.</p>
+                                <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#noticia1">Ler mais</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <img src="https://images.unsplash.com/photo-1581595219315-a187dd40c322?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="card-img-top" alt="Tipos Sanguíneos" style="height: 150px; object-fit: cover;">
+                            <div class="card-body">
+                                <h5 class="card-title">Entenda os Tipos Sanguíneos</h5>
+                                <p class="card-text text-muted small">Conheça a compatibilidade entre os tipos sanguíneos e por que seu tipo é especial.</p>
+                                <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#noticia2">Ler mais</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+</div>
+
+<!-- Modal Notícia 1 -->
+<div class="modal fade" id="noticia1" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">A Importância da Doação Regular</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img src="https://images.unsplash.com/photo-1579165466741-6d2f1e352b39?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="img-fluid rounded mb-3" alt="Importância da Doação">
+                <p>A doação regular de sangue é fundamental para manter os estoques em níveis seguros e atender às demandas de pacientes que necessitam de transfusões constantes, como portadores de doenças crônicas, pacientes em tratamento de câncer e vítimas de acidentes.</p>
+                <h6 class="mt-4">Benefícios da Doação Regular:</h6>
+                <ul>
+                    <li>Garante suprimento contínuo para emergências</li>
+                    <li>Permite planejamento dos hemocentros</li>
+                    <li>Ajuda a identificar possíveis problemas de saúde no doador</li>
+                    <li>Promove a renovação das células sanguíneas</li>
+                </ul>
+                <p class="mt-3">Lembre-se: homens podem doar a cada 2 meses (até 4 vezes por ano) e mulheres a cada 3 meses (até 3 vezes por ano).</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Notícia 2 -->
+<div class="modal fade" id="noticia2" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Entenda os Tipos Sanguíneos</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img src="https://images.unsplash.com/photo-1581595219315-a187dd40c322?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="img-fluid rounded mb-3" alt="Tipos Sanguíneos">
+                <p>O sistema ABO classifica o sangue em quatro tipos principais: A, B, AB e O. Cada tipo pode ser positivo ou negativo, dependendo da presença do fator Rh. Essa classificação é crucial para garantir a compatibilidade nas transfusões sanguíneas.</p>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h6>Quem pode receber de quem:</h6>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><strong>O-:</strong> Doador universal (pode doar para todos)</li>
+                            <li class="list-group-item"><strong>O+:</strong> Pode doar para A+, B+, AB+ e O+</li>
+                            <li class="list-group-item"><strong>A-:</strong> Pode doar para A+, A-, AB+ e AB-</li>
+                            <li class="list-group-item"><strong>A+:</strong> Pode doar para A+ e AB+</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Tipos mais comuns:</h6>
+                        <div class="progress mb-3" style="height: 20px;">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: 38%;">O+ 38%</div>
+                        </div>
+                        <div class="progress mb-3" style="height: 20px;">
+                            <div class="progress-bar" role="progressbar" style="width: 34%; background-color: #d32f2f;">A+ 34%</div>
+                        </div>
+                        <div class="progress mb-3" style="height: 20px;">
+                            <div class="progress-bar" role="progressbar" style="width: 9%; background-color: #c2185b;">B+ 9%</div>
+                        </div>
+                        <div class="progress mb-3" style="height: 20px;">
+                            <div class="progress-bar" role="progressbar" style="width: 3%; background-color: #e91e63;">AB+ 3%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -1,32 +1,178 @@
 {% extends "layouts/base_login.html" %}
 
 {% block conteudo_principal %}
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-6 offset-md-3">
-            <div class="card">
-                <div class="card-header bg-danger text-white">
-                    <h4>Cadastro - Doador</h4>
+<div class="cadastro-page">
+    <div class="cadastro-card">
+        <h2 class="text-center text-danger mb-4">Cadastro de Doador de Sangue</h2>
+        <form method="POST" action="{{ url_for('autenticacao.cadastro_doador') }}" class="needs-validation" novalidate>
+            <!-- Seção de Dados Pessoais -->
+            <div class="mb-4">
+                <h5 class="text-danger">Dados Pessoais</h5>
+                <div class="form-row">
+                    <div class="form-group col-md-8">
+                        <label for="nome">Nome Completo *</label>
+                        <input type="text" class="form-control" id="nome" name="nome" required>
+                        <div class="invalid-feedback">Por favor, informe seu nome completo.</div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="data_nascimento">Data de Nascimento *</label>
+                        <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" required>
+                        <div class="invalid-feedback">Informe sua data de nascimento.</div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <form method="POST" action="{{ url_for('autenticacao.cadastro_doador') }}">
-                        <div class="form-group">
-                            <label for="nome">Nome</label>
-                            <input type="text" class="form-control" id="nome" name="nome" placeholder="Digite seu nome" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Digite seu e-mail" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="senha">Senha</label>
-                            <input type="password" class="form-control" id="senha" name="senha" placeholder="Digite sua senha" required>
-                        </div>
-                        <button type="submit" class="btn btn-danger btn-block">Cadastrar</button>
-                    </form>
+                
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="cpf">CPF *</label>
+                        <input type="text" class="form-control cpf-mask" id="cpf" name="cpf" placeholder="000.000.000-00" required>
+                        <div class="invalid-feedback">Informe um CPF válido.</div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="rg">RG *</label>
+                        <input type="text" class="form-control" id="rg" name="rg" required>
+                        <div class="invalid-feedback">Informe seu RG.</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="sexo">Sexo *</label>
+                        <select class="form-control" id="sexo" name="sexo" required>
+                            <option value="" selected disabled>Selecione</option>
+                            <option value="M">Masculino</option>
+                            <option value="F">Feminino</option>
+                            <option value="O">Outro</option>
+                        </select>
+                        <div class="invalid-feedback">Selecione seu sexo.</div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="tipo_sanguineo">Tipo Sanguíneo *</label>
+                        <select class="form-control" id="tipo_sanguineo" name="tipo_sanguineo" required>
+                            <option value="" selected disabled>Selecione</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                        </select>
+                        <div class="invalid-feedback">Selecione seu tipo sanguíneo.</div>
+                    </div>
                 </div>
             </div>
-        </div>
+
+            <!-- Seção de Contato -->
+            <div class="mb-4">
+                <h5 class="text-danger">Informações de Contato</h5>
+                <div class="form-group">
+                    <label for="email">E-mail *</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                    <div class="invalid-feedback">Informe um e-mail válido.</div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="telefone">Telefone *</label>
+                        <input type="tel" class="form-control phone-mask" id="telefone" name="telefone" placeholder="(00) 00000-0000" required>
+                        <div class="invalid-feedback">Informe um telefone válido.</div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="telefone_emergencia">Telefone de Emergência *</label>
+                        <input type="tel" class="form-control phone-mask" id="telefone_emergencia" name="telefone_emergencia" placeholder="(00) 00000-0000" required>
+                        <div class="invalid-feedback">Informe um telefone de emergência.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seção de Endereço -->
+            <div class="mb-4">
+                <h5 class="text-danger">Endereço</h5>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="cep">CEP *</label>
+                        <input type="text" class="form-control cep-mask" id="cep" name="cep" required>
+                        <div class="invalid-feedback">Informe um CEP válido.</div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="cidade">Cidade *</label>
+                        <input type="text" class="form-control" id="cidade" name="cidade" required>
+                        <div class="invalid-feedback">Informe sua cidade.</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group col-md-8">
+                        <label for="logradouro">Logradouro *</label>
+                        <input type="text" class="form-control" id="logradouro" name="logradouro" required>
+                        <div class="invalid-feedback">Informe seu endereço.</div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="numero">Número *</label>
+                        <input type="text" class="form-control" id="numero" name="numero" required>
+                        <div class="invalid-feedback">Informe o número.</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="complemento">Complemento</label>
+                    <input type="text" class="form-control" id="complemento" name="complemento">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="bairro">Bairro *</label>
+                        <input type="text" class="form-control" id="bairro" name="bairro" required>
+                        <div class="invalid-feedback">Informe seu bairro.</div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="estado">Estado *</label>
+                        <select class="form-control" id="estado" name="estado" required>
+                            <option value="" selected disabled>Selecione</option>
+                            <option value="AC">Acre</option>
+                            <option value="AL">Alagoas</option>
+                            <!-- Todos os estados aqui -->
+                            <option value="SP">São Paulo</option>
+                        </select>
+                        <div class="invalid-feedback">Selecione seu estado.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seção de Informações de Saúde -->
+            <div class="mb-4">
+                <h5 class="text-danger">Informações de Saúde</h5>
+                <div class="form-group">
+                    <label for="peso">Peso (kg) *</label>
+                    <input type="number" class="form-control" id="peso" name="peso" min="50" required>
+                    <small class="form-text text-muted">Mínimo 50kg para doação</small>
+                    <div class="invalid-feedback">Informe seu peso (mínimo 50kg).</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="altura">Altura (cm) *</label>
+                    <input type="number" class="form-control" id="altura" name="altura" min="140" max="220" required>
+                    <div class="invalid-feedback">Informe sua altura em centímetros.</div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="termos" required>
+                        <label class="form-check-label" for="termos">
+                            Declaro que todas as informações são verdadeiras e que atendo aos requisitos básicos para doação de sangue *
+                        </label>
+                        <div class="invalid-feedback">Você deve concordar com os termos para se cadastrar.</div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-danger btn-block mt-3">Cadastrar como Doador</button>
+            
+            <div class="text-center mt-3">
+                <small>Já possui conta? <a href="{{ url_for('autenticacao.login_doador') }}">Faça login</a></small>
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}

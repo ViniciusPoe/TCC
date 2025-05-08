@@ -1,20 +1,275 @@
 {% extends "layouts/base_instituicao.html" %}
 {% block conteudo_principal %}
-<div class="container mt-4">
-    <h2 class="mb-4">Solicitações de Agendamento</h2>
-    <div class="list-group">
-        {% for i in range(4) %}
-        <div class="list-group-item mb-3 border">
-            <h5>Agendamento {{ i+1 }}</h5>
-            <p><strong>Doador:</strong> Maria {{ i+1 }}</p>
-            <p><strong>Data:</strong> {{ '15/0' ~ (i+1) ~ '/2025' }}</p>
-            <p><strong>Hemocentro:</strong> Hemocentro X</p>
-            <div class="mt-2">
-                <button class="btn btn-success me-2">Aceitar</button>
-                <button class="btn btn-danger">Recusar</button>
+<div class="container-fluid px-4 py-5 bg-light">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <h1 class="display-5 fw-bold text-primary mb-2">Solicitações de Agendamento</h1>
+                <p class="lead text-muted">Novas solicitações de doação aguardando aprovação</p>
+            </div>
+            <div>
+                <button class="btn btn-primary me-2">
+                    <i class="bi bi-funnel-fill me-2"></i>Filtrar
+                </button>
+                <button class="btn btn-outline-primary">
+                    <i class="bi bi-calendar-week me-2"></i>Ver Calendário
+                </button>
             </div>
         </div>
-        {% endfor %}
+
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card border-start border-4 border-warning shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted">Pendentes</h6>
+                        <h3 class="card-title text-warning">8</h3>
+                        <p class="card-text small">Aguardando análise</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-start border-4 border-success shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted">Confirmados</h6>
+                        <h3 class="card-title text-success">15</h3>
+                        <p class="card-text small">Para esta semana</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-start border-4 border-danger shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted">Recusados</h6>
+                        <h3 class="card-title text-danger">3</h3>
+                        <p class="card-text small">Neste mês</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-start border-4 border-info shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted">Reagendados</h6>
+                        <h3 class="card-title text-info">5</h3>
+                        <p class="card-text small">Solicitações alteradas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-white border-bottom-0">
+                <ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#pendentes" data-bs-toggle="tab">Pendentes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#confirmados" data-bs-toggle="tab">Confirmados</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#recusados" data-bs-toggle="tab">Recusados</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body p-0">
+                <div class="tab-content">
+                    <!-- Tab Pendentes -->
+                    <div class="tab-pane fade show active" id="pendentes">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th width="120px">Data/Hora</th>
+                                        <th>Doador</th>
+                                        <th>Tipo Sanguíneo</th>
+                                        <th>Contato</th>
+                                        <th>Última Doação</th>
+                                        <th>Detalhes</th>
+                                        <th width="180px">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i in range(4) %}
+                                    {% set tipos = ['A+', 'B-', 'O+', 'AB+'] %}
+                                    {% set datas = ['15/05/2025 09:00', '16/05/2025 10:30', '17/05/2025 14:00', '18/05/2025 11:15'] %}
+                                    {% set ultimas_doacoes = ['10/01/2025', '15/12/2024', '05/02/2025', '20/01/2025'] %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ datas[i].split(' ')[0] }}</strong><br>
+                                            <small class="text-muted">{{ datas[i].split(' ')[1] }}</small>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar bg-primary text-white rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                                    {{ (i+1)|string }}
+                                                </div>
+                                                <div>
+                                                    <strong>Maria {{ i+1 }} Silva</strong><br>
+                                                    <small class="text-muted">CPF: 123.456.789-0{{ i }}</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-primary rounded-pill px-3 py-2">
+                                                {{ tipos[i] }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <small>(11) 9{{ i }}876-54{{ i }}2</small><br>
+                                            <small>maria{{ i+1 }}@exemplo.com</small>
+                                        </td>
+                                        <td>{{ ultimas_doacoes[i] }}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#detalhesModal{{ i }}">
+                                                <i class="bi bi-eye-fill me-1"></i>Ver
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-success me-2">
+                                                <i class="bi bi-check-circle-fill me-1"></i>Aceitar
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-x-circle-fill me-1"></i>Recusar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    
+                                    <!-- Modal Detalhes -->
+                                    <div class="modal fade" id="detalhesModal{{ i }}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Detalhes do Agendamento</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <h6>Dados Pessoais</h6>
+                                                            <ul class="list-group list-group-flush mb-3">
+                                                                <li class="list-group-item d-flex justify-content-between">
+                                                                    <span>Nome Completo:</span>
+                                                                    <strong>Maria {{ i+1 }} Silva</strong>
+                                                                </li>
+                                                                <li class="list-group-item d-flex justify-content-between">
+                                                                    <span>CPF:</span>
+                                                                    <strong>123.456.789-0{{ i }}</strong>
+                                                                </li>
+                                                                <li class="list-group-item d-flex justify-content-between">
+                                                                    <span>Data Nasc.:</span>
+                                                                    <strong>15/0{{ i+5 }}/1990</strong>
+                                                                </li>
+                                                                <li class="list-group-item d-flex justify-content-between">
+                                                                    <span>Gênero:</span>
+                                                                    <strong>Feminino</strong>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <h6>Contato</h6>
+                                                            <ul class="list-group list-group-flush mb-3">
+                                                                <li class="list-group-item d-flex justify-content-between">
+                                                                    <span>Telefone:</span>
+                                                                    <strong>(11) 9{{ i }}876-54{{ i }}2</strong>
+                                                                </li>
+                                                                <li class="list-group-item d-flex justify-content-between">
+                                                                    <span>Email:</span>
+                                                                    <strong>maria{{ i+1 }}@exemplo.com</strong>
+                                                                </li>
+                                                                <li class="list-group-item d-flex justify-content-between">
+                                                                    <span>Endereço:</span>
+                                                                    <strong>Rua Exemplo, 12{{ i }} - São Paulo/SP</strong>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="row mt-3">
+                                                        <div class="col-md-6">
+                                                            <h6>Informações da Doação</h6>
+                                                            <ul class="list-group list-group-flush">
+                                                                <li class="list-group-item d-flex justify-content-between">
+                                                                    <span>Tipo Sanguíneo:</span>
+                                                                    <strong>{{ tipos[i] }}</strong>
+                                                                </li>
+                                                                <li class="list-group-item d-flex justify-content-between">
+                                                                    <span>Data Agendada:</span>
+                                                                    <strong>{{ datas[i] }}</strong>
+                                                                </li>
+                                                                <li class="list-group-item d-flex justify-content-between">
+                                                                    <span>Local:</span>
+                                                                    <strong>Hemocentro Local</strong>
+                                                                </li>
+                                                                <li class="list-group-item d-flex justify-content-between">
+                                                                    <span>Tipo de Doação:</span>
+                                                                    <strong>Sangue total</strong>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <h6>Histórico</h6>
+                                                            <ul class="list-group list-group-flush">
+                                                                <li class="list-group-item d-flex justify-content-between">
+                                                                    <span>Última Doação:</span>
+                                                                    <strong>{{ ultimas_doacoes[i] }}</strong>
+                                                                </li>
+                                                                <li class="list-group-item d-flex justify-content-between">
+                                                                    <span>Total de Doações:</span>
+                                                                    <strong>{{ i+3 }}</strong>
+                                                                </li>
+                                                                <li class="list-group-item d-flex justify-content-between">
+                                                                    <span>Status:</span>
+                                                                    <span class="badge bg-warning">Pendente</span>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-success">
+                                                        <i class="bi bi-check-circle-fill me-1"></i> Confirmar Agendamento
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                                        <i class="bi bi-x-circle-fill me-1"></i> Fechar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Tab Confirmados -->
+                    <div class="tab-pane fade" id="confirmados">
+                        <!-- Conteúdo similar com status "Confirmado" -->
+                    </div>
+                    
+                    <!-- Tab Recusados -->
+                    <div class="tab-pane fade" id="recusados">
+                        <!-- Conteúdo similar com status "Recusado" -->
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-white border-top-0">
+                <nav aria-label="Navegação de agendamentos">
+                    <ul class="pagination justify-content-center mb-0">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Anterior</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Próxima</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

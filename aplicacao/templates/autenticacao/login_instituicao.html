@@ -1,31 +1,67 @@
 {% extends "layouts/base_login.html" %}
 
 {% block conteudo_principal %}
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-6 offset-md-3">
-            <div class="card">
-                <div class="card-header bg-success text-white">
-                    <h4>Login - Instituição</h4>
+<div class="institution-login-container">
+    <div class="institution-login-card">
+        <!-- Cabeçalho Institucional -->
+        <div class="institution-header text-center mb-4">
+            <img src="{{ url_for('static', filename='img/institution-logo.svg') }}" alt="Logo Instituição" class="institution-logo mb-3">
+            <h4 class="institution-title">Acesso Institucional</h4>
+            <p class="institution-subtitle">Sistema de Gerenciamento de Doações</p>
+        </div>
+
+        <!-- Formulário de Login -->
+        <form id="institutionForm" class="needs-validation" novalidate>
+            <!-- CNPJ/Registro -->
+            <div class="form-group mb-3">
+                <label for="institution_id" class="institution-label">CNPJ/Registro</label>
+                <div class="input-group institution-input">
+                    <input type="text" class="form-control" id="institution_id" name="institution_id" 
+                           placeholder="00.000.000/0000-00" required>
                 </div>
-                <div class="card-body">
-                    <form method="POST" action="{{ url_for('autenticacao.login_instituicao') }}">
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Digite seu e-mail" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="senha">Senha</label>
-                            <input type="password" class="form-control" id="senha" name="senha" placeholder="Digite sua senha" required>
-                        </div>
-                        <button type="submit" class="btn btn-success btn-block">Login</button>
-                    </form>
-                    <div class="mt-3">
-                        <a href="{{ url_for('autenticacao.cadastro_instituicao') }}">Ainda não tem uma conta? Cadastre-se</a>
-                    </div>
+                <div class="invalid-feedback">
+                    Por favor, insira o CNPJ/Registro da instituição
                 </div>
             </div>
-        </div>
+
+            <!-- Senha -->
+            <div class="form-group mb-4">
+                <label for="inst_password" class="institution-label">Senha Institucional</label>
+                <div class="input-group institution-input">
+                    <input type="password" class="form-control" id="inst_password" name="password" 
+                           placeholder="Senha de acesso" required>
+                </div>
+                <div class="invalid-feedback">
+                    Por favor, insira sua senha
+                </div>
+            </div>
+
+            <!-- Controles -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="rememberInstitution">
+                    <label class="form-check-label institution-remember" for="rememberInstitution">
+                        Manter conectado
+                    </label>
+                </div>
+                <a href="" class="institution-forgot-password">
+                    Esqueceu a senha?
+                </a>
+            </div>
+
+            <!-- Botão de Acesso -->
+            <button type="submit" class="btn institution-login-btn w-100 py-2 mb-3">
+                <i class="fas fa-sign-in-alt me-2"></i> ACESSAR SISTEMA
+            </button>
+
+            <div id="errorMessage" class="alert alert-danger d-none mt-3"></div>
+
+            <!-- Rodapé -->
+            <div class="institution-footer text-center mt-4">
+                <p class="mb-2">Não possui cadastro? <a href="{{ url_for('autenticacao.cadastro_instituicao') }}" class="institution-register-link">Solicite acesso</a></p>
+                <p class="institution-copyright small">Sistema exclusivo para hospitais e hemocentros credenciados</p>
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}

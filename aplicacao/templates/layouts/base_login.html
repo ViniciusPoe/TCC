@@ -5,18 +5,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="largura=largura-dispositivo, escala-inicial=1">
     <title>{% block titulo %}Sistema de Doação de Sangue{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/principal.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
     {% endblock %}
+    <style>
+        .instituicao-bg {
+            background: linear-gradient(to right, #24c6dc, #514a9d);
+        }
+    </style>
 </head>
-<body>
+<body {% if '/cadastro/instituicao' in request.path or '/login/instituicao' in request.path %}class="instituicao-bg"{% endif %}>
     
-    <main class="conteiner">
+    <main>
+        <div></div>
+        <div></div>
         {% block conteudo_principal %}{% endblock %}
     </main>
 
-    
-    <script src="{{ url_for('static', filename='js/comportamento.js') }}"></script>
+    <script>
+        const doadorPainelUrl = "{{ url_for('doador.painel') }}";
+        const instituicaoPainelUrl = "{{ url_for('instituicao.painel') }}";
+    </script>
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

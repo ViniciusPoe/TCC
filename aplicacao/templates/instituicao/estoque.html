@@ -1,19 +1,244 @@
 {% extends "layouts/base_instituicao.html" %}
 {% block conteudo_principal %}
-<div class="container mt-4">
-    <h2 class="mb-4">Estoque de Sangue</h2>
-    <div class="row g-4">
-        {% for tipo in ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] %}
-        <div class="col-md-3">
-            <div class="card border-danger">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Tipo {{ tipo }}</h5>
-                    <p class="card-text">Disponível: <strong>{{ 20 - loop.index }} bolsas</strong></p>
-                    <p class="text-danger">Necessário: {{ 25 - loop.index * 2 }} bolsas</p>
+<div class="container-fluid px-4 py-5 bg-light">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <h1 class="display-5 fw-bold text-primary mb-2">Estoque de Sangue</h1>
+                <p class="lead text-muted">Controle e monitoramento dos tipos sanguíneos disponíveis</p>
+            </div>
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
+                    <i class="bi bi-download me-2"></i>Exportar Relatório
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">PDF</a></li>
+                    <li><a class="dropdown-item" href="#">Excel</a></li>
+                    <li><a class="dropdown-item" href="#">Imprimir</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="alert alert-info d-flex align-items-center">
+            <i class="bi bi-info-circle-fill me-3 fs-4"></i>
+            <div>
+                <strong>Status do Estoque:</strong> 
+                <span id="statusEstoque">Nível moderado - 68% da capacidade ideal</span>
+                <div class="progress mt-2" style="height: 8px;">
+                    <div class="progress-bar bg-info" role="progressbar" style="width: 68%"></div>
                 </div>
             </div>
         </div>
-        {% endfor %}
+
+        <div class="row g-4">
+            {% set tipos_sanguineos = [
+                {'tipo': 'A+', 'compativel': ['A+', 'AB+'], 'freq': '34%', 'info': 'Um dos tipos mais comuns. Pode doar para A+ e AB+.'},
+                {'tipo': 'A-', 'compativel': ['A+', 'A-', 'AB+', 'AB-'], 'freq': '6%', 'info': 'Doador universal de plaquetas. Pode doar para todos os tipos A e AB.'},
+                {'tipo': 'B+', 'compativel': ['B+', 'AB+'], 'freq': '9%', 'info': 'Mais comum em asiáticos. Pode doar para B+ e AB+.'},
+                {'tipo': 'B-', 'compativel': ['B+', 'B-', 'AB+', 'AB-'], 'freq': '2%', 'info': 'Tipo raro. Pode doar para todos os tipos B e AB.'},
+                {'tipo': 'AB+', 'compativel': ['AB+'], 'freq': '3%', 'info': 'Receptor universal. Pode receber de todos, mas só doa para AB+.'},
+                {'tipo': 'AB-', 'compativel': ['AB+', 'AB-'], 'freq': '1%', 'info': 'Tipo mais raro. Receptor universal para plasma.'},
+                {'tipo': 'O+', 'compativel': ['A+', 'B+', 'AB+', 'O+'], 'freq': '38%', 'info': 'Doador universal de glóbulos vermelhos. O mais utilizado em emergências.'},
+                {'tipo': 'O-', 'compativel': ['Todos os tipos'], 'freq': '7%', 'info': 'Doador universal. Essencial para emergências quando o tipo é desconhecido.'}
+            ] %}
+            
+            {% for sangue in tipos_sanguineos %}
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="card h-100 border-0 shadow-sm hover-shadow">
+                    <div class="card-header bg-white border-bottom-0">
+                        <h5 class="card-title mb-0 text-center">
+                            <span class="badge bg-primary rounded-pill p-2">Tipo {{ sangue.tipo }}</span>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h6 class="mb-1">Disponível</h6>
+                                <span class="display-6 fw-bold">{{ 20 - loop.index }}</span>
+                                <small class="text-muted">bolsas</small>
+                            </div>
+                            <div class="text-end">
+                                <h6 class="mb-1">Necessário</h6>
+                                <span class="display-6 fw-bold text-danger">{{ 25 - loop.index * 2 }}</span>
+                                <small class="text-muted">bolsas</small>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <small>Estoque</small>
+                                <small>{{ ((20 - loop.index)/(25 - loop.index * 2)*100)|round(0) }}%</small>
+                            </div>
+                            <div class="progress" style="height: 6px;">
+                                {% set percentual = ((20 - loop.index)/(25 - loop.index * 2)*100) %}
+                                <div class="progress-bar 
+                                    {% if percentual > 80 %}bg-success
+                                    {% elif percentual > 50 %}bg-info
+                                    {% elif percentual > 30 %}bg-warning
+                                    {% else %}bg-danger
+                                    {% endif %}" 
+                                    role="progressbar" >
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-light p-2 mb-3">
+                            <small class="d-block mb-1"><i class="bi bi-people-fill text-primary me-1"></i> <strong>Compatível com:</strong> {{ sangue.compativel|join(', ') }}</small>
+                            <small class="d-block"><i class="bi bi-pie-chart-fill text-primary me-1"></i> <strong>Frequência:</strong> {{ sangue.freq }} da população</small>
+                        </div>
+                        
+                        <button class="btn btn-sm btn-outline-primary w-100" 
+                                type="button" 
+                                data-bs-toggle="collapse" 
+                                data-bs-target="#info{{ sangue.tipo }}">
+                            <i class="bi bi-info-circle me-1"></i> Mais informações
+                        </button>
+                        
+                        <div class="collapse mt-3" id="info{{ sangue.tipo }}">
+                            <div class="card card-body bg-light p-3 small">
+                                <p>{{ sangue.info }}</p>
+                                <ul class="mb-0">
+                                    <li>Pode receber de: 
+                                        {% if sangue.tipo == 'A+' %}A+, A-, O+, O-{% endif %}
+                                        {% if sangue.tipo == 'A-' %}A-, O-{% endif %}
+                                        {% if sangue.tipo == 'B+' %}B+, B-, O+, O-{% endif %}
+                                        {% if sangue.tipo == 'B-' %}B-, O-{% endif %}
+                                        {% if sangue.tipo == 'AB+' %}Todos os tipos{% endif %}
+                                        {% if sangue.tipo == 'AB-' %}AB-, A-, B-, O-{% endif %}
+                                        {% if sangue.tipo == 'O+' %}O+, O-{% endif %}
+                                        {% if sangue.tipo == 'O-' %}O-{% endif %}
+                                    </li>
+                                    <li>Tempo entre doações: 60 dias (homens), 90 dias (mulheres)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-md-6 mb-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-bottom-0">
+                        <h5 class="card-title mb-0"><i class="bi bi-graph-up me-2"></i>Estoque nos últimos 30 dias</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Gráfico de linha estático -->
+                        <div class="grafico-estatico">
+                            <div class="grafico-linha" style="height: 250px; position: relative;">
+                                <!-- Eixos -->
+                                <div class="eixo-y" style="position: absolute; left: 0; top: 0; bottom: 0; width: 30px; border-right: 1px solid #dee2e6;">
+                                    <div style="position: absolute; top: 0; right: 5px;">120</div>
+                                    <div style="position: absolute; top: 50%; right: 5px; margin-top: -8px;">60</div>
+                                    <div style="position: absolute; bottom: 0; right: 5px;">0</div>
+                                </div>
+                                <!-- Linha do gráfico -->
+                                <div class="linha" style="position: absolute; left: 30px; right: 15px; top: 0; bottom: 0;">
+                                    <div style="position: absolute; height: 2px; width: 100%; background-color: #1976d2; 
+                                        transform-origin: left; transform: scaleX(0.9) translateY(120px);"></div>
+                                    <div style="position: absolute; height: 100%; width: 2px; background-color: #dee2e6; left: 0;"></div>
+                                    <!-- Pontos da linha -->
+                                    <div class="ponto" style="position: absolute; width: 10px; height: 10px; background-color: #1976d2; border-radius: 50%; 
+                                        left: 0%; top: 120px;"></div>
+                                    <div class="ponto" style="position: absolute; width: 10px; height: 10px; background-color: #1976d2; border-radius: 50%; 
+                                        left: 20%; top: 80px;"></div>
+                                    <div class="ponto" style="position: absolute; width: 10px; height: 10px; background-color: #1976d2; border-radius: 50%; 
+                                        left: 40%; top: 100px;"></div>
+                                    <div class="ponto" style="position: absolute; width: 10px; height: 10px; background-color: #1976d2; border-radius: 50%; 
+                                        left: 60%; top: 60px;"></div>
+                                    <div class="ponto" style="position: absolute; width: 10px; height: 10px; background-color: #1976d2; border-radius: 50%; 
+                                        left: 80%; top: 40px;"></div>
+                                    <div class="ponto" style="position: absolute; width: 10px; height: 10px; background-color: #1976d2; border-radius: 50%; 
+                                        left: 100%; top: 20px;"></div>
+                                    <!-- Rótulos do eixo X -->
+                                    <div style="position: absolute; bottom: -25px; left: 0%; width: 20%; text-align: center;">1/05</div>
+                                    <div style="position: absolute; bottom: -25px; left: 20%; width: 20%; text-align: center;">10/05</div>
+                                    <div style="position: absolute; bottom: -25px; left: 40%; width: 20%; text-align: center;">15/05</div>
+                                    <div style="position: absolute; bottom: -25px; left: 60%; width: 20%; text-align: center;">20/05</div>
+                                    <div style="position: absolute; bottom: -25px; left: 80%; width: 20%; text-align: center;">25/05</div>
+                                    <div style="position: absolute; bottom: -25px; left: 100%; width: 20%; text-align: center;">30/05</div>
+                                </div>
+                            </div>
+                            <div class="alert alert-info mt-5 mb-0">
+                                <i class="bi bi-info-circle-fill me-2"></i>
+                                Variação do estoque total nos últimos 30 dias (dados simulados)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-bottom-0">
+                        <h5 class="card-title mb-0"><i class="bi bi-pie-chart me-2"></i>Distribuição por Tipo</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Gráfico de pizza estático -->
+                        <div class="grafico-estatico text-center">
+                            <div class="grafico-pizza" style="width: 200px; height: 200px; border-radius: 50%; margin: 0 auto; position: relative; 
+                                background: conic-gradient(
+                                    #1976d2 0% 34%,
+                                    #d32f2f 34% 43%,
+                                    #ff9800 43% 52%,
+                                    #4caf50 52% 61%,
+                                    #9c27b0 61% 70%,
+                                    #00bcd4 70% 79%,
+                                    #8bc34a 79% 88%,
+                                    #ff5722 88% 100%
+                                );">
+                            </div>
+                            <div class="legenda-pizza mt-4">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <div style="width: 15px; height: 15px; background-color: #1976d2; margin-right: 8px;"></div>
+                                            <small>A+ (34%)</small>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-2">
+                                            <div style="width: 15px; height: 15px; background-color: #d32f2f; margin-right: 8px;"></div>
+                                            <small>B+ (9%)</small>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-2">
+                                            <div style="width: 15px; height: 15px; background-color: #ff9800; margin-right: 8px;"></div>
+                                            <small>AB+ (3%)</small>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <div style="width: 15px; height: 15px; background-color: #4caf50; margin-right: 8px;"></div>
+                                            <small>O+ (38%)</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <div style="width: 15px; height: 15px; background-color: #9c27b0; margin-right: 8px;"></div>
+                                            <small>A- (6%)</small>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-2">
+                                            <div style="width: 15px; height: 15px; background-color: #00bcd4; margin-right: 8px;"></div>
+                                            <small>B- (2%)</small>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-2">
+                                            <div style="width: 15px; height: 15px; background-color: #8bc34a; margin-right: 8px;"></div>
+                                            <small>AB- (1%)</small>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <div style="width: 15px; height: 15px; background-color: #ff5722; margin-right: 8px;"></div>
+                                            <small>O- (7%)</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="alert alert-info mt-3 mb-0">
+                                <i class="bi bi-info-circle-fill me-2"></i>
+                                Distribuição percentual dos tipos sanguíneos em estoque
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

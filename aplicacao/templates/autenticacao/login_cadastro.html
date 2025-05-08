@@ -1,32 +1,48 @@
 {% extends "layouts/base_login.html" %}
 
 {% block conteudo_principal %}
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-6 offset-md-3">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h4>Login ou Cadastro</h4>
+<div class="professional-login-container">
+    <div class="professional-login-card">
+        <div class="login-header text-center mb-5">
+            <img src="{{ url_for('static', filename='images/blood-donation-logo.png') }}" alt="Logo Sistema de Doação" class="login-logo mb-3">
+            <h2 class="login-title">Sistema de Doação de Sangue</h2>
+            <p class="login-subtitle">Selecione seu tipo de acesso</p>
+        </div>
+
+        <div class="login-options">
+            <div class="login-option-card option-donor">
+                <div class="option-icon">
+                    <i class="fas fa-heartbeat"></i>
                 </div>
-                <div class="card-body">
-                    <form method="POST" action="{{ url_for('autenticacao.login') }}">
-                        <div class="form-group">
-                            <label for="tipo_usuario">Escolha seu tipo de usuário</label>
-                            <select class="form-control" id="tipo_usuario" name="tipo_usuario">
-                                <option value="doador">Doador</option>
-                                <option value="instituicao">Instituição</option>
-                            </select>
-                        </div>
-                        <div class="form-group mt-3">
-                            <a href="{{ url_for('autenticacao.login_doador') }}" class="btn btn-danger btn-block">Login como Doador</a>
-                            <a href="{{ url_for('autenticacao.login_instituicao') }}" class="btn btn-success btn-block">Login como Instituição</a>
-                        </div>
-                        <div class="form-group mt-3">
-                            <a href="{{ url_for('autenticacao.cadastro_doador') }}" class="btn btn-danger btn-block">Cadastrar como Doador</a>
-                            <a href="{{ url_for('autenticacao.cadastro_instituicao') }}" class="btn btn-success btn-block">Cadastrar como Instituição</a>
-                        </div>
-                    </form>
+                <h3 class="option-title">Doador</h3>
+                <p class="option-description">Acesse para agendar doações e acompanhar seu histórico</p>
+                <a href="{{ url_for('autenticacao.login_doador') }}" class="btn option-btn">
+                    Entrar como Doador <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="login-option-card option-institution">
+                <div class="option-icon">
+                    <i class="fas fa-hospital-alt"></i>
                 </div>
+                <h3 class="option-title">Instituição</h3>
+                <p class="option-description">Acesso para hospitais e hemocentros gerenciarem doações</p>
+                <a href="{{ url_for('autenticacao.login_instituicao') }}" class="btn option-btn">
+                    Entrar como Instituição <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="login-footer text-center mt-5">
+            <p class="register-text">Não possui uma conta?</p>
+            <div class="register-links">
+                <a href="{{ url_for('autenticacao.cadastro_doador') }}" class="register-link">
+                    <i class="fas fa-user-plus"></i> Cadastrar como Doador
+                </a>
+                <span class="separator">|</span>
+                <a href="{{ url_for('autenticacao.cadastro_instituicao') }}" class="register-link">
+                    <i class="fas fa-hospital-user"></i> Cadastrar como Instituição
+                </a>
             </div>
         </div>
     </div>

@@ -24,3 +24,7 @@ def cadastro_doador():
 @bp_autenticacao.route('/cadastro/instituicao', methods=['GET', 'POST'])
 def cadastro_instituicao():
     return render_template('autenticacao/cadastro_instituicao.html')
+
+@bp_autenticacao.route('/')
+def redirecionar_para_login():
+    return redirect(url_for('autenticacao.login'))

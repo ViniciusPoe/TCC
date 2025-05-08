@@ -1,1 +1,1 @@
-web: gunicorn executar:app
+web: gunicorn executar.py

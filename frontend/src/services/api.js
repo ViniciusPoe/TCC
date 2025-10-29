@@ -4,7 +4,7 @@
 
 import { authManager } from "../utils/authManager";
 
-const API_BASE_URL = "http://localhost:5000";
+const API_BASE_URL = "https://tcc-34y4.onrender.com";
 
 // =======================================
 // 🔧 HEADERS DE AUTENTICAÇÃO

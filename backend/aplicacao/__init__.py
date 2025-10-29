@@ -28,7 +28,7 @@ def criar_app(testing=False):
     # CORS para o frontend React
     CORS(app, resources={r"/*": {"origins": [
         "http://localhost:3000",                # para desenvolvimento
-        "https://tcc-frontend.onrender.com"     # domínio do Render (frontend)
+        "https://tcc-front-urbm.onrender.com"     # domínio do Render (frontend)
     ]}}, supports_credentials=True)
 
 

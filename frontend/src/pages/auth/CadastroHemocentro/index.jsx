@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./styles.css";
+const API_BASE_URL = process.env.REACT_APP_API_URL || "https://tcc-34y4.onrender.com";
 
 const CadastroHemocentro = () => {
   const [formData, setFormData] = useState({
@@ -105,14 +106,11 @@ const CadastroHemocentro = () => {
         senha: formData.senha,
       };
 
-      const response = await fetch(
-        "http://localhost:5000/api/cadastro/hemocentro",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(dadosParaEnviar),
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}/api/cadastro/hemocentro`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dadosParaEnviar),
+      });
 
       const data = await response.json();
 
@@ -221,21 +219,13 @@ const CadastroHemocentro = () => {
                   required
                 >
                   <option value="">Selecione</option>
-                  {[
-                    "SP",
-                    "RJ",
-                    "MG",
-                    "PR",
-                    "RS",
-                    "BA",
-                    "PE",
-                    "CE",
-                    "DF",
-                  ].map((uf) => (
-                    <option key={uf} value={uf}>
-                      {uf}
-                    </option>
-                  ))}
+                  {["SP", "RJ", "MG", "PR", "RS", "BA", "PE", "CE", "DF"].map(
+                    (uf) => (
+                      <option key={uf} value={uf}>
+                        {uf}
+                      </option>
+                    )
+                  )}
                 </select>
               </div>
             </div>

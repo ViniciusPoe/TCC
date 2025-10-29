@@ -4,7 +4,8 @@
 
 import { authManager } from "../utils/authManager";
 
-const API_BASE_URL = "https://tcc-34y4.onrender.com";
+const API_BASE_URL = process.env.REACT_APP_API_URL || "https://tcc-34y4.onrender.com";
+console.log("🔧 API BASE URL:", process.env.REACT_APP_API_URL);
 
 // =======================================
 // 🔧 HEADERS DE AUTENTICAÇÃO

@@ -1,0 +1,12 @@
+.perfil-hemocentro .avatar-xl {
+  width: 100px;
+  height: 100px;
+}
+
+.perfil-hemocentro .card {
+  border-radius: 15px;
+}
+
+.perfil-hemocentro .btn-warning {
+  font-weight: 500;
+}

@@ -1,0 +1,216 @@
+/* ===============================
+   AGENDAMENTOS - HEMOCENTRO
+   =============================== */
+
+.agendamentos-hemocentro {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f7fc;
+  min-height: 100vh;
+}
+
+/* HEADER */
+h1.display-5 {
+  color: #0d6efd;
+  font-weight: 700;
+}
+
+/* ===============================
+   ESTATÍSTICAS
+   =============================== */
+.card {
+  border-radius: 16px;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(13, 110, 253, 0.1);
+}
+
+.card-body.text-center i {
+  background: rgba(13, 110, 253, 0.08);
+  padding: 12px;
+  border-radius: 50%;
+}
+
+/* ===============================
+   FILTROS
+   =============================== */
+.btn-group .btn {
+  border-radius: 10px;
+  font-weight: 500;
+  transition: all 0.25s ease;
+}
+
+.btn-group .btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn-primary {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.btn-outline-primary:hover {
+  background-color: #e7f1ff;
+  color: #0d6efd;
+}
+
+/* ===============================
+   TABELA
+   =============================== */
+.table-responsive {
+  border-radius: 10px;
+  background-color: #fff;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.table thead {
+  background-color: #f1f5ff;
+}
+
+.table th {
+  font-weight: 600;
+  color: #495057;
+  border: none;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.table td {
+  vertical-align: middle;
+  padding: 0.85rem;
+  border-bottom: 1px solid #f0f2f5;
+}
+
+.table tbody tr:hover {
+  background-color: #f8fbff;
+  transition: all 0.3s ease;
+}
+
+/* ===============================
+   BADGES
+   =============================== */
+.badge {
+  font-size: 0.75rem;
+  border-radius: 6px;
+  font-weight: 500;
+  padding: 0.4rem 0.7rem;
+}
+
+.badge.bg-success {
+  background-color: #d1f7dc !important;
+  color: #198754 !important;
+}
+
+.badge.bg-warning {
+  background-color: #fff3cd !important;
+  color: #856404 !important;
+}
+
+.badge.bg-info {
+  background-color: #d1ecf1 !important;
+  color: #0c5460 !important;
+}
+
+/* ===============================
+   BOTÕES DE AÇÃO
+   =============================== */
+.btn-group .btn {
+  border-radius: 8px;
+}
+
+.btn-sm i {
+  font-size: 0.9rem;
+}
+
+/* ===============================
+   MODAIS
+   =============================== */
+.modal-content {
+  border-radius: 15px;
+  border: none;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-header {
+  border-radius: 15px 15px 0 0;
+}
+
+.modal-body {
+  background-color: #f9fbff;
+}
+
+.modal-footer .btn {
+  border-radius: 8px;
+}
+
+/* ===============================
+   DETALHES
+   =============================== */
+.detail-section {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.info-item {
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-item strong {
+  color: #495057;
+}
+
+/* ===============================
+   ESTADO VAZIO
+   =============================== */
+.text-center.py-5 {
+  background: linear-gradient(135deg, #ffffff 0%, #f3f7ff 100%);
+  border-radius: 15px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  margin: 2rem 0;
+}
+
+/* ===============================
+   ANIMAÇÕES
+   =============================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===============================
+   RESPONSIVIDADE
+   =============================== */
+@media (max-width: 768px) {
+  .table-responsive {
+    font-size: 0.85rem;
+  }
+
+  .btn-group {
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .card-header .d-flex {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+}

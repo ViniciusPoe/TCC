@@ -1,0 +1,78 @@
+/* Container principal */
+.container-historico {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 30px;
+}
+
+/* Cabeçalhos */
+.container-historico h1 {
+  color: #d32f2f;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Estatísticas */
+.card .progress {
+  height: 6px;
+  border-radius: 5px;
+  background-color: #f1f1f1;
+}
+
+.card .progress-bar {
+  transition: width 0.5s ease;
+}
+
+/* Tabela */
+.table {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.table thead {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.table th {
+  font-weight: 600;
+  color: #555;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #fff5f5;
+}
+
+/* Badge customizada para status Bronze */
+.badge.bg-brown {
+  background-color: #8b4513 !important;
+  color: #fff !important;
+}
+
+/* Botão de ação */
+.btn-danger {
+  background-color: #d32f2f;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-danger:hover {
+  background-color: #c62828;
+  transform: translateY(-2px);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .container-historico {
+    padding: 15px;
+  }
+
+  .table th, .table td {
+    font-size: 0.9rem;
+  }
+}

@@ -25,10 +25,8 @@ class Config:
     DB_HOST = os.getenv("DB_HOST", "localhost")
     DB_NAME = os.getenv("DB_NAME", "doacao_sangue")
 
-    SQLALCHEMY_DATABASE_URI = (
-        f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
-        if DB_USER and DB_NAME
-        else "sqlite:///banco_teste.db"
+    SQLALCHEMY_DATABASE_URI = os.getenv("SQLALCHEMY_DATABASE_URI") or (
+    f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
     )
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False

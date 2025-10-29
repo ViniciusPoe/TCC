@@ -26,8 +26,8 @@ class Config:
     DB_NAME = os.getenv("DB_NAME", "doacao_sangue")
 
     SQLALCHEMY_DATABASE_URI = os.getenv("SQLALCHEMY_DATABASE_URI") or (
-    f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
-    )
+    f"postgresql+psycopg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
+)
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 

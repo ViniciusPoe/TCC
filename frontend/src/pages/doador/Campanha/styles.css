@@ -1,0 +1,111 @@
+/* ==============================
+   CAMPANHAS DOADOR - ESTILO GERAL
+   ============================== */
+
+body {
+  background-color: #f8f9fa;
+}
+
+/* Card principal da campanha */
+.campanha-card {
+  border-radius: 15px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  background-color: #fff;
+}
+
+.campanha-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(211, 47, 47, 0.15);
+}
+
+/* Título e texto */
+.campanha-card .card-title {
+  font-weight: 700;
+  color: #d32f2f;
+}
+
+.campanha-card .card-text {
+  color: #555;
+  margin-bottom: 1rem;
+  min-height: 70px;
+}
+
+/* Badge de status */
+.badge {
+  font-size: 0.85rem;
+  padding: 0.45em 0.75em;
+  border-radius: 8px;
+  text-transform: capitalize;
+}
+
+/* Ícones e botões */
+.campanha-card .btn {
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+}
+
+.campanha-card .btn-danger {
+  background-color: #d32f2f;
+  border: none;
+}
+
+.campanha-card .btn-danger:hover {
+  background-color: #c2185b;
+}
+
+.campanha-card .btn-outline-danger:hover {
+  background-color: #f8d7da;
+  color: #b71c1c;
+}
+
+/* Estatísticas */
+.stat-item {
+  padding: 20px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+}
+
+.stat-item h3 {
+  font-weight: 700;
+}
+
+.stat-item p {
+  color: #777;
+  font-size: 0.9rem;
+}
+
+/* Seção de nenhuma campanha */
+.text-center i.fa-bullhorn {
+  opacity: 0.5;
+}
+
+/* Animação de entrada */
+.campanha-card {
+  animation: fadeInUp 0.6s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .campanha-card .btn {
+    font-size: 0.9rem;
+    padding: 8px 10px;
+  }
+
+  .stat-item {
+    margin-bottom: 20px;
+  }
+}

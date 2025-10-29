@@ -1,0 +1,195 @@
+/* ===============================
+   REGISTRO DE DOAÇÕES - HEMOCENTRO
+   =============================== */
+
+.registro-doacoes {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f7fc;
+  min-height: 100vh;
+  color: #333;
+}
+
+/* ===== HEADER ===== */
+h1.display-5 {
+  color: #0d6efd;
+  font-weight: 700;
+}
+
+.lead.text-muted {
+  color: #6c757d;
+}
+
+/* ===== CARDS ===== */
+.card {
+  border-radius: 16px;
+  border: none;
+  background: #fff;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(13, 110, 253, 0.1);
+}
+
+.card-header {
+  background: #fff;
+  border-bottom: 1px solid #e9ecef;
+  border-radius: 16px 16px 0 0;
+}
+
+/* ===== FORMULÁRIO ===== */
+.form-label {
+  font-weight: 600;
+  color: #0d6efd;
+  margin-bottom: 0.4rem;
+}
+
+.form-control,
+.form-select {
+  border-radius: 10px;
+  border: 2px solid #e0e6ef;
+  transition: all 0.25s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+.form-control[readonly] {
+  background-color: #f8f9fa;
+  border-color: #e9ecef;
+}
+
+/* ===== BOTÕES ===== */
+.btn {
+  border-radius: 10px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn-outline-secondary:hover {
+  background: #f8f9fa;
+  color: #0d6efd;
+}
+
+/* ===== TABELA ===== */
+.table-responsive {
+  border-radius: 12px;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.table thead {
+  background-color: #f1f5ff;
+}
+
+.table th {
+  font-weight: 600;
+  color: #495057;
+  border: none;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.table td {
+  vertical-align: middle;
+  padding: 0.9rem;
+  border-bottom: 1px solid #f0f2f5;
+}
+
+.table tbody tr:hover {
+  background-color: #f8fbff;
+  transition: all 0.25s ease;
+}
+
+/* ===== BADGES ===== */
+.badge {
+  font-size: 0.75rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.badge.bg-success {
+  background-color: #d1f7dc !important;
+  color: #198754 !important;
+}
+
+.badge.bg-primary {
+  background-color: #d1e7ff !important;
+  color: #0d6efd !important;
+}
+
+/* ===== ESTADO VAZIO ===== */
+.text-center.py-5 {
+  background: linear-gradient(135deg, #ffffff 0%, #f3f7ff 100%);
+  border-radius: 15px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  margin: 2rem 0;
+}
+
+/* ===== INDICADORES MÉDICOS ===== */
+.text-success {
+  color: #198754 !important;
+}
+
+.text-danger {
+  color: #dc3545 !important;
+}
+
+/* ===== FORMULÁRIO CLÍNICO ===== */
+.medical-form .form-control {
+  border-left: 4px solid #0d6efd;
+}
+
+.medical-form .form-control:focus {
+  border-left-color: #0d6efd;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+  .table-responsive {
+    font-size: 0.85rem;
+  }
+
+  .btn-group {
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .card-header .d-flex {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .form-label {
+    font-size: 0.9rem;
+  }
+}
+
+/* ===== ANIMAÇÕES ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card,
+.table,
+.form-control {
+  animation: fadeIn 0.4s ease;
+}

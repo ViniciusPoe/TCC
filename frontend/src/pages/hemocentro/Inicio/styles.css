@@ -1,0 +1,193 @@
+/* ===============================
+   HOME HEMOCENTRO - ESTILO GERAL
+   =============================== */
+
+.home-hemocentro {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f8fc;
+  min-height: 100vh;
+  color: #333;
+}
+
+/* ======= HEADER BEM-VINDO ======= */
+.welcome-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f3f7ff 100%);
+  border-radius: 18px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
+}
+
+.welcome-card .display-6 {
+  color: #0d6efd;
+  font-weight: 700;
+}
+
+.welcome-card .badge {
+  font-size: 0.85rem;
+  padding: 0.5em 0.75em;
+  border-radius: 8px;
+}
+.avatar-lg-doador {
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, #0d6efd 0%, #39baf0 100%); /* 🔵 Azul gradiente */
+  color: #d32f2f; /* 🔴 Vermelho para o ícone */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 15px rgba(13, 110, 253, 0.3);
+}
+/* ======= CARDS DE ESTATÍSTICAS ======= */
+.stat-card {
+  border-radius: 15px;
+  background: #fff;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(13, 110, 253, 0.15);
+}
+
+.stat-card h4 {
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.stat-icon {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(13, 110, 253, 0.1);
+  color: #0d6efd;
+}
+
+/* ======= CAMPANHAS ======= */
+.campanha-card {
+  border-radius: 12px;
+  background: #fff;
+  transition: all 0.3s ease;
+}
+
+.campanha-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.campanha-info {
+  background: #f0f5ff;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.campanha-card .btn {
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.campanha-card .btn-outline-primary:hover {
+  background-color: #e7f1ff;
+  color: #0d6efd;
+}
+
+/* ======= AGENDAMENTOS ======= */
+.agendamento-item {
+  background: #fff;
+  border-radius: 10px;
+  padding: 10px;
+  transition: all 0.3s ease;
+}
+
+.agendamento-item:hover {
+  background-color: #f9fbff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* ======= DOADORES ======= */
+.doador-item {
+  background: #fff;
+  border-radius: 10px;
+  padding: 10px;
+  transition: all 0.3s ease;
+}
+
+.doador-item:hover {
+  background-color: #fff9f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* ======= BOTÕES ======= */
+.btn {
+  border-radius: 10px;
+  font-weight: 500;
+  transition: all 0.25s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn-outline-primary:hover {
+  background-color: #e7f1ff;
+  color: #0d6efd;
+}
+
+/* ======= FORMULÁRIO DE CAMPANHA ======= */
+.campanha-form {
+  background: #f8faff;
+  border-radius: 12px;
+  padding: 20px;
+  animation: fadeIn 0.4s ease;
+  border: 1px solid #dee2e6;
+}
+
+.campanha-form label {
+  font-weight: 500;
+  color: #0d6efd;
+}
+
+.campanha-form input,
+.campanha-form textarea,
+.campanha-form select {
+  border-radius: 8px;
+}
+
+/* ======= ANIMAÇÕES ======= */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ======= RESPONSIVIDADE ======= */
+@media (max-width: 768px) {
+  .welcome-card .display-6 {
+    font-size: 1.6rem;
+  }
+
+  .avatar-lg {
+    width: 80px;
+    height: 80px;
+  }
+
+  .stat-card {
+    margin-bottom: 1rem;
+  }
+
+  .campanha-card {
+    margin-bottom: 1rem;
+  }
+}

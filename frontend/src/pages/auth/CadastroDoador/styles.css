@@ -1,0 +1,143 @@
+/* ================================
+   PÁGINA DE CADASTRO DE DOADOR
+   ================================ */
+
+.cadastro-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 20px;
+}
+
+.cadastro-card {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 700px;
+}
+
+/* ================================
+   TÍTULOS
+   ================================ */
+.cadastro-card h2 {
+  font-weight: 700;
+  color: #dc3545 !important; /* vermelho */
+}
+
+.cadastro-card h5 {
+  margin-top: 15px;
+  font-weight: 600;
+  color: #dc3545 !important; /* vermelho */
+}
+
+/* ================================
+   CAMPOS DE FORMULÁRIO
+   ================================ */
+.cadastro-card input,
+.cadastro-card select,
+.cadastro-card textarea {
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ced4da;
+  width: 100%;
+  color: #212529; /* texto preto */
+}
+
+/* Efeito de foco em vermelho */
+.cadastro-card input:focus,
+.cadastro-card select:focus,
+.cadastro-card textarea:focus {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+  outline: none;
+}
+
+/* Placeholder preto */
+.cadastro-card ::placeholder {
+  color: #212529 !important;
+  opacity: 0.8;
+}
+
+/* ================================
+   TEXTOS E LINKS
+   ================================ */
+.cadastro-card label,
+.cadastro-card small,
+.cadastro-card p,
+.cadastro-card .form-label {
+  color: #212529 !important; /* texto preto */
+}
+
+.cadastro-card a {
+  color: #212529 !important;
+  text-decoration: none;
+}
+
+.cadastro-card a:hover {
+  text-decoration: underline;
+  color: #000 !important;
+}
+
+/* ================================
+   BOTÕES
+   ================================ */
+.btn-danger {
+  background-color: #dc3545 !important;
+  border: none !important;
+  color: #fff;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-danger:hover {
+  background-color: #bb2d3b !important;
+  transform: translateY(-1px);
+}
+
+/* ================================
+   CHECKBOX DE TERMOS
+   ================================ */
+.cadastro-card .form-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.cadastro-card .form-check-input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  flex-shrink: 0;
+  accent-color: #dc3545; /* deixa o check vermelho */
+}
+
+.cadastro-card .form-check-label {
+  font-size: 0.95rem;
+  color: #212529;
+  line-height: 1.4;
+  margin: 0;
+  user-select: none;
+}
+
+/* ================================
+   RESPONSIVIDADE
+   ================================ */
+@media (max-width: 576px) {
+  .cadastro-card {
+    padding: 20px;
+  }
+
+  .cadastro-card h2 {
+    font-size: 1.5rem;
+  }
+
+  .cadastro-card h5 {
+    font-size: 1.1rem;
+  }
+}

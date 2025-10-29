@@ -1,0 +1,169 @@
+/* Container principal */
+.doador-login {
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 40px 20px;
+}
+
+/* Card de login - MAIS LARGO */
+.doador-login-card {
+  background: white;
+  border-radius: 20px;
+  padding: 50px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* Título maior */
+.doador-title {
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 12px;
+  font-size: 2.2rem;
+}
+
+/* Subtítulo */
+.doador-login-card .text-muted {
+  font-size: 1.1rem;
+  margin-bottom: 35px;
+}
+
+/* Input fields maiores */
+.doador-login-card .form-control {
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  padding: 16px 20px;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  height: 56px;
+  margin-bottom: 20px;
+}
+
+.doador-login-card .form-label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 12px;
+  font-size: 1.1rem;
+}
+
+/* Checkbox maior */
+.doador-login-card .form-check-input {
+  width: 20px;
+  height: 20px;
+  margin-top: 0.3rem;
+  margin-right: 10px;
+}
+
+.doador-login-card .form-check-label {
+  color: #6c757d;
+  font-size: 1rem;
+}
+
+/* Layout dos elementos de lembrar senha */
+.doador-login-card .d-flex {
+  margin: 25px 0;
+}
+
+/* Link de esqueci senha */
+.doador-login-card a.text-danger {
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+/* Botão de login maior */
+.doador-login-card .btn-danger {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  border: none;
+  border-radius: 12px;
+  padding: 18px;
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin: 20px 0;
+  height: 60px;
+}
+
+/* Alert de erro */
+.doador-login-card .alert {
+  border-radius: 12px;
+  padding: 16px 20px;
+  font-size: 1rem;
+  margin: 20px 0;
+}
+
+/* Links de cadastro */
+.doador-login-card .text-center p {
+  color: #6c757d;
+  font-size: 1.1rem;
+  margin: 25px 0 15px 0;
+}
+
+.doador-login-card .text-center a {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* Ícone maior */
+.fa-heartbeat {
+  font-size: 4rem !important;
+  margin-bottom: 20px;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 576px) {
+  .doador-login {
+    padding: 20px 15px;
+  }
+  
+  .doador-login-card {
+    padding: 35px 25px;
+    border-radius: 16px;
+  }
+  
+  .doador-title {
+    font-size: 1.8rem;
+  }
+  
+  .doador-login-card .text-muted {
+    font-size: 1rem;
+  }
+  
+  .doador-login-card .form-control {
+    padding: 14px 18px;
+    height: 52px;
+    font-size: 1rem;
+  }
+  
+  .doador-login-card .btn-danger {
+    padding: 16px;
+    font-size: 1.1rem;
+    height: 56px;
+  }
+  
+  .fa-heartbeat {
+    font-size: 3.5rem !important;
+  }
+}
+
+/* Para telas muito pequenas */
+@media (max-width: 400px) {
+  .doador-login-card {
+    padding: 30px 20px;
+  }
+  
+  .doador-title {
+    font-size: 1.6rem;
+  }
+  
+  .doador-login-card .d-flex {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+}

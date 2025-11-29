@@ -6,17 +6,11 @@ import "./styles.css";
 const NavigationDoador = () => {
   const modalRef = useRef(null);
 
-  // 🔧 Inicializa o modal quando o componente monta
   useEffect(() => {
-    // Importa o Bootstrap dinamicamente
     const initBootstrap = async () => {
       if (typeof window !== 'undefined') {
-        // Verifica se o Bootstrap já está disponível
         if (!window.bootstrap) {
-          // Tenta carregar o Bootstrap se não estiver disponível
           try {
-            // Esta linha pode variar dependendo de como você importa o Bootstrap
-            // Se você já tem Bootstrap via CDN, isso não é necessário
             console.log("🔧 Bootstrap carregado");
           } catch (error) {
             console.warn("⚠️ Bootstrap não pôde ser carregado:", error);
@@ -28,7 +22,6 @@ const NavigationDoador = () => {
     initBootstrap();
   }, []);
 
-  // 🔐 Função para alterar senha
   const handleAlterarSenha = async () => {
     const senhaAtual = document.getElementById("senhaAtual").value;
     const novaSenha = document.getElementById("novaSenha").value;
@@ -52,25 +45,21 @@ const NavigationDoador = () => {
 
       if (response.success) {
         alert("✅ Senha alterada com sucesso!");
-        
-        // ✅ CORREÇÃO: Fecha o modal de forma 100% segura
+
         const modalElement = document.getElementById("modalAlterarSenha");
         if (modalElement) {
-          // Método 1: Tenta com Bootstrap se disponível
           if (window.bootstrap) {
             const modal = window.bootstrap.Modal.getInstance(modalElement);
             if (modal) {
               modal.hide();
             }
           } 
-          // Método 2: Remove as classes do modal manualmente (fallback)
           else {
             modalElement.classList.remove('show');
             modalElement.style.display = 'none';
             modalElement.setAttribute('aria-hidden', 'true');
             document.body.classList.remove('modal-open');
             
-            // Remove o backdrop
             const backdrop = document.querySelector('.modal-backdrop');
             if (backdrop) {
               backdrop.remove();
@@ -78,7 +67,6 @@ const NavigationDoador = () => {
           }
         }
 
-        // Limpa campos
         document.getElementById("senhaAtual").value = "";
         document.getElementById("novaSenha").value = "";
         document.getElementById("confirmarSenha").value = "";
@@ -95,7 +83,6 @@ const NavigationDoador = () => {
     <>
       <nav className="navbar navbar-expand-lg navbar-dark navigation-doador">
         <div className="container">
-          {/* Marca */}
           <Link
             className="navbar-brand d-flex align-items-center"
             to="/doador/inicio"
@@ -103,8 +90,6 @@ const NavigationDoador = () => {
             <i className="fas fa-heartbeat me-2"></i>
             <span className="fw-bold">BloodSystem</span>
           </Link>
-
-          {/* Botão responsivo */}
           <button
             className="navbar-toggler"
             type="button"
@@ -113,8 +98,6 @@ const NavigationDoador = () => {
           >
             <span className="navbar-toggler-icon"></span>
           </button>
-
-          {/* Menu principal */}
           <div className="collapse navbar-collapse" id="navbarDoador">
             <ul className="navbar-nav ms-auto">
               <li className="nav-item mx-1">
@@ -140,8 +123,6 @@ const NavigationDoador = () => {
                   <i className="fas fa-newspaper me-2"></i> Campanhas
                 </Link>
               </li>
-
-              {/* Dropdown Perfil */}
               <li className="nav-item dropdown mx-1">
                 <a
                   className="nav-link dropdown-toggle d-flex align-items-center py-3"
@@ -190,8 +171,6 @@ const NavigationDoador = () => {
           </div>
         </div>
       </nav>
-
-      {/* Modal Alterar Senha */}
       <div
         className="modal fade"
         id="modalAlterarSenha"

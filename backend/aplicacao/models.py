@@ -31,14 +31,10 @@ class Doador(db.Model):
     senha_hash = db.Column(db.String(255), nullable=False)
     data_cadastro = db.Column(db.DateTime, default=datetime.utcnow)
 
-    # 🩸 Campos de doação
-    ultima_doacao_tipo = db.Column(db.String(20), nullable=False)  # ← ADICIONE ESTE CAMPO
+    ultima_doacao_tipo = db.Column(db.String(20), nullable=False)
     ultima_doacao = db.Column(db.Date, nullable=True)
     proxima_doacao = db.Column(db.Date, nullable=True)
-    
-    # ==========================
-    # 🔐 Métodos de autenticação
-    # ==========================
+
     def set_senha(self, senha_plana: str):
         """Gera o hash seguro da senha."""
         self.senha_hash = bcrypt.generate_password_hash(senha_plana).decode("utf-8")
@@ -63,21 +59,16 @@ class Hemocentro(db.Model):
     estado = db.Column(db.String(2), nullable=False)
     cep = db.Column(db.String(10), nullable=False)
 
-    # 🕒 Horário de funcionamento dividido
-    horario_inicio = db.Column(db.String(5), nullable=False)  # Ex: "08:00"
-    horario_fim = db.Column(db.String(5), nullable=False)      # Ex: "16:00"
+    horario_inicio = db.Column(db.String(5), nullable=False)
+    horario_fim = db.Column(db.String(5), nullable=False) 
 
     email = db.Column(db.String(120), unique=True, nullable=False)
     telefone = db.Column(db.String(20), nullable=False)
 
     senha_hash = db.Column(db.String(255), nullable=False)
 
-    # 🗓️ Registro de criação
     data_cadastro = db.Column(db.DateTime, default=datetime.utcnow)
-
-    # ==========================
-    # 🔐 Métodos de autenticação
-    # ==========================
+    
     def set_senha(self, senha_plana: str):
         self.senha_hash = bcrypt.generate_password_hash(senha_plana).decode("utf-8")
 
@@ -90,7 +81,7 @@ class Agendamento(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     data = db.Column(db.Date, nullable=False)
-    horario = db.Column(db.String(8))  # "HH:MM"
+    horario = db.Column(db.String(8))
     status = db.Column(db.String(20), default='agendado')
     tipo_doacao = db.Column(db.String(20), default='sangue_total')
     doador_id = db.Column(db.Integer, db.ForeignKey('doadores.id'), nullable=False)
@@ -98,7 +89,6 @@ class Agendamento(db.Model):
     data_criacao = db.Column(db.DateTime, default=datetime.utcnow)
     data_cancelamento = db.Column(db.DateTime, nullable=True)
 
-    # 🩸 Relacionamentos
     doador = db.relationship("Doador", backref="agendamentos", lazy=True)
     hemocentro = db.relationship("Hemocentro", backref="agendamentos", lazy=True)
 
@@ -145,7 +135,7 @@ class Campanha(db.Model):
     local = db.Column(db.String(200), nullable=False)
     data_inicio = db.Column(db.Date, nullable=False)
     data_fim = db.Column(db.Date, nullable=False)
-    status = db.Column(db.String(20), default='ativa')  # ativa, urgente, concluida
+    status = db.Column(db.String(20), default='ativa')
     participantes = db.Column(db.Integer, default=0)
     data_criacao = db.Column(db.DateTime, default=datetime.utcnow)
     hemocentro_id = db.Column(db.Integer, db.ForeignKey('hemocentros.id'), nullable=False)

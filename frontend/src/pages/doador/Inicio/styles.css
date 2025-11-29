@@ -23,8 +23,8 @@
 .avatar-lg {
   width: 100px;
   height: 100px;
-  background: linear-gradient(135deg, #ffebee 0%, #ef5350 100%); /* 🔴 Vermelho gradiente */
-  color: #1565c0; /* 🔵 Azul escuro para o ícone */
+  background: linear-gradient(135deg, #ffebee 0%, #ef5350 100%);
+  color: #1565c0;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -69,7 +69,6 @@
   padding-bottom: 0 !important;
 }
 
-/* Animações suaves */
 .card {
   transition: all 0.3s ease;
 }
@@ -82,7 +81,6 @@
   transform: translateY(-1px);
 }
 
-/* Responsividade */
 @media (max-width: 768px) {
   .welcome-card .display-6 {
     font-size: 1.8rem;
@@ -97,7 +95,6 @@
   }
 }
 
-/* Estados de loading */
 .skeleton {
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;

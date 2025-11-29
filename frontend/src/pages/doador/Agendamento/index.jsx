@@ -23,49 +23,97 @@ const Agendamento = () => {
 
   const navigate = useNavigate();
 
-  // Função para calcular dias entre duas datas
   const calcularDiasEntreDatas = (data1, data2) => {
-    const umDia = 24 * 60 * 60 * 1000; // horas * minutos * segundos * milissegundos
-    return Math.round(Math.abs((data1 - data2) / umDia));
+    const d1 = new Date(data1.getFullYear(), data1.getMonth(), data1.getDate());
+    const d2 = new Date(data2.getFullYear(), data2.getMonth(), data2.getDate());
+
+    const umDia = 24 * 60 * 60 * 1000;
+    const diffMs = d1 - d2;
+
+    return Math.floor(Math.abs(diffMs / umDia));
   };
 
-  // Função para verificar se o doador está inapto
+  const parseData = (dataStr) => {
+    if (!dataStr) return null;
+
+    if (dataStr instanceof Date) return dataStr;
+
+    if (typeof dataStr === "string") {
+      if (dataStr.includes("/")) {
+        const [dia, mes, ano] = dataStr.split("/");
+        return new Date(ano, mes - 1, dia);
+      }
+
+      return new Date(dataStr);
+    }
+
+    return null;
+  };
+
   const verificarInaptidao = (ultimaDoacaoData) => {
-    if (!ultimaDoacaoData) return false;
+    if (!ultimaDoacaoData) {
+      return { inapto: false, diasRestantes: 0 };
+    }
 
     const hoje = new Date();
-    const dataUltimaDoacao = new Date(ultimaDoacaoData);
-
-    const diasDesdeUltimaDoacao = calcularDiasEntreDatas(
-      hoje,
-      dataUltimaDoacao
+    const hojeSemHora = new Date(
+      hoje.getFullYear(),
+      hoje.getMonth(),
+      hoje.getDate()
     );
-    const diasNecessarios = 60; // Período de espera recomendado pela OMS
 
-    return diasDesdeUltimaDoacao < diasNecessarios;
+    const dataUltimaDoacao = parseData(ultimaDoacaoData);
+
+    if (!dataUltimaDoacao || isNaN(dataUltimaDoacao.getTime())) {
+      console.warn("⚠️ Data de última doação inválida:", ultimaDoacaoData);
+      return { inapto: false, diasRestantes: 0 };
+    }
+
+    const ultimaSemHora = new Date(
+      dataUltimaDoacao.getFullYear(),
+      dataUltimaDoacao.getMonth(),
+      dataUltimaDoacao.getDate()
+    );
+
+    const umDia = 24 * 60 * 60 * 1000;
+
+    const proximaDoacao = new Date(ultimaSemHora);
+    proximaDoacao.setDate(proximaDoacao.getDate() + 90);
+
+    const diffMs = proximaDoacao - hojeSemHora;
+    const diasRestantes = Math.ceil(diffMs / umDia);
+
+    if (diasRestantes > 0) {
+      return { inapto: true, diasRestantes };
+    }
+
+    return { inapto: false, diasRestantes: 0 };
   };
 
-  // Função para formatar data em português
   const formatarDataExtenso = (data) => {
-    return new Date(data).toLocaleDateString("pt-BR", {
+    const dataObj = parseData(data);
+
+    if (!dataObj || isNaN(dataObj.getTime())) {
+      console.warn("⚠️ Data inválida em formatarDataExtenso:", data);
+      return "Data inválida";
+    }
+
+    return dataObj.toLocaleDateString("pt-BR", {
       weekday: "long",
       year: "numeric",
       month: "long",
       day: "numeric",
     });
   };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // ✅ Verificar autenticação primeiro
         if (!api.isAuthenticated()) {
           console.log("❌ Usuário não autenticado, redirecionando...");
           navigate("/login/doador");
           return;
         }
 
-        // ✅ Buscar dados do usuário atual
         const currentUser = api.getCurrentUser();
         console.log("🔄 DEBUG - Usuário atual:", currentUser);
 
@@ -75,102 +123,56 @@ const Agendamento = () => {
           return;
         }
 
-        // ✅ Buscar histórico de doações
         try {
-          const historicoResponse = await api.getHistoricoDoacoes();
+          const historicoResponse = await api.getHistorico();
           console.log("📋 Histórico bruto recebido da API:", historicoResponse);
 
-          if (historicoResponse.success && historicoResponse.doacoes) {
-            console.log(
-              `📊 Total de registros recebidos: ${historicoResponse.doacoes.length}`
-            );
+          if (historicoResponse.success && historicoResponse.data?.doacoes) {
+            const doacoes = historicoResponse.data.doacoes;
 
-            // 🩸 Normaliza campos diferentes vindos do backend
-            const doacoesNormalizadas = historicoResponse.doacoes.map(
-              (d, i) => {
-                const normalizada = {
-                  id: d.id || d.doacao_id || null,
-                  data_doacao: d.data_doacao || d.data || d.dataDoacao || null,
-                  status:
-                    d.status ||
-                    d.situacao ||
-                    d.estado ||
-                    d.resultado ||
-                    "indefinido",
-                  tipo_doacao:
-                    d.tipo_doacao || d.tipo || d.forma || "sangue_total",
-                };
-                console.log(
-                  `#${i + 1} | ID=${normalizada.id} | Data=${
-                    normalizada.data_doacao
-                  } | Status=${normalizada.status} | Tipo=${
-                    normalizada.tipo_doacao
-                  }`
-                );
-                return normalizada;
-              }
-            );
+            console.log(`📊 Total de doações encontradas: ${doacoes.length}`);
 
-            // 🔎 Filtrar doações concluídas
-            const doacoesConcluidas = doacoesNormalizadas.filter((d) =>
-              ["concluido", "realizada", "realizado"].includes(
-                d.status.toLowerCase()
-              )
-            );
+            const doacoesOrdenadas = [...doacoes]
+              .filter((d) => d.data)
+              .sort((a, b) => parseData(b.data) - parseData(a.data));
 
-            console.log(
-              `🧾 Doações concluídas encontradas: ${doacoesConcluidas.length}`
-            );
-
-            if (doacoesConcluidas.length > 0) {
-              // Ordenar por data (mais recente primeiro)
-              doacoesConcluidas.sort(
-                (a, b) => new Date(b.data_doacao) - new Date(a.data_doacao)
-              );
-              const ultimaDoacao = doacoesConcluidas[0];
+            if (doacoesOrdenadas.length > 0) {
+              const ultimaDoacao = doacoesOrdenadas[0];
               console.log("🩸 Última doação considerada:", ultimaDoacao);
 
-              if (!ultimaDoacao.data_doacao) {
-                console.error(
-                  "🚨 ERRO: A última doação não possui campo 'data_doacao' válido!"
-                );
-              }
-
-              const estaInapto = verificarInaptidao(ultimaDoacao.data_doacao);
+              const { inapto: estaInapto, diasRestantes } = verificarInaptidao(
+                ultimaDoacao.data
+              );
 
               console.log(
                 `🔎 Resultado da verificação de inaptidão: ${
                   estaInapto ? "INAPTO" : "APTO"
-                }`
+                } (dias restantes: ${diasRestantes})`
               );
 
               if (estaInapto) {
-                const hoje = new Date();
-                const dataUltima = new Date(ultimaDoacao.data_doacao);
-                const diasPassados = calcularDiasEntreDatas(hoje, dataUltima);
-                const diasRestantes = 60 - diasPassados;
-
                 setInapto(true);
                 setDiasRestantes(diasRestantes);
-                setDataUltimaDoacao(ultimaDoacao.data_doacao);
+                setDataUltimaDoacao(ultimaDoacao.data);
                 setLoading(false);
 
                 console.warn(
                   `⏳ Doador marcado como INAPTO (${diasRestantes} dias restantes)`
                 );
-                return; // 🚨 PARA AQUI! Não carrega hemocentros nem agendamentos
+                return;
               }
             } else {
-              console.log("⚠️ Nenhuma doação concluída encontrada.");
+              console.log("⚠️ Nenhuma doação encontrada no histórico.");
             }
           } else {
-            console.log("⚠️ Nenhuma lista de doações encontrada na resposta.");
+            console.log(
+              "⚠️ Nenhuma lista de doações encontrada na resposta de histórico."
+            );
           }
         } catch (error) {
           console.log("ℹ️ Erro ao obter histórico:", error);
         }
 
-        // ✅ Se chegou aqui, o usuário está apto — buscar agendamentos
         const agendamentosResponse = await api.getAgendamentosDoador();
         console.log("📋 Agendamentos do usuário:", agendamentosResponse);
 
@@ -233,7 +235,6 @@ const Agendamento = () => {
           }
         }
 
-        // ✅ Se não há agendamento, buscar hemocentros
         const response = await api.getHemocentros();
         console.log("📋 Resposta da API de hemocentros:", response);
 
@@ -257,7 +258,6 @@ const Agendamento = () => {
     fetchData();
   }, [navigate]);
 
-  // Tela de doador inapto
   if (inapto && !loading) {
     return (
       <div>
@@ -316,7 +316,7 @@ const Agendamento = () => {
                         Por que esse período de espera?
                       </h6>
                       <p className="mb-3">
-                        O intervalo de 60 dias entre as doações de sangue é uma
+                        O intervalo de 90 dias entre as doações de sangue é uma
                         recomendação da
                         <strong> Organização Mundial da Saúde (OMS)</strong> e
                         da
@@ -343,68 +343,6 @@ const Agendamento = () => {
                           pacientes
                         </li>
                       </ul>
-                    </div>
-
-                    <div className="row mt-4">
-                      <div className="col-md-6">
-                        <div className="card border-success h-100">
-                          <div className="card-body text-center">
-                            <i className="fas fa-heart text-success fa-2x mb-3"></i>
-                            <h6 className="text-success">
-                              O Que Você Pode Fazer Agora?
-                            </h6>
-                            <ul className="list-unstyled text-start small">
-                              <li className="mb-2">
-                                <i className="fas fa-check text-success me-2"></i>
-                                Mantenha uma alimentação saudável
-                              </li>
-                              <li className="mb-2">
-                                <i className="fas fa-check text-success me-2"></i>
-                                Beba bastante água
-                              </li>
-                              <li className="mb-2">
-                                <i className="fas fa-check text-success me-2"></i>
-                                Descanse adequadamente
-                              </li>
-                              <li>
-                                <i className="fas fa-check text-success me-2"></i>
-                                Pratique exercícios físicos moderados
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-md-6">
-                        <div className="card border-primary h-100">
-                          <div className="card-body text-center">
-                            <i className="fas fa-bell text-primary fa-2x mb-3"></i>
-                            <h6 className="text-primary">
-                              Lembretes Automáticos
-                            </h6>
-                            <p className="small text-muted">
-                              Nós te avisaremos quando estiver próximo do fim do
-                              período de espera para que você possa agendar sua
-                              próxima doação.
-                            </p>
-                            <div className="alert alert-light border mt-3">
-                              <small>
-                                <i className="fas fa-calendar-alt me-1 text-primary"></i>
-                                <strong>Próxima doação possível:</strong>
-                                <br />
-                                {(() => {
-                                  const dataProxima = new Date(
-                                    dataUltimaDoacao
-                                  );
-                                  dataProxima.setDate(
-                                    dataProxima.getDate() + 60
-                                  );
-                                  return formatarDataExtenso(dataProxima);
-                                })()}
-                              </small>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
                     </div>
 
                     <div className="text-center mt-5">
@@ -434,11 +372,9 @@ const Agendamento = () => {
     );
   }
 
-  // Restante do código permanece igual...
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // ✅ Verificar autenticação
     if (!api.isAuthenticated()) {
       alert("Sessão expirada. Faça login novamente.");
       navigate("/login/doador");
@@ -451,13 +387,12 @@ const Agendamento = () => {
     }
 
     try {
-      // ✅ Não precisa mais passar doador_id - a API pega do token
       console.log("📤 Enviando agendamento:", formData);
 
-      const response = await api.fazerAgendamento(formData); // ✅ SEM doador_id
+      const response = await api.fazerAgendamento(formData);
       if (response.success) {
         alert("Agendamento realizado com sucesso!");
-        navigate("/doador/inicio"); // ✅ useNavigate
+        navigate("/doador/inicio");
       } else {
         alert("Erro ao agendar: " + response.message);
       }
@@ -480,7 +415,7 @@ const Agendamento = () => {
       const response = await api.cancelarAgendamento(agendamentoExistente.id);
       if (response.success) {
         alert("Agendamento cancelado com sucesso!");
-        window.location.reload(); // Pode manter reload para atualizar estado
+        window.location.reload();
       } else {
         alert("Erro ao cancelar agendamento: " + response.message);
       }
@@ -502,7 +437,6 @@ const Agendamento = () => {
     setLoadingReagendamento(true);
 
     try {
-      // Primeiro, cancelar o agendamento atual
       const cancelResponse = await api.cancelarAgendamento(
         agendamentoExistente.id
       );
@@ -510,7 +444,6 @@ const Agendamento = () => {
       if (cancelResponse.success) {
         console.log("✅ Agendamento anterior cancelado com sucesso");
 
-        // Buscar hemocentros disponíveis
         const hemocentrosResponse = await api.getHemocentros();
 
         if (
@@ -521,7 +454,6 @@ const Agendamento = () => {
             hemocentrosResponse.data || hemocentrosResponse.hemocentros || [];
           setHemocentros(lista);
 
-          // Preencher automaticamente com o mesmo hemocentro se disponível
           const hemocentroAnterior = lista.find(
             (h) => h.id === agendamentoExistente.hemocentro_id
           );
@@ -533,7 +465,6 @@ const Agendamento = () => {
             }));
           }
 
-          // Entrar no modo reagendamento
           setModoReagendamento(true);
           setAgendamentoExistente(null);
 
@@ -565,18 +496,16 @@ const Agendamento = () => {
   };
 
   const formatarData = (dataString) => {
-    try {
-      const [dia, mes, ano] = dataString.split("/");
-      const data = new Date(ano, mes - 1, dia);
-      return data.toLocaleDateString("pt-BR", {
-        weekday: "long",
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      });
-    } catch (error) {
-      return dataString;
-    }
+    const data = parseData(dataString);
+
+    if (!data || isNaN(data.getTime())) return dataString || "Data inválida";
+
+    return data.toLocaleDateString("pt-BR", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
   };
 
   const voltarParaDetalhes = () => {
@@ -584,7 +513,6 @@ const Agendamento = () => {
     window.location.reload();
   };
 
-  // ✅ Função para logout
   const handleLogout = async () => {
     try {
       await api.logout();
@@ -610,11 +538,11 @@ const Agendamento = () => {
     );
   }
 
-  // Se existe agendamento e NÃO está no modo reagendamento, mostrar tela de visualização
   if (agendamentoExistente && !modoReagendamento) {
     return (
       <div>
         <NavigationDoador />
+
         <div className="container-fluid px-4 py-5">
           <div className="container">
             <div className="row justify-content-center">
@@ -638,9 +566,7 @@ const Agendamento = () => {
                   </div>
 
                   <div className="card-body p-5">
-                    {/* BLOCO 1: Data + Local */}
                     <div className="row text-center">
-                      {/* Data do agendamento */}
                       <div className="col-md-6 mb-4">
                         <div className="info-card">
                           <i className="fas fa-calendar-day fa-2x text-danger mb-3"></i>
@@ -651,7 +577,6 @@ const Agendamento = () => {
                         </div>
                       </div>
 
-                      {/* Local e horário */}
                       <div className="col-md-6 mb-4">
                         <div className="info-card">
                           <i className="fas fa-map-marker-alt fa-2x text-danger mb-3"></i>
@@ -676,45 +601,6 @@ const Agendamento = () => {
                       </div>
                     </div>
 
-                    {/* BLOCO 2: Tipo de doação + Status */}
-                    <div className="row text-center">
-                      <div className="col-md-6 mb-4">
-                        <div className="info-card">
-                          <i className="fas fa-droplet fa-2x text-danger mb-3"></i>
-                          <h5>Tipo de Doação</h5>
-                          <p className="fw-bold text-capitalize">
-                            {agendamentoExistente.tipo_doacao?.replace(
-                              "_",
-                              " "
-                            ) || "Sangue total"}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="col-md-6 mb-4">
-                        <div className="info-card">
-                          <i className="fas fa-info-circle fa-2x text-danger mb-3"></i>
-                          <h5>Status</h5>
-                          <span
-                            className={`badge bg-${
-                              agendamentoExistente.status === "agendado"
-                                ? "success"
-                                : agendamentoExistente.status === "pendente"
-                                ? "warning"
-                                : "secondary"
-                            } fs-6`}
-                          >
-                            {agendamentoExistente.status === "agendado"
-                              ? "Confirmado"
-                              : agendamentoExistente.status === "pendente"
-                              ? "Pendente"
-                              : "Agendado"}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Avisos */}
                     <div className="alert alert-info mt-4">
                       <h6>
                         <i className="fas fa-info-circle me-2"></i>
@@ -730,7 +616,6 @@ const Agendamento = () => {
                       </ul>
                     </div>
 
-                    {/* Ações */}
                     <div className="d-flex justify-content-center gap-3 mt-5">
                       <button
                         className="btn btn-outline-danger btn-lg"
@@ -770,13 +655,13 @@ const Agendamento = () => {
               </div>
             </div>
           </div>
-          <Footer />
         </div>
+
+        <Footer />
       </div>
     );
   }
 
-  // Tela normal de agendamento (incluindo modo reagendamento)
   return (
     <div>
       <NavigationDoador />
@@ -833,7 +718,6 @@ const Agendamento = () => {
                   )}
 
                   <form onSubmit={handleSubmit}>
-                    {/* Seleção de Hemocentro */}
                     <div className="mb-4">
                       <h6 className="text-danger mb-3">
                         <i className="fas fa-map-marker-alt me-2"></i>Selecione
@@ -866,7 +750,6 @@ const Agendamento = () => {
                       )}
                     </div>
 
-                    {/* Data Centralizada */}
                     <div className="mb-4">
                       <h6 className="text-danger mb-3 text-center">
                         <i className="fas fa-calendar me-2"></i>
@@ -899,7 +782,6 @@ const Agendamento = () => {
                       </div>
                     </div>
 
-                    {/* Tipo de Doação - Apenas Sangue Total */}
                     <div className="mb-4">
                       <h6 className="text-danger mb-3 text-center">
                         <i className="fas fa-droplet me-2"></i>Tipo de Doação
@@ -932,7 +814,7 @@ const Agendamento = () => {
                                   450ml | Aproximadamente 60 minutos
                                 </small>
                                 <small className="d-block text-muted">
-                                  Doação completa de sangue
+                                  Doação de sangue
                                 </small>
                               </label>
                             </div>
@@ -941,7 +823,6 @@ const Agendamento = () => {
                       </div>
                     </div>
 
-                    {/* Termos e Condições */}
                     <div className="mb-4">
                       <div className="form-check mb-3">
                         <input
@@ -989,7 +870,6 @@ const Agendamento = () => {
                 </div>
               </div>
 
-              {/* Informações Adicionais */}
               <div className="card border-0 shadow-sm mt-4">
                 <div className="card-body">
                   <h5 className="text-danger mb-3">

@@ -5,7 +5,7 @@ import "./styles.css";
 
 const LoginHemocentro = () => {
   const [formData, setFormData] = useState({
-    cnpj: "", // ✅ Corrigido: campo certo pro login
+    cnpj: "",
     senha: "",
   });
   const [loading, setLoading] = useState(false);
@@ -55,7 +55,6 @@ const LoginHemocentro = () => {
         </div>
 
         <form onSubmit={handleSubmit} noValidate>
-          {/* CNPJ */}
           <div className="form-group mb-3">
             <label htmlFor="cnpj" className="form-label">
               CNPJ *
@@ -72,7 +71,6 @@ const LoginHemocentro = () => {
             />
           </div>
 
-          {/* Senha */}
           <div className="form-group mb-4">
             <label htmlFor="senha" className="form-label">
               Senha *
@@ -90,7 +88,6 @@ const LoginHemocentro = () => {
             />
           </div>
 
-          {/* Opções */}
           <div className="d-flex justify-content-between align-items-center mb-4">
             <div className="form-check">
               <input
@@ -108,7 +105,6 @@ const LoginHemocentro = () => {
             </a>
           </div>
 
-          {/* Botão */}
           <button
             type="submit"
             className="btn btn-primary w-100 py-2 mb-3"
@@ -131,7 +127,6 @@ const LoginHemocentro = () => {
             )}
           </button>
 
-          {/* Erro */}
           {error && (
             <div className="alert alert-danger" role="alert">
               <i className="fas fa-exclamation-triangle me-2"></i>
@@ -139,7 +134,6 @@ const LoginHemocentro = () => {
             </div>
           )}
 
-          {/* Links */}
           <div className="text-center mt-4">
             <p className="mb-2">
               Não possui cadastro?{" "}

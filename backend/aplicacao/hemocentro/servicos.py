@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from aplicacao.core.database import db
 from aplicacao.models import Hemocentro, Agendamento, Doador, Doacao, Campanha
 from aplicacao.utils.helpers import parse_data_iso, parse_horario, proxima_doacao_a_partir, is_apto_para_doar
@@ -8,7 +8,6 @@ def montar_perfil_hemocentro(hemocentro: Hemocentro):
     Retorna os dados completos do hemocentro, incluindo informações
     cadastrais e estatísticas de painel.
     """
-    # 🔢 Estatísticas (painel)
     total_agendamentos = Agendamento.query.filter_by(hemocentro_id=hemocentro.id).count()
     agendamentos_hoje = Agendamento.query.filter(
         Agendamento.hemocentro_id == hemocentro.id,
@@ -17,7 +16,6 @@ def montar_perfil_hemocentro(hemocentro: Hemocentro):
     doacoes_realizadas = Doacao.query.filter_by(hemocentro_id=hemocentro.id).count()
 
     return {
-        # 🏥 Dados cadastrais
         "id": hemocentro.id,
         "nome_instituicao": hemocentro.nome_instituicao,
         "cnpj": hemocentro.cnpj,
@@ -30,11 +28,9 @@ def montar_perfil_hemocentro(hemocentro: Hemocentro):
         "estado": hemocentro.estado,
         "cep": hemocentro.cep,
 
-        # 🕒 Novo formato de horário
         "horario_inicio": hemocentro.horario_inicio,
         "horario_fim": hemocentro.horario_fim,
 
-        # 📊 Dados de painel
         "total_agendamentos": total_agendamentos,
         "agendamentos_hoje": agendamentos_hoje,
         "doacoes_realizadas": doacoes_realizadas,
@@ -72,7 +68,7 @@ def reagendar_agendamento(hemocentro_id, agendamento_id, dados):
     if dados.get('data'):
         ag.data = parse_data_iso(dados['data'])
     if dados.get('horario'):
-        ag.horario = dados['horario']  # mantendo string HH:MM
+        ag.horario = dados['horario']
 
     db.session.commit()
     return ag, None
@@ -98,7 +94,6 @@ def listar_doadores_com_info(hemocentro_id):
             if proxima > datetime.now().date():
                 apto = False
 
-        # frequência nos últimos 12 meses
         um_ano_atras = datetime.now().date() - timedelta(days=365)
         doacoes_ultimo_ano = Doacao.query.filter(
             Doacao.doador_id == d.id,
@@ -147,7 +142,6 @@ def listar_doacoes(hemocentro_id):
             'horario': d.horario,
             'doador_nome': d.doador.nome if d.doador else 'N/A',
             
-            # ✅ Corrigido: se Doacao não tem tipo_sanguineo, puxa do Doador
             'tipo_sanguineo': d.doador.tipo_sanguineo if hasattr(d, 'doador') and d.doador else 'N/A',
             
             'tipo_doacao': d.tipo_doacao,
@@ -183,67 +177,86 @@ def listar_doadores_com_agendamento(hemocentro_id):
 
 def registrar_doacao(hemocentro_id, dados):
     try:
-        # 1️⃣ Evita duplicar doações do mesmo doador e data
+        doador_id = int(dados["doador_id"])
+
+        data_doacao = parse_data_iso(dados["data_doacao"])
+
         existente = Doacao.query.filter_by(
-            doador_id=dados["doador_id"],
+            doador_id=doador_id,
             hemocentro_id=hemocentro_id,
-            data_doacao=parse_data_iso(dados["data_doacao"])
+            data_doacao=data_doacao
         ).first()
 
         if existente:
             print("⚠️ Doação já registrada para este doador nesta data.")
-            return existente
+        else:
+            peso_valor = dados.get("peso")
+            peso_float = (
+                float(peso_valor)
+                if peso_valor is not None and str(peso_valor).strip() not in ("", "None", "null")
+                else None
+            )
+
+            temp_valor = dados.get("temperatura")
+            temp_float = (
+                float(temp_valor)
+                if temp_valor is not None and str(temp_valor).strip() not in ("", "None", "null")
+                else None
+            )
+
+            nova = Doacao(
+                doador_id=doador_id,
+                hemocentro_id=hemocentro_id,
+                volume=dados.get("volume", 450),
+                tipo_doacao=dados.get("tipo_doacao", "sangue_total"),
+                data_doacao=data_doacao,
+                horario=parse_horario(dados.get("horario")),
+                hemoglobina=dados.get("hemoglobina"),
+                pressao_arterial=dados.get("pressao_arterial"),
+                peso=peso_float,
+                temperatura=temp_float,
+                observacoes=dados.get("observacoes", ""),
+                status="realizada"
+            )
+            db.session.add(nova)
+            print(f"✅ Doação criada: ID {nova.id if hasattr(nova, 'id') else 'pendente commit'}")
         
-        peso_valor = dados.get("peso")
-        peso_float = float(peso_valor) if str(peso_valor).strip() not in ("", "None", "null") else None
-
-        temp_valor = dados.get("temperatura")
-        temp_float = float(temp_valor) if str(temp_valor).strip() not in ("", "None", "null") else None
-
-        # 2️⃣ Cria nova doação
-        nova = Doacao(
-            doador_id=dados["doador_id"],
-            hemocentro_id=hemocentro_id,
-            volume=dados.get("volume", 450),
-            tipo_doacao=dados.get("tipo_doacao", "sangue_total"),
-            data_doacao=parse_data_iso(dados["data_doacao"]),
-            horario=parse_horario(dados.get("horario")),
-            hemoglobina=dados.get("hemoglobina"),
-            pressao_arterial=dados.get("pressao_arterial"),
-            peso=peso_float,
-            temperatura=temp_float,
-            observacoes=dados.get("observacoes", ""),
-            status="realizada"
+        agendamento = (
+            Agendamento.query
+            .filter(
+                Agendamento.doador_id == doador_id,
+                Agendamento.hemocentro_id == hemocentro_id,
+                Agendamento.status == "agendado"
+            )
+            .order_by(Agendamento.data.desc())
+            .first()
         )
-        db.session.add(nova)
-
-        # 3️⃣ Atualiza agendamento associado
-        agendamento = Agendamento.query.filter_by(
-            doador_id=dados["doador_id"],
-            hemocentro_id=hemocentro_id,
-            status="pendente"  # ⚠️ alterado para refletir seu backend real
-        ).first()
 
         if agendamento:
             agendamento.status = "concluido"
             agendamento.data_realizacao = datetime.now()
             print(f"🩸 Agendamento {agendamento.id} marcado como concluído.")
+        else:
+            print(
+                f"⚠️ Nenhum agendamento 'agendado' encontrado para doador {doador_id} "
+                f"no hemocentro {hemocentro_id}."
+            )
 
-        # 4️⃣ Atualiza última doação do doador
-        doador = Doador.query.get(dados["doador_id"])
+        doador = Doador.query.get(doador_id)
         if doador:
-            doador.ultima_doacao = parse_data_iso(dados["data_doacao"])
+            doador.ultima_doacao = data_doacao
             print(f"🧬 Atualizada última doação do doador {doador.nome}.")
 
         db.session.commit()
-        print(f"✅ Doação registrada com sucesso: ID {nova.id}")
-        return nova
+        print("✅ Commit executado com sucesso.")
+
+        return existente if existente else nova
 
     except Exception as e:
         import traceback
         db.session.rollback()
         print("❌ Erro ao registrar doação:")
-        traceback.print_exc()  # 👈 mostra a linha exata e a causa real
+        traceback.print_exc()
         return None
 
 
@@ -280,7 +293,7 @@ def listar_campanhas_hemocentro(hemocentro_id):
             'status': c.status,
             'data_criacao': c.data_criacao.strftime('%Y-%m-%d') if c.data_criacao else None,
             'participantes': c.participantes,
-            'hemocentro_id': c.hemocentro_id  # 👈 ADICIONE ESTA LINHA
+            'hemocentro_id': c.hemocentro_id
         })
     return saida
 
@@ -342,6 +355,29 @@ def concluir_campanha(hemocentro_id, campanha_id):
     camp.status = "concluida"
     db.session.commit()
     return True, None, camp
+
+def atualizar_campanhas_expiradas(hemocentro_id):
+    """Marca como concluída todas as campanhas com data_fim < hoje e status != 'concluida'."""
+    hoje = date.today()
+
+    query = Campanha.query.filter(
+        Campanha.data_fim < hoje,
+        Campanha.status != 'concluida'
+    )
+
+    if hemocentro_id is not None:
+        query = query.filter(Campanha.hemocentro_id == hemocentro_id)
+
+    campanhas_expiradas = query.all()
+
+    if not campanhas_expiradas:
+        return 0
+
+    for campanha in campanhas_expiradas:
+        campanha.status = 'concluida'
+
+    db.session.commit()
+    return len(campanhas_expiradas)
 
 def montar_historico_doacoes(doador_id: int):
     doacoes = (

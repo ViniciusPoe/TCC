@@ -1,7 +1,3 @@
-// ==========================================
-// 🔐 AUTH MANAGER MULTIUSUÁRIO (Doador + Hemocentro)
-// ==========================================
-
 const STORAGE_KEYS = {
   doador: "hemosys_auth_doador",
   hemocentro: "hemosys_auth_hemocentro",
@@ -10,16 +6,12 @@ const STORAGE_KEYS = {
 let currentAuth = null;
 let currentType = null;
 
-// ===================================================
-// 🧩 Função interna - restaura sessão de um tipo
-// ===================================================
 const restoreFromStorage = (tipo = "doador") => {
   const key = STORAGE_KEYS[tipo];
   try {
     const saved = localStorage.getItem(key);
     if (saved) {
       const parsed = JSON.parse(saved);
-      // Expira após 24h
       if (Date.now() - parsed.timestamp < 24 * 60 * 60 * 1000) {
         currentAuth = parsed;
         currentType = tipo;
@@ -39,13 +31,7 @@ const restoreFromStorage = (tipo = "doador") => {
   return false;
 };
 
-// ===================================================
-// 🧠 Auth Manager principal
-// ===================================================
 export const authManager = {
-  // ==============================
-  // 🔑 SALVAR AUTENTICAÇÃO
-  // ==============================
   setAuth: (token, userData) => {
   if (!userData || !token) {
     console.error("❌ setAuth chamado com dados inválidos:", { token, userData });
@@ -55,23 +41,18 @@ export const authManager = {
   const tipo = userData.tipo || "doador";
   const key = STORAGE_KEYS[tipo];
 
-  // 🔥 Limpa o outro tipo antes de definir o novo
   const outroTipo = tipo === "doador" ? "hemocentro" : "doador";
   localStorage.removeItem(STORAGE_KEYS[outroTipo]);
 
-  // 🧠 Atualiza estado atual
+
   currentAuth = { token, userData, timestamp: Date.now() };
   currentType = tipo;
 
-  // 💾 Salva no localStorage
   localStorage.setItem(key, JSON.stringify(currentAuth));
 
   console.log(`🔐 Sessão salva (${tipo}) para: ${userData?.nome}`);
 },
 
-  // ==============================
-  // 📦 GETTERS
-  // ==============================
   getToken: () => currentAuth?.token || null,
   getTokenByType: (tipo) => {
     const saved = localStorage.getItem(STORAGE_KEYS[tipo]);
@@ -86,9 +67,6 @@ export const authManager = {
   getUserType: () => currentAuth?.userData?.tipo || currentType,
   getUserId: () => currentAuth?.userData?.id || null,
 
-  // ==============================
-  // 🚪 LIMPAR / LOGOUT
-  // ==============================
   clear: (tipo = null) => {
     if (tipo) {
       const key = STORAGE_KEYS[tipo];
@@ -102,9 +80,6 @@ export const authManager = {
     currentType = null;
   },
 
-  // ==============================
-  // 🧠 VERIFICAÇÕES
-  // ==============================
   isValid: () => {
     if (!currentAuth) return false;
     const expired = Date.now() - currentAuth.timestamp >= 24 * 60 * 60 * 1000;
@@ -119,21 +94,14 @@ export const authManager = {
   isDoador: () => currentAuth?.userData?.tipo === "doador",
   isHemocentro: () => currentAuth?.userData?.tipo === "hemocentro",
 
-  // ==============================
-  // 🧩 UTILITÁRIOS
-  // ==============================
   restore: restoreFromStorage,
   getAuth: () => currentAuth,
 };
 
-// ===================================================
-// 🚀 Restaura automaticamente a sessão mais recente
-// ===================================================
 try {
   const hemocentroSaved = localStorage.getItem(STORAGE_KEYS.hemocentro);
   const doadorSaved = localStorage.getItem(STORAGE_KEYS.doador);
 
-  // ⚙️ Impede que uma restauração sobrescreva outra se já há uma ativa
   if (!currentAuth) {
     if (hemocentroSaved && doadorSaved) {
       const hemocentroData = JSON.parse(hemocentroSaved);

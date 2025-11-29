@@ -12,9 +12,6 @@ const PerfilHemocentro = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // ==========================
-  // 🔄 Carregar perfil do hemocentro
-  // ==========================
   useEffect(() => {
     const fetchPerfil = async () => {
       try {
@@ -49,17 +46,11 @@ const PerfilHemocentro = () => {
     fetchPerfil();
   }, [navigate]);
 
-  // ==========================
-  // ✏️ Atualização de campos
-  // ==========================
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  // ==========================
-  // 💾 Salvar alterações
-  // ==========================
   const handleSalvar = async () => {
     try {
       const response = await api.atualizarPerfilHemocentro(form);
@@ -75,9 +66,6 @@ const PerfilHemocentro = () => {
     }
   };
 
-  // ==========================
-  // ⏳ Tela de carregamento
-  // ==========================
   if (loading) {
     return (
       <div>
@@ -91,9 +79,6 @@ const PerfilHemocentro = () => {
     );
   }
 
-  // ==========================
-  // ⚠️ Erro ao carregar
-  // ==========================
   if (!dados) {
     return (
       <div>
@@ -105,9 +90,6 @@ const PerfilHemocentro = () => {
     );
   }
 
-  // ==========================
-  // 🎨 Interface principal
-  // ==========================
   return (
     <div>
       <NavigationHemocentro />
@@ -128,7 +110,6 @@ const PerfilHemocentro = () => {
 
           <div className="card-body">
             <div className="row g-3">
-              {/* Nome e CNPJ */}
               <div className="col-md-8">
                 <label className="form-label">Nome da Instituição</label>
                 <input
@@ -151,7 +132,6 @@ const PerfilHemocentro = () => {
                 />
               </div>
 
-              {/* Contato */}
               <div className="col-md-6">
                 <label className="form-label">Email</label>
                 <input
@@ -176,7 +156,6 @@ const PerfilHemocentro = () => {
                 />
               </div>
 
-              {/* Endereço */}
               <div className="col-md-4">
                 <label className="form-label">CEP</label>
                 <input
@@ -249,7 +228,6 @@ const PerfilHemocentro = () => {
                 />
               </div>
 
-              {/* Horário de funcionamento (início e fim separados) */}
               <div className="col-md-3">
                 <label className="form-label">Horário de Início</label>
                 <input
@@ -274,7 +252,6 @@ const PerfilHemocentro = () => {
                 />
               </div>
 
-              {/* Estatísticas do painel */}
               <div className="col-md-4">
                 <label className="form-label">Total de Agendamentos</label>
                 <input

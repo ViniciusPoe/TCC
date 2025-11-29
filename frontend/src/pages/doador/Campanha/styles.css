@@ -1,12 +1,7 @@
-/* ==============================
-   CAMPANHAS DOADOR - ESTILO GERAL
-   ============================== */
-
 body {
   background-color: #f8f9fa;
 }
 
-/* Card principal da campanha */
 .campanha-card {
   border-radius: 15px;
   overflow: hidden;
@@ -19,7 +14,6 @@ body {
   box-shadow: 0 6px 20px rgba(211, 47, 47, 0.15);
 }
 
-/* Título e texto */
 .campanha-card .card-title {
   font-weight: 700;
   color: #d32f2f;
@@ -31,7 +25,6 @@ body {
   min-height: 70px;
 }
 
-/* Badge de status */
 .badge {
   font-size: 0.85rem;
   padding: 0.45em 0.75em;
@@ -39,7 +32,6 @@ body {
   text-transform: capitalize;
 }
 
-/* Ícones e botões */
 .campanha-card .btn {
   border-radius: 8px;
   font-weight: 500;
@@ -60,7 +52,6 @@ body {
   color: #b71c1c;
 }
 
-/* Estatísticas */
 .stat-item {
   padding: 20px;
   border-radius: 10px;
@@ -77,12 +68,10 @@ body {
   font-size: 0.9rem;
 }
 
-/* Seção de nenhuma campanha */
 .text-center i.fa-bullhorn {
   opacity: 0.5;
 }
 
-/* Animação de entrada */
 .campanha-card {
   animation: fadeInUp 0.6s ease;
 }
@@ -98,7 +87,6 @@ body {
   }
 }
 
-/* Responsividade */
 @media (max-width: 768px) {
   .campanha-card .btn {
     font-size: 0.9rem;

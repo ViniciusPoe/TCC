@@ -20,14 +20,12 @@ const AgendamentosHemocentro = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // ✅ NOVO: Verificar autenticação primeiro
         if (!api.isAuthenticated()) {
           console.log("❌ Hemocentro não autenticado, redirecionando...");
           navigate("/login/hemocentro");
           return;
         }
 
-        // ✅ NOVO: Buscar dados do hemocentro atual da memória
         const currentUser = api.getCurrentUser();
         console.log("🏥 DEBUG - Hemocentro atual:", currentUser);
 
@@ -39,8 +37,7 @@ const AgendamentosHemocentro = () => {
 
         console.log("🏥 Buscando agendamentos para hemocentro...");
 
-        // ✅ NOVO: Buscar agendamentos SEM passar ID
-        const response = await api.getAgendamentosHemocentro(); // ✅ SEM ID
+        const response = await api.getAgendamentosHemocentro();
         console.log("📋 Resposta da API Agendamentos:", response);
 
         if (response.success) {
@@ -67,7 +64,6 @@ const AgendamentosHemocentro = () => {
       } catch (error) {
         console.error("Erro ao carregar agendamentos:", error);
 
-        // ✅ NOVO: Se erro de autenticação, redirecionar
         if (
           error.message.includes("token") ||
           error.message.includes("autenticação")
@@ -85,7 +81,6 @@ const AgendamentosHemocentro = () => {
     fetchData();
   }, [navigate]);
 
-  // Aplicar filtro quando o filtroStatus ou agendamentos mudarem
   useEffect(() => {
     if (filtroStatus === "todos") {
       setAgendamentosFiltrados(agendamentos);
@@ -97,7 +92,6 @@ const AgendamentosHemocentro = () => {
 
   const handleReagendar = (agendamento) => {
     setAgendamentoSelecionado(agendamento);
-    // Converter data do formato DD/MM/YYYY para YYYY-MM-DD
     const [dia, mes, ano] = agendamento.data.split("/");
     setNovaData(`${ano}-${mes.padStart(2, "0")}-${dia.padStart(2, "0")}`);
     setShowModalReagendar(true);
@@ -112,7 +106,6 @@ const AgendamentosHemocentro = () => {
     try {
       if (!agendamentoSelecionado) return;
 
-      // ✅ NOVO: Verificar autenticação
       if (!api.isAuthenticated()) {
         alert("Sessão expirada. Faça login novamente.");
         navigate("/login/hemocentro");
@@ -127,7 +120,6 @@ const AgendamentosHemocentro = () => {
       );
 
       if (response.success) {
-        // Atualizar a lista de agendamentos
         const updatedAgendamentos = agendamentos.map((ag) =>
           ag.id === agendamentoSelecionado.id
             ? {
@@ -153,7 +145,6 @@ const AgendamentosHemocentro = () => {
     }
   };
 
-  // ✅ NOVO: Função para logout
   const handleLogout = async () => {
     try {
       await api.logout();
@@ -203,7 +194,6 @@ const AgendamentosHemocentro = () => {
     }
   };
 
-  // Ordenar agendamentos por data (mais próximos primeiro)
   const agendamentosOrdenados = [...agendamentosFiltrados].sort((a, b) => {
     try {
       const [diaA, mesA, anoA] = a.data.split("/");
@@ -216,7 +206,6 @@ const AgendamentosHemocentro = () => {
     }
   });
 
-  // Estatísticas para os filtros
   const estatisticas = {
     todos: agendamentos.length,
     agendado: agendamentos.filter((a) => a.status === "pendente").length,
@@ -245,7 +234,6 @@ const AgendamentosHemocentro = () => {
 
       <div className="container-fluid px-4 py-5">
         <div className="container">
-          {/* Header da Página */}
           <div className="row mb-5">
             <div className="col-12">
               <div className="text-center">
@@ -260,7 +248,6 @@ const AgendamentosHemocentro = () => {
             </div>
           </div>
 
-          {/* Estatísticas */}
           <div className="row mb-4">
             {[
               {
@@ -296,7 +283,6 @@ const AgendamentosHemocentro = () => {
             ))}
           </div>
 
-          {/* Filtros */}
           <div className="row mb-4">
             <div className="col-12">
               <div className="card border-0 shadow-sm">
@@ -313,12 +299,12 @@ const AgendamentosHemocentro = () => {
                         count: estatisticas.todos,
                       },
                       {
-                        key: "pendente",
+                        key: "agendado",
                         label: "Agendados",
                         count: estatisticas.pedente,
                       },
                       {
-                        key: "realizado",
+                        key: "concluido",
                         label: "Realizados",
                         count: estatisticas.realizado,
                       },
@@ -334,9 +320,6 @@ const AgendamentosHemocentro = () => {
                         onClick={() => setFiltroStatus(filtro.key)}
                       >
                         {filtro.label}
-                        <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">
-                          {filtro.count}
-                        </span>
                       </button>
                     ))}
                   </div>
@@ -345,7 +328,6 @@ const AgendamentosHemocentro = () => {
             </div>
           </div>
 
-          {/* Tabela de Agendamentos */}
           <div className="row">
             <div className="col-12">
               <div className="card border-0 shadow-sm">
@@ -470,7 +452,6 @@ const AgendamentosHemocentro = () => {
         </div>
       </div>
 
-      {/* Modal de Reagendamento */}
       {showModalReagendar && agendamentoSelecionado && (
         <div
           className="modal fade show d-block"
@@ -555,7 +536,6 @@ const AgendamentosHemocentro = () => {
         </div>
       )}
 
-      {/* Modal de Detalhes */}
       {showModalDetalhes && agendamentoSelecionado && (
         <div
           className="modal fade show d-block"
@@ -654,7 +634,6 @@ const AgendamentosHemocentro = () => {
                   </div>
                 </div>
 
-                {/* Informações Adicionais */}
                 <div className="detail-section">
                   <h6 className="text-primary mb-3">
                     <i className="fas fa-clipboard-list me-2"></i>Informações

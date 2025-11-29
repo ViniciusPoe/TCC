@@ -17,14 +17,12 @@ from aplicacao.hemocentro.servicos import (
     editar_campanha,
     concluir_campanha,
     montar_historico_doacoes,
+    atualizar_campanhas_expiradas
 )
 from aplicacao import db
 
 bp_hemocentro = Blueprint("hemocentro", __name__)
 
-# ==========================================================
-# 🧩 Função auxiliar centralizada
-# ==========================================================
 def obter_hemocentro_autenticado():
     """
     Recupera o hemocentro autenticado a partir do token JWT.
@@ -47,9 +45,6 @@ def obter_hemocentro_autenticado():
     return hemocentro, claims
 
 
-# ==========================================================
-# 🩸 Painel do Hemocentro
-# ==========================================================
 @bp_hemocentro.route("/api/perfil", methods=["GET"])
 @jwt_required()
 def get_perfil_hemocentro():
@@ -77,7 +72,6 @@ def atualizar_perfil_hemocentro():
 
         data = request.get_json() or {}
 
-        # 📝 Campos que podem ser atualizados (corrigidos)
         campos_editaveis = [
             "nome_instituicao", "email", "telefone",
             "logradouro", "numero", "complemento",
@@ -102,9 +96,6 @@ def atualizar_perfil_hemocentro():
         return error_response(f"Erro ao atualizar perfil: {e}", 500)
 
 
-# ==========================================================
-# 📅 Agendamentos
-# ==========================================================
 @bp_hemocentro.route("/api/agendamentos/hemocentro", methods=["GET"])
 @jwt_required()
 def api_agendamentos_hemocentro():
@@ -168,10 +159,6 @@ def api_reagendar_agendamento(agendamento_id):
         db.session.rollback()
         return error_response("Erro interno ao reagendar agendamento.", 500)
 
-
-# ==========================================================
-# 👥 Doadores Aptos
-# ==========================================================
 @bp_hemocentro.route("/api/doadores", methods=["GET"])
 @jwt_required()
 def api_doadores_aptos():
@@ -181,14 +168,10 @@ def api_doadores_aptos():
     else:
         return resultado
 
-    # ✅ Agora o dicionário completo é retornado direto
     doadores_info = listar_doadores_com_info(hemocentro.id)
     return success_response(data=doadores_info)
 
 
-# ==========================================================
-# 🧾 Doações Registradas
-# ==========================================================
 @bp_hemocentro.route("/api/doacoes", methods=["GET"])
 @jwt_required()
 def api_doacoes_registradas():
@@ -200,7 +183,7 @@ def api_doacoes_registradas():
         if isinstance(resultado, tuple):
             hemocentro, _ = resultado
         else:
-            return resultado  # erro_response vindo de dentro
+            return resultado 
 
         doacoes = listar_doacoes(hemocentro.id)
 
@@ -208,15 +191,15 @@ def api_doacoes_registradas():
         for d in doacoes:
             resposta.append({
                 "id": d["id"],
-                "data_doacao": d["data"],  # ✅ renomeado
+                "data_doacao": d["data"],
                 "horario": d["horario"] if isinstance(d["horario"], str)
                             else (d["horario"].strftime("%H:%M") if d["horario"] else None),
                 "doador_nome": d["doador_nome"],
-                "tipo_sanguineo": d.get("tipo_sanguineo", "N/A"),  # ✅ novo campo
+                "tipo_sanguineo": d.get("tipo_sanguineo", "N/A"), 
                 "tipo_doacao": d["tipo_doacao"],
                 "volume": d["volume"],
-                "hemoglobina": d.get("hemoglobina", "-"),          # ✅ novo campo
-                "pressao_arterial": d.get("pressao_arterial", "-"),# ✅ novo campo
+                "hemoglobina": d.get("hemoglobina", "-"),          
+                "pressao_arterial": d.get("pressao_arterial", "-"),
                 "status": d["status"],
             })
 
@@ -230,9 +213,6 @@ def api_doacoes_registradas():
         return error_response("Erro interno ao carregar doações.", 500)
 
 
-# ==========================================================
-# 🧾 Listar Hemocentros
-# ==========================================================
 @bp_hemocentro.route("/api/listar", methods=["GET"])
 def listar_hemocentros():
     try:
@@ -260,9 +240,6 @@ def listar_hemocentros():
         return error_response("Erro interno ao listar hemocentros.", 500)
 
 
-# ==========================================================
-# 🧾 Doadores com Agendamento
-# ==========================================================
 @bp_hemocentro.route("/api/doadores-com-agendamento", methods=["GET"])
 @jwt_required()
 def api_doadores_com_agendamento():
@@ -279,7 +256,7 @@ def api_doadores_com_agendamento():
 
         agendamentos = Agendamento.query.filter(
             Agendamento.hemocentro_id == hemocentro.id,
-            Agendamento.status.in_(["agendado", "pendente"])
+            Agendamento.status.in_(["agendado"])
         ).all()
 
         lista = []
@@ -299,9 +276,6 @@ def api_doadores_com_agendamento():
         print("❌ Erro ao listar doadores com agendamento:", e)
         return error_response("Erro interno ao listar doadores com agendamento.", 500)
 
-# ==========================================================
-# 🩸 Registrar uma nova doação
-# ==========================================================
 @bp_hemocentro.route("/api/registrar-doacao", methods=["POST"])
 @jwt_required()
 def api_registrar_doacao():
@@ -351,9 +325,6 @@ def api_registrar_doacao():
         },
     )
 
-# ==========================================================
-# 🏥 Informações do Hemocentro
-# ==========================================================
 @bp_hemocentro.route("/api/hemocentro-info", methods=["GET"])
 @jwt_required()
 def api_info_hemocentro():
@@ -374,10 +345,6 @@ def api_info_hemocentro():
     }
     return success_response(data={"hemocentro": dados})
 
-
-# ==========================================================
-# 📢 Campanhas do Hemocentro
-# ==========================================================
 @bp_hemocentro.route("/api/campanhas", methods=["GET"])
 @jwt_required()
 def api_campanhas_hemocentro():
@@ -387,14 +354,16 @@ def api_campanhas_hemocentro():
         hemocentro, _ = resultado
     else:
         return resultado
+    try:
+        atualizadas = atualizar_campanhas_expiradas(hemocentro.id)
+        if atualizadas:
+            print(f"✅ {atualizadas} campanhas atualizadas para 'concluida' (hemocentro {hemocentro.id})")
+    except Exception as e:
+        print("⚠️ Erro ao atualizar campanhas expiradas:", e)
 
     campanhas = listar_campanhas_hemocentro(hemocentro.id)
     return success_response(data={"campanhas": campanhas})
 
-
-# ==========================================================
-# 🧾 Criar nova campanha
-# ==========================================================
 @bp_hemocentro.route("/api/campanhas", methods=["POST"])
 @jwt_required()
 def api_campanha_criar():
@@ -412,7 +381,7 @@ def api_campanha_criar():
 
     try:
         nova = criar_campanha(hemocentro.id, dados)
-        db.session.commit()  # 🔥 GARANTE que o commit finalize antes da resposta
+        db.session.commit()
 
         print(f"✅ Campanha criada: {nova.titulo} (ID: {nova.id})")
 
@@ -439,10 +408,6 @@ def api_campanha_criar():
         db.session.rollback()
         return error_response("Erro interno ao criar campanha.", 500)
 
-
-# ==========================================================
-# ✏️ Editar campanha existente
-# ==========================================================
 @bp_hemocentro.route("/api/campanhas/<int:campanha_id>", methods=["PUT"])
 @jwt_required()
 def api_campanha_editar(campanha_id):
@@ -473,10 +438,6 @@ def api_campanha_editar(campanha_id):
         }}
     )
 
-
-# ==========================================================
-# ❌ Excluir campanha
-# ==========================================================
 @bp_hemocentro.route("/api/campanhas/<int:campanha_id>", methods=["DELETE"])
 @jwt_required()
 def api_campanha_excluir(campanha_id):
@@ -493,10 +454,6 @@ def api_campanha_excluir(campanha_id):
 
     return success_response(message=f"Campanha {campanha_id} excluída com sucesso!")
 
-
-# ==========================================================
-# ✅ Concluir campanha
-# ==========================================================
 @bp_hemocentro.route("/api/campanhas/<int:campanha_id>/concluir", methods=["PUT"])
 @jwt_required()
 def api_campanha_concluir(campanha_id):
@@ -537,11 +494,6 @@ def api_historico_doador(doador_id):
 
     return success_response(data={"historico": historico})
 
-
-    
-# ==========================================================
-# ⚙️ Endpoint de Teste / Status
-# ==========================================================
 @bp_hemocentro.route("/api/status", methods=["GET"])
 def api_status():
     return success_response("API de hemocentro operacional.")

@@ -12,7 +12,6 @@ const PerfilDoador = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // carregar dados
   useEffect(() => {
     const fetchPerfil = async () => {
       try {
@@ -29,7 +28,7 @@ const PerfilDoador = () => {
         );
 
         if (response.success && response.data) {
-          const carteira = response.data.carteira; // 👈 aqui está o objeto real
+          const carteira = response.data.carteira;
           setDados(carteira);
           setForm(carteira);
           console.log("✅ Dados carregados da carteira:", carteira);
@@ -108,7 +107,6 @@ const PerfilDoador = () => {
 
           <div className="card-body">
             <div className="row g-3">
-              {/* Informações pessoais */}
               <div className="col-md-6">
                 <label className="form-label">Nome</label>
                 <input
@@ -212,7 +210,6 @@ const PerfilDoador = () => {
                 />
               </div>
 
-              {/* Contatos */}
               <div className="col-md-6">
                 <label className="form-label">Telefone</label>
                 <input
@@ -225,7 +222,6 @@ const PerfilDoador = () => {
                 />
               </div>
 
-              {/* Endereço */}
               <div className="col-md-3">
                 <label className="form-label">CEP</label>
                 <input
@@ -310,7 +306,6 @@ const PerfilDoador = () => {
                 />
               </div>
 
-              {/* Última e próxima doação */}
               <div className="col-md-5">
                 <label className="form-label">Última Doação</label>
                 <input

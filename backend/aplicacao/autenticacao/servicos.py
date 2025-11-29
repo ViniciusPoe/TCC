@@ -27,7 +27,6 @@ def autenticar_doador(cpf, senha):
         print("🧑 Nome:", doador.nome)
         print("🪪 CPF armazenado:", doador.cpf)
 
-    # 🔹 Busca o doador no banco, normalizando o CPF armazenado
     doador = (
         Doador.query.filter(
             db.func.replace(
@@ -36,18 +35,15 @@ def autenticar_doador(cpf, senha):
         ).first()
     )
 
-    # 🔹 Verifica se encontrou o doador e se a senha está correta
     if not doador or not doador.verificar_senha(senha):
         print("⚠️ Falha no login - CPF ou senha incorretos.")
         return None
 
-    # 🔹 Gera token JWT
     token = create_access_token(
         identity=str(doador.id),
         additional_claims={"tipo": "doador"}
     )
 
-    # 🔹 Retorna dados do doador logado
     return {
         "token": token,
         "user": {

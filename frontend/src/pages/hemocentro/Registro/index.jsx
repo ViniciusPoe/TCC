@@ -28,13 +28,9 @@ const RegistroDoacoes = () => {
 
   const navigate = useNavigate();
 
-  // =========================
-  // 1) carregar dados iniciais
-  // =========================
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 🔐 mesma lógica do AgendamentosHemocentro
         if (!api.isAuthenticated()) {
           console.log("❌ Hemocentro não autenticado, redirecionando...");
           navigate("/login/hemocentro");
@@ -51,8 +47,6 @@ const RegistroDoacoes = () => {
         }
 
         console.log("🩸 Buscando doações do hemocentro logado...");
-        // importante: assumindo que o backend já filtra com base no token JWT
-        // exatamente como você fez em api.getAgendamentosHemocentro()
         const doacoesResponse = await api.getDoacoes();
         console.log("📊 Doações response:", doacoesResponse);
 
@@ -74,7 +68,6 @@ const RegistroDoacoes = () => {
       } catch (error) {
         console.error("❌ Erro ao carregar dados:", error);
 
-        // mesma proteção que você já usa
         if (
           error.message?.includes("token") ||
           error.message?.includes("autenticação")
@@ -93,9 +86,6 @@ const RegistroDoacoes = () => {
     fetchData();
   }, [navigate]);
 
-  // =========================
-  // 2) mudança de campo do form
-  // =========================
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -103,7 +93,6 @@ const RegistroDoacoes = () => {
       [name]: value,
     }));
 
-    // auto-preencher tipo sanguíneo e tipo_doacao baseado no doador escolhido
     if (name === "doador_id" && value) {
       const doadorSelecionado = doadoresComAgendamento.find(
         (d) => d.id === parseInt(value)
@@ -118,16 +107,12 @@ const RegistroDoacoes = () => {
     }
   };
 
-  // =========================
-  // 3) submit do formulário
-  // =========================
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       console.log("📤 Enviando dados da doação:", formData);
 
-      // 🔒 garantir sessão válida antes de registrar doação
       if (!api.isAuthenticated()) {
         alert("Sessão expirada. Faça login novamente.");
         navigate("/login/hemocentro");
@@ -139,24 +124,28 @@ const RegistroDoacoes = () => {
       if (response.success) {
         console.log("✅ Doação registrada com sucesso!");
 
-        // ideia: o back deve retornar a doação criada atualizada
-        // exemplo: response.doacao
-        // se ele não retorna, você pode refazer as duas chamadas abaixo.
-        // vou assumir que você quer manter o padrão de refetch imediato:
         const [doacoesResponse, doadoresResponse] = await Promise.all([
           api.getDoacoes(),
           api.getDoadoresComAgendamento(),
         ]);
 
         if (doacoesResponse.success) {
-          setDoacoes(doacoesResponse.doacoes || []);
+          setDoacoes(
+            doacoesResponse.data?.doacoes ||
+              doacoesResponse.doacoes ||
+              []
+          );
         }
 
         if (doadoresResponse.success) {
-          setDoadoresComAgendamento(doadoresResponse.doadores || []);
+          setDoadoresComAgendamento(
+            doadoresResponse.data?.doadores ||
+              doadoresResponse.doadores ||
+              doadoresResponse.data ||
+              []
+          );
         }
 
-        // limpar form
         setFormData({
           doador_id: "",
           tipo_sanguineo: "",
@@ -185,9 +174,6 @@ const RegistroDoacoes = () => {
     }
   };
 
-  // =========================
-  // 4) filtragem por data
-  // =========================
   const doacoesFiltradas = filtroData
     ? doacoes.filter(
         (doacao) =>
@@ -195,9 +181,6 @@ const RegistroDoacoes = () => {
       )
     : doacoes;
 
-  // =========================
-  // 5) (opcional) logout seguro
-  // =========================
   const handleLogout = async () => {
     try {
       await api.logout();
@@ -208,9 +191,6 @@ const RegistroDoacoes = () => {
     }
   };
 
-  // =========================
-  // 6) loading state
-  // =========================
   if (loading) {
     return (
       <div>
@@ -226,16 +206,12 @@ const RegistroDoacoes = () => {
     );
   }
 
-  // =========================
-  // 7) render final
-  // =========================
   return (
     <div className="registro-doacoes">
       <NavigationInstituicao />
 
       <div className="container-fluid px-4 py-5">
         <div className="container">
-          {/* Header da Página */}
           <div className="row mb-5">
             <div className="col-12">
               <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
@@ -261,7 +237,6 @@ const RegistroDoacoes = () => {
             </div>
           </div>
 
-          {/* Filtros e Estatísticas */}
           <div className="row mb-4">
             <div className="col-md-8">
               <div className="card border-0 shadow-sm">
@@ -301,7 +276,6 @@ const RegistroDoacoes = () => {
             </div>
           </div>
 
-          {/* Formulário de Nova Doação */}
           {showForm && (
             <div className="row mb-5">
               <div className="col-12">
@@ -413,7 +387,7 @@ const RegistroDoacoes = () => {
                               )
                                 .toISOString()
                                 .split("T")[0]
-                            } // 🔒 agora bloqueia dias passados corretamente
+                            }
                           />
                         </div>
                         <div className="col-md-4 mb-3">
@@ -514,7 +488,6 @@ const RegistroDoacoes = () => {
             </div>
           )}
 
-          {/* Lista de Doações */}
           <div className="row">
             <div className="col-12">
               <div className="card border-0 shadow-sm">

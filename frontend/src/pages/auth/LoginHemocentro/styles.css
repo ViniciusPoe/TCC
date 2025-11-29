@@ -29,7 +29,6 @@
   margin-bottom: 30px;
 }
 
-/* Campos */
 .hemocentro-login-card .form-control {
   border: 2px solid #e9ecef;
   border-radius: 12px;
@@ -51,7 +50,7 @@
   font-size: 1rem;
 }
 
-/* Botão */
+
 .hemocentro-login-card .btn-primary {
   background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
   border: none;
@@ -72,7 +71,6 @@
   background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
 }
 
-/* Checkbox */
 .hemocentro-login-card .form-check-input {
   width: 20px;
   height: 20px;
@@ -85,7 +83,6 @@
   border-color: #007bff;
 }
 
-/* Alert */
 .alert {
   border-radius: 10px;
   padding: 15px;
@@ -94,13 +91,11 @@
   border-left: 6px solid #007bff;
 }
 
-/* Ícone */
 .fa-hospital-alt {
   font-size: 4rem !important;
   color: #007bff !important;
 }
 
-/* Links */
 .text-primary {
   color: #007bff !important;
   transition: color 0.3s ease;
@@ -111,7 +106,6 @@
   text-decoration: underline;
 }
 
-/* Animação */
 .hemocentro-login-card {
   animation: fadeInUp 0.6s ease-out;
 }
@@ -127,7 +121,6 @@
   }
 }
 
-/* Responsivo */
 @media (max-width: 576px) {
   .hemocentro-login-card {
     padding: 35px 25px;

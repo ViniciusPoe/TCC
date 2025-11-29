@@ -2,9 +2,6 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 import { authManager } from "../utils/authManager";
 
-// =============================
-// 🔒 ROTA PROTEGIDA — DOADOR
-// =============================
 export const ProtectedDoadorRoute = ({ children }) => {
   const valid = authManager.isValid();
   const tipo = authManager.getUserType();
@@ -25,11 +22,7 @@ export const ProtectedDoadorRoute = ({ children }) => {
   return children;
 };
 
-// =============================
-// 🏥 ROTA PROTEGIDA — HEMOCENTRO
-// =============================
 export const ProtectedHemocentroRoute = ({ children }) => {
-  // 🔁 Garante que a sessão ativa seja recarregada, caso o app tenha reiniciado
   if (!authManager.getUserData()) {
     const hemocentro = localStorage.getItem("hemosys_auth_hemocentro");
     const doador = localStorage.getItem("hemosys_auth_doador");

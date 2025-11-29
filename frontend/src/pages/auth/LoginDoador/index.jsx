@@ -6,7 +6,7 @@ import "./styles.css";
 
 const LoginDoador = () => {
   const [formData, setFormData] = useState({
-    cpf: "",   // ✅ agora o backend recebe corretamente
+    cpf: "", 
     senha: "",
   });
 
@@ -14,9 +14,6 @@ const LoginDoador = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // =======================================================
-  // 🧩 Atualiza campos do formulário
-  // =======================================================
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -26,9 +23,6 @@ const LoginDoador = () => {
     if (error) setError("");
   };
 
-  // =======================================================
-  // 🚀 Envio do formulário
-  // =======================================================
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -47,7 +41,6 @@ const LoginDoador = () => {
           return;
         }
 
-        // 🔐 Salva sessão global
         authManager.setAuth(apiData.token, {
           id: apiData.id,
           nome: apiData.nome,
@@ -58,7 +51,6 @@ const LoginDoador = () => {
 
         console.log("✅ Login salvo com sucesso:", apiData.nome);
 
-        // Redireciona ao painel
         navigate("/doador/inicio");
       } else {
         setError(response.message || "CPF ou senha incorretos");
@@ -71,9 +63,6 @@ const LoginDoador = () => {
     }
   };
 
-  // =======================================================
-  // 🎨 Interface
-  // =======================================================
   return (
     <div className="container doador-login">
       <div className="row justify-content-center">

@@ -1,22 +1,15 @@
-/* ===============================
-   AGENDAMENTOS - HEMOCENTRO
-   =============================== */
-
 .agendamentos-hemocentro {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f4f7fc;
   min-height: 100vh;
 }
 
-/* HEADER */
+
 h1.display-5 {
   color: #0d6efd;
   font-weight: 700;
 }
 
-/* ===============================
-   ESTATÍSTICAS
-   =============================== */
 .card {
   border-radius: 16px;
   border: none;
@@ -34,9 +27,6 @@ h1.display-5 {
   border-radius: 50%;
 }
 
-/* ===============================
-   FILTROS
-   =============================== */
 .btn-group .btn {
   border-radius: 10px;
   font-weight: 500;
@@ -57,9 +47,6 @@ h1.display-5 {
   color: #0d6efd;
 }
 
-/* ===============================
-   TABELA
-   =============================== */
 .table-responsive {
   border-radius: 10px;
   background-color: #fff;
@@ -90,9 +77,6 @@ h1.display-5 {
   transition: all 0.3s ease;
 }
 
-/* ===============================
-   BADGES
-   =============================== */
 .badge {
   font-size: 0.75rem;
   border-radius: 6px;
@@ -115,9 +99,6 @@ h1.display-5 {
   color: #0c5460 !important;
 }
 
-/* ===============================
-   BOTÕES DE AÇÃO
-   =============================== */
 .btn-group .btn {
   border-radius: 8px;
 }
@@ -126,9 +107,6 @@ h1.display-5 {
   font-size: 0.9rem;
 }
 
-/* ===============================
-   MODAIS
-   =============================== */
 .modal-content {
   border-radius: 15px;
   border: none;
@@ -147,9 +125,6 @@ h1.display-5 {
   border-radius: 8px;
 }
 
-/* ===============================
-   DETALHES
-   =============================== */
 .detail-section {
   background: #ffffff;
   border-radius: 10px;
@@ -171,9 +146,6 @@ h1.display-5 {
   color: #495057;
 }
 
-/* ===============================
-   ESTADO VAZIO
-   =============================== */
 .text-center.py-5 {
   background: linear-gradient(135deg, #ffffff 0%, #f3f7ff 100%);
   border-radius: 15px;
@@ -181,9 +153,6 @@ h1.display-5 {
   margin: 2rem 0;
 }
 
-/* ===============================
-   ANIMAÇÕES
-   =============================== */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -195,9 +164,6 @@ h1.display-5 {
   }
 }
 
-/* ===============================
-   RESPONSIVIDADE
-   =============================== */
 @media (max-width: 768px) {
   .table-responsive {
     font-size: 0.85rem;

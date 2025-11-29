@@ -1,6 +1,6 @@
 import { authManager } from "../utils/authManager";
 
-const API_BASE_URL = process.env.REACT_APP_API_URL
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 console.log("🔧 API BASE URL:", process.env.REACT_APP_API_URL);
 
 export function getAuthHeaders() {
@@ -40,7 +40,6 @@ const handleResponse = async (response) => {
 };
 
 export const api = {
-
   async loginDoador(dados) {
     try {
       const response = await fetch(`${API_BASE_URL}/api/login/doador`, {
@@ -185,7 +184,9 @@ export const api = {
 
     const response = await fetch(`${API_BASE_URL}/api/cadastro/doador`, {
       method: "POST",
-      headers: getAuthHeaders(),
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(payload),
     });
 
@@ -195,7 +196,9 @@ export const api = {
   async cadastroHemocentro(dados) {
     const response = await fetch(`${API_BASE_URL}/api/cadastro/hemocentro`, {
       method: "POST",
-      headers: getAuthHeaders(),
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(dados),
     });
     return handleResponse(response);

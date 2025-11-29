@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from aplicacao.core.database import db
 from aplicacao.models import (
     Agendamento,
@@ -13,7 +13,6 @@ from aplicacao.utils.helpers import parse_data_iso, proxima_doacao_a_partir, is_
 def montar_perfil_doador(doador):
     """Monta o dicionário completo de informações do doador, incluindo última e próxima doação."""
     
-    # 🩸 PRIMEIRO: Verifica se há doações registradas (sistema novo)
     ultima_doacao_registrada = (
         Doacao.query
         .filter_by(doador_id=doador.id)
@@ -21,13 +20,10 @@ def montar_perfil_doador(doador):
         .first()
     )
 
-    # 🩸 SEGUNDO: Se não há doações registradas, usa os dados do cadastro
     if ultima_doacao_registrada and ultima_doacao_registrada.data_doacao:
-        # Usa dados das doações registradas
         ultima_doacao = ultima_doacao_registrada.data_doacao
-        proxima_doacao = ultima_doacao + timedelta(days=60)
+        proxima_doacao = ultima_doacao + timedelta(days=90)
     else:
-        # Usa dados do cadastro inicial
         ultima_doacao = doador.ultima_doacao
         proxima_doacao = doador.proxima_doacao
 
@@ -59,7 +55,6 @@ def montar_perfil_doador(doador):
             else None
         ),
 
-        # 🩸 Doações - AGORA USA OS DADOS CORRETOS
         "ultima_doacao": (
             ultima_doacao.strftime("%d/%m/%Y")
             if ultima_doacao else "Nenhuma"
@@ -84,7 +79,7 @@ def montar_historico_doacoes(doador_id: int):
         lista.append({
             'id': doacao.id,
             'data': doacao.data_doacao.strftime('%d/%m/%Y') if doacao.data_doacao else None,
-            'horario': doacao.horario.strftime('%H:%M') if doacao.horario else None,  # ✅ conversão
+            'horario': doacao.horario.strftime('%H:%M') if doacao.horario else None,
             'local': doacao.hemocentro.nome_instituicao if doacao.hemocentro else 'Hemocentro',
             'volume': doacao.volume,
             'tipo_doacao': doacao.tipo_doacao,
@@ -106,7 +101,7 @@ def listar_hemocentros():
             'estado': h.estado,
             'telefone': h.telefone,
             'horario_funcionamento': f"{h.horario_inicio} - {h.horario_fim}",
-            'tipos_sanguineos_aceitos': 'A+, A-, B+, B-, AB+, AB-, O+, O-'  # mock
+            'tipos_sanguineos_aceitos': 'A+, A-, B+, B-, AB+, AB-, O+, O-'
         })
     return saida
 
@@ -157,7 +152,7 @@ def listar_agendamentos_doador(doador_id):
             'tipo_doacao': ag.tipo_doacao,
             'hemocentro_nome': ag.hemocentro.nome_instituicao if ag.hemocentro else 'Hemocentro não encontrado',
             'hemocentro_endereco': f"{ag.hemocentro.logradouro}, {ag.hemocentro.numero}" if ag.hemocentro else '',
-            'horario_funcionamento': horario_funcionamento  # 🕒 NOVO CAMPO
+            'horario_funcionamento': horario_funcionamento
         })
     return saida
 

@@ -1,15 +1,8 @@
-// =======================================
-// ✅ API SERVICE - VERSÃO SINCRONIZADA
-// =======================================
-
 import { authManager } from "../utils/authManager";
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || "https://tcc-34y4.onrender.com";
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 console.log("🔧 API BASE URL:", process.env.REACT_APP_API_URL);
 
-// =======================================
-// 🔧 HEADERS DE AUTENTICAÇÃO
-// =======================================
 export function getAuthHeaders() {
   const token = authManager.getToken();
   if (!token) throw new Error("Token ausente");
@@ -19,12 +12,8 @@ export function getAuthHeaders() {
   };
 }
 
-// =======================================
-// ⚙️ HANDLER GLOBAL DE RESPOSTAS
-// =======================================
 const handleResponse = async (response) => {
   if (response.status === 401) {
-    // Descobre tipo de usuário pra redirecionar corretamente
     const tipo = authManager.getUserData()?.tipo || "hemocentro";
     authManager.clear();
 
@@ -50,16 +39,11 @@ const handleResponse = async (response) => {
   return data;
 };
 
-// =======================================
-// 💾 FUNÇÕES PRINCIPAIS
-// =======================================
 export const api = {
-  // ========= AUTENTICAÇÃO =========
 
   async loginDoador(dados) {
     try {
       const response = await fetch(`${API_BASE_URL}/api/login/doador`, {
-        // ✅ direto
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dados),
@@ -170,7 +154,6 @@ export const api = {
     return Promise.resolve({ success: true });
   },
 
-  // ========= CADASTROS =========
   async cadastroDoador(dados) {
     const payload = {
       nome: dados.nome,
@@ -191,16 +174,13 @@ export const api = {
       peso: dados.peso,
       altura: dados.altura,
       senha: dados.senha,
-
-      // ✅ CORREÇÃO: Use os mesmos nomes que o backend espera
-      ultima_doacao_tipo: dados.ultima_doacao_tipo, // 'nunca' ou 'doador'
+      ultima_doacao_tipo: dados.ultima_doacao_tipo,
       ultima_doacao:
         dados.ultima_doacao_tipo === "doador" ? dados.ultima_doacao : null,
       proxima_doacao:
         dados.ultima_doacao_tipo === "doador" ? dados.proxima_doacao : null,
     };
 
-    // 🔍 Debug para confirmar no console antes do envio
     console.log("📤 Payload final enviado ao backend:", payload);
 
     const response = await fetch(`${API_BASE_URL}/api/cadastro/doador`, {
@@ -221,7 +201,6 @@ export const api = {
     return handleResponse(response);
   },
 
-  // ========= DOADOR =========
   async getPerfilDoador() {
     const token = authManager.getToken();
     const response = await fetch(`${API_BASE_URL}/doador/api/perfil`, {
@@ -260,7 +239,6 @@ export const api = {
     return handleResponse(response);
   },
 
-  // ========= AGENDAMENTOS DOADOR =========
   async fazerAgendamento(dados) {
     const response = await fetch(`${API_BASE_URL}/doador/api/agendamento`, {
       method: "POST",
@@ -289,7 +267,6 @@ export const api = {
     return handleResponse(response);
   },
 
-  // ========= HEMOCENTROS =========
   getHemocentros: async () => {
     const response = await fetch(`${API_BASE_URL}/doador/api/hemocentros`, {
       method: "GET",
@@ -297,7 +274,6 @@ export const api = {
     });
     return handleResponse(response);
   },
-  // ========= HEMOCENTRO (INSTITUIÇÃO) =========
   async getAgendamentosHemocentro() {
     const token = authManager.getToken();
     if (!token) throw new Error("Token ausente");
@@ -320,9 +296,6 @@ export const api = {
     };
   },
 
-  // ======================================================
-  // ♻️ REAGENDAR AGENDAMENTO (HEMOCENTRO)
-  // ======================================================
   async reagendarAgendamento(id, dados) {
     const token = authManager.getToken();
     if (!token) throw new Error("Token ausente");
@@ -347,7 +320,6 @@ export const api = {
     };
   },
 
-  // ========= DOADORES =========
   async getDoadores() {
     const response = await fetch(`${API_BASE_URL}/hemocentro/api/doadores`, {
       headers: getAuthHeaders(),
@@ -377,16 +349,15 @@ export const api = {
       doadores: data.data?.doadores || [],
     };
   },
-  // ========= DOAÇÕES =========
   async getDoacoes() {
-    const token = authManager.getToken(); // ✅ pega o JWT salvo no login
+    const token = authManager.getToken();
     if (!token) throw new Error("Token ausente");
 
     const response = await fetch(`${API_BASE_URL}/hemocentro/api/doacoes`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // ✅ envia token no header
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -394,7 +365,7 @@ export const api = {
   },
 
   async registrarDoacao(dados) {
-    const token = authManager.getToken(); // ✅ pega o JWT
+    const token = authManager.getToken();
     if (!token) throw new Error("Token ausente");
 
     const response = await fetch(
@@ -403,7 +374,7 @@ export const api = {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // ✅ agora token existe
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(dados),
       }
@@ -417,7 +388,6 @@ export const api = {
     };
   },
 
-  // ========= CAMPANHAS =========
   async getCampanhas() {
     const response = await fetch(`${API_BASE_URL}/hemocentro/api/campanhas`, {
       headers: getAuthHeaders(),
@@ -505,7 +475,6 @@ export const api = {
     }
   },
 
-  // ✅ Histórico de doações do doador logado
   async getHistoricoDoacoesDoador(doadorId) {
     try {
       const token = authManager.getToken();
@@ -530,7 +499,6 @@ export const api = {
         throw new Error(data.message || "Erro ao buscar histórico do doador");
       }
 
-      // Normaliza o formato da resposta
       const lista =
         data.historico || data.data?.historico || data.data?.doacoes || [];
       const doacoesNormalizadas = lista.map((d) => ({
@@ -548,7 +516,6 @@ export const api = {
     }
   },
 
-  // ========= UTILITÁRIOS =========
   getCurrentUser: () => authManager.getUserData(),
   isAuthenticated: () => authManager.isValid(),
   isDoador: () => authManager.getUserData()?.tipo === "doador",

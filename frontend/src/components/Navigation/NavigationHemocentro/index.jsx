@@ -6,7 +6,6 @@ import "./styles.css";
 const NavigationHemocentro = () => {
   const modalRef = useRef(null);
 
-  // 🔧 Inicializa o modal quando o componente monta
   useEffect(() => {
     const initBootstrap = async () => {
       if (typeof window !== 'undefined') {
@@ -23,7 +22,6 @@ const NavigationHemocentro = () => {
     initBootstrap();
   }, []);
 
-  // ✅ Função para alterar senha
   const handleAlterarSenha = async () => {
     const senhaAtual = document.getElementById("senhaAtual").value;
     const novaSenha = document.getElementById("novaSenha").value;
@@ -47,25 +45,21 @@ const NavigationHemocentro = () => {
 
       if (response.success) {
         alert("✅ Senha alterada com sucesso!");
-        
-        // ✅ CORREÇÃO: Fecha o modal de forma 100% segura
+
         const modalElement = document.getElementById("modalAlterarSenha");
         if (modalElement) {
-          // Método 1: Tenta com Bootstrap se disponível
           if (window.bootstrap) {
             const modal = window.bootstrap.Modal.getInstance(modalElement);
             if (modal) {
               modal.hide();
             }
           } 
-          // Método 2: Remove as classes do modal manualmente (fallback)
           else {
             modalElement.classList.remove('show');
             modalElement.style.display = 'none';
             modalElement.setAttribute('aria-hidden', 'true');
             document.body.classList.remove('modal-open');
             
-            // Remove o backdrop
             const backdrop = document.querySelector('.modal-backdrop');
             if (backdrop) {
               backdrop.remove();
@@ -73,7 +67,6 @@ const NavigationHemocentro = () => {
           }
         }
 
-        // Limpa campos
         document.getElementById("senhaAtual").value = "";
         document.getElementById("novaSenha").value = "";
         document.getElementById("confirmarSenha").value = "";
@@ -88,16 +81,12 @@ const NavigationHemocentro = () => {
 
   return (
     <>
-      {/* 🔹 Barra de Navegação */}
       <nav className="navbar navbar-expand-lg navigation-hemocentro">
         <div className="container">
-          {/* Logo / Marca */}
           <Link className="navbar-brand d-flex align-items-center" to="/hemocentro/inicio">
             <i className="fas fa-hospital me-2"></i>
             <span className="fw-bold">Hemocentro</span>
           </Link>
-
-          {/* Botão responsivo */}
           <button
             className="navbar-toggler"
             type="button"
@@ -106,8 +95,6 @@ const NavigationHemocentro = () => {
           >
             <span className="navbar-toggler-icon"></span>
           </button>
-
-          {/* Menu principal */}
           <div className="collapse navbar-collapse" id="navbarHemocentro">
             <ul className="navbar-nav ms-auto">
               <li className="nav-item mx-1">
@@ -140,7 +127,6 @@ const NavigationHemocentro = () => {
                 </Link>
               </li>
 
-              {/* 🔹 Perfil */}
               <li className="nav-item dropdown mx-1">
                 <a
                   className="nav-link dropdown-toggle d-flex align-items-center py-3"
@@ -190,7 +176,6 @@ const NavigationHemocentro = () => {
         </div>
       </nav>
 
-      {/* 🔒 Modal Alterar Senha */}
       <div
         className="modal fade"
         id="modalAlterarSenha"

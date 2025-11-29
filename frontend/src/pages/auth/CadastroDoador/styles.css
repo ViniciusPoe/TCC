@@ -1,7 +1,3 @@
-/* ================================
-   PÁGINA DE CADASTRO DE DOADOR
-   ================================ */
-
 .cadastro-page {
   display: flex;
   justify-content: center;
@@ -20,23 +16,18 @@
   max-width: 700px;
 }
 
-/* ================================
-   TÍTULOS
-   ================================ */
 .cadastro-card h2 {
   font-weight: 700;
-  color: #dc3545 !important; /* vermelho */
+  color: #dc3545 !important;
 }
 
 .cadastro-card h5 {
   margin-top: 15px;
   font-weight: 600;
-  color: #dc3545 !important; /* vermelho */
+  color: #dc3545 !important; 
 }
 
-/* ================================
-   CAMPOS DE FORMULÁRIO
-   ================================ */
+
 .cadastro-card input,
 .cadastro-card select,
 .cadastro-card textarea {
@@ -45,10 +36,10 @@
   border-radius: 6px;
   border: 1px solid #ced4da;
   width: 100%;
-  color: #212529; /* texto preto */
+  color: #212529; 
 }
 
-/* Efeito de foco em vermelho */
+
 .cadastro-card input:focus,
 .cadastro-card select:focus,
 .cadastro-card textarea:focus {
@@ -57,20 +48,18 @@
   outline: none;
 }
 
-/* Placeholder preto */
+
 .cadastro-card ::placeholder {
   color: #212529 !important;
   opacity: 0.8;
 }
 
-/* ================================
-   TEXTOS E LINKS
-   ================================ */
+
 .cadastro-card label,
 .cadastro-card small,
 .cadastro-card p,
 .cadastro-card .form-label {
-  color: #212529 !important; /* texto preto */
+  color: #212529 !important; 
 }
 
 .cadastro-card a {
@@ -83,9 +72,6 @@
   color: #000 !important;
 }
 
-/* ================================
-   BOTÕES
-   ================================ */
 .btn-danger {
   background-color: #dc3545 !important;
   border: none !important;
@@ -99,9 +85,6 @@
   transform: translateY(-1px);
 }
 
-/* ================================
-   CHECKBOX DE TERMOS
-   ================================ */
 .cadastro-card .form-check {
   display: flex;
   align-items: center;
@@ -114,7 +97,7 @@
   height: 18px;
   margin: 0;
   flex-shrink: 0;
-  accent-color: #dc3545; /* deixa o check vermelho */
+  accent-color: #dc3545;
 }
 
 .cadastro-card .form-check-label {
@@ -125,9 +108,6 @@
   user-select: none;
 }
 
-/* ================================
-   RESPONSIVIDADE
-   ================================ */
 @media (max-width: 576px) {
   .cadastro-card {
     padding: 20px;

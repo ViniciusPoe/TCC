@@ -14,19 +14,9 @@ const HomeDoador = () => {
   const [agendamentos, setAgendamentos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [agendamentoForm, setAgendamentoForm] = useState({
-    data: "",
-    horario: "",
-    tipo_doacao: "sangue_total",
-    hemocentro_id: "",
-  });
-  const [isEditMode, setIsEditMode] = useState(false);
 
   const navigate = useNavigate();
 
-  // ==========================
-  // 🔄 Carregar dados iniciais
-  // ==========================
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -48,7 +38,6 @@ const HomeDoador = () => {
           return;
         }
 
-        // 🔽 Buscar todas as informações do dashboard
         const [
           perfilResponse,
           historicoResponse,
@@ -69,9 +58,7 @@ const HomeDoador = () => {
         console.log("📦 DEBUG - AGENDAMENTOS:", agendamentosResponse);
         console.log("📦 DEBUG - CAMPANHAS:", campanhasResponse);
 
-        // ✅ Perfil
         if (perfilResponse.success && perfilResponse.data) {
-          // Compatível com os dois formatos possíveis: {doador: {...}} ou {carteira: {...}}
           const perfil =
             perfilResponse.data.doador ||
             perfilResponse.data.carteira ||
@@ -81,14 +68,12 @@ const HomeDoador = () => {
         } else {
           throw new Error(perfilResponse.message || "Erro ao carregar perfil");
         }
-        // ✅ Histórico
         if (historicoResponse.success && historicoResponse.data?.doacoes) {
           setDoacoes(historicoResponse.data.doacoes.slice(0, 3));
         } else {
           setDoacoes([]);
         }
 
-        // ✅ Campanhas
         if (campanhasResponse.success && campanhasResponse.data?.campanhas) {
           setCampanhas(campanhasResponse.data.campanhas.slice(0, 2));
         } else if (
@@ -100,7 +85,6 @@ const HomeDoador = () => {
           setCampanhas([]);
         }
 
-        // ✅ Hemocentros
         if (
           hemocentrosResponse.success &&
           Array.isArray(hemocentrosResponse.data)
@@ -112,7 +96,6 @@ const HomeDoador = () => {
           );
         }
 
-        // ✅ Agendamentos
         if (
           agendamentosResponse.success &&
           agendamentosResponse.data?.agendamentos
@@ -147,9 +130,6 @@ const HomeDoador = () => {
     fetchData();
   }, [navigate]);
 
-  // ==========================
-  // 🩸 Funções auxiliares
-  // ==========================
   const calcularProximaDoacao = () => {
     if (!agendamentos || agendamentos.length === 0) return null;
 
@@ -222,104 +202,6 @@ const HomeDoador = () => {
     }
   };
 
-  // ==========================
-  // 🗓️ Agendamento de doação
-  // ==========================
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setAgendamentoForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleAgendamentoSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      if (!agendamentoForm.hemocentro_id) {
-        alert("Por favor, selecione um hemocentro");
-        return;
-      }
-
-      // estamos reagendando?
-      if (isEditMode && agendamentoForm.agendamento_id) {
-        console.log(
-          "🔁 Reagendando. Cancelando agendamento antigo:",
-          agendamentoForm.agendamento_id
-        );
-
-        // 1. cancelar/remover agendamento antigo
-        const cancelarResp = await api.cancelarAgendamento(
-          agendamentoForm.agendamento_id
-        );
-
-        if (!cancelarResp.success) {
-          alert("Não foi possível cancelar o agendamento anterior.");
-          return;
-        }
-      }
-
-      // 2. criar novo agendamento (o mesmo fluxo que você já tinha)
-      console.log("📤 Criando novo agendamento:", agendamentoForm);
-
-      const response = await api.fazerAgendamento({
-        data: agendamentoForm.data,
-        horario: agendamentoForm.horario,
-        tipo_doacao: agendamentoForm.tipo_doacao,
-        hemocentro_id: agendamentoForm.hemocentro_id,
-      });
-
-      console.log("📥 Resposta do agendamento:", response);
-
-      if (response.success) {
-        alert(
-          isEditMode
-            ? "Agendamento atualizado!"
-            : "Agendamento realizado com sucesso!"
-        );
-
-        // limpa form
-        setAgendamentoForm({
-          data: "",
-          horario: "",
-          tipo_doacao: "sangue_total",
-          hemocentro_id: "",
-          agendamento_id: null,
-        });
-        setIsEditMode(false);
-
-        // recarregar lista de agendamentos
-        const agendamentosResponse = await api.getAgendamentosDoador();
-        if (
-          agendamentosResponse.success &&
-          agendamentosResponse.data?.agendamentos
-        ) {
-          setAgendamentos(agendamentosResponse.data.agendamentos);
-        } else if (
-          agendamentosResponse.success &&
-          Array.isArray(agendamentosResponse.data)
-        ) {
-          setAgendamentos(agendamentosResponse.data);
-        }
-
-        // fechar o collapse
-        const collapseElement = document.getElementById("formAgendamento");
-        if (collapseElement && collapseElement.classList.contains("show")) {
-          const { Collapse } = require("bootstrap");
-          const c =
-            Collapse.getInstance(collapseElement) ||
-            new Collapse(collapseElement, { toggle: false });
-          c.hide();
-        }
-      } else {
-        alert("Erro ao agendar: " + (response.message || "Tente novamente"));
-      }
-    } catch (error) {
-      console.error("❌ Erro ao agendar:", error);
-      alert("Erro ao conectar com o servidor");
-    }
-  };
-
-  // ==========================
-  // 🔁 Loading / Erro / Vazio
-  // ==========================
   if (loading) {
     return (
       <div>
@@ -376,9 +258,6 @@ const HomeDoador = () => {
     );
   }
 
-  // ==========================
-  // 🎨 Renderização principal
-  // ==========================
   const estatisticas = calcularEstatisticas();
   const proximaDoacao = calcularProximaDoacao();
   const diasAteProxima = calcularDiasAteProximaDoacao();
@@ -389,7 +268,6 @@ const HomeDoador = () => {
 
       <div className="container-fluid px-4 py-5">
         <div className="container">
-          {/* Header de boas-vindas */}
           <div className="row mb-5">
             <div className="col-12">
               <div className="welcome-card card border-0 shadow-lg">
@@ -414,9 +292,6 @@ const HomeDoador = () => {
                         )}
                       </p>
                       <div className="d-flex flex-wrap gap-2">
-                        <span className={`badge ${estatisticas.badgeClass}`}>
-                          {estatisticas.statusDoador}
-                        </span>
                         <span className="badge bg-success">
                           {estatisticas.totalDoacoes} Doações Realizadas
                         </span>
@@ -442,11 +317,8 @@ const HomeDoador = () => {
             </div>
           </div>
 
-          {/* O RESTANTE DO JSX PERMANECE IGUAL (só mudei a lógica, não o layout) */}
           <div className="row">
-            {/* Coluna Esquerda - Dashboard Rápido */}
             <div className="col-lg-8">
-              {/* Cards de Ação Rápida */}
               <div className="row mb-4">
                 <div className="col-md-4 mb-3">
                   <div className="action-card card border-0 shadow-sm h-100 text-center">
@@ -460,8 +332,7 @@ const HomeDoador = () => {
                       </p>
                       <button
                         className="btn btn-danger btn-sm w-100"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#formAgendamento"
+                        onClick={() => navigate("/doador/agendamento")}
                       >
                         Agendar Agora
                       </button>
@@ -506,60 +377,6 @@ const HomeDoador = () => {
                 </div>
               </div>
 
-              {/* Formulário de Agendamento (Collapsible) */}
-              <div className="collapse mb-4" id="formAgendamento">
-                <div className="card border-0 shadow-sm">
-                  <div className="card-header bg-white">
-                    <h5 className="mb-0">
-                      <i className="fas fa-calendar-plus me-2"></i>Agendar Nova
-                      Doação
-                    </h5>
-                  </div>
-                  <div className="card-body">
-                    <form onSubmit={handleAgendamentoSubmit}>
-                      <div className="row">
-                        <div className="col-md-4 mb-3">
-                          <label className="form-label">Data *</label>
-                          <input
-                            type="date"
-                            className="form-control"
-                            name="data"
-                            value={agendamentoForm.data}
-                            onChange={handleInputChange}
-                            min={new Date().toISOString().split("T")[0]}
-                            required
-                          />
-                        </div>
-                        <div className="col-md-4 mb-3">
-                          <label className="form-label">Hemocentro *</label>
-                          <select
-                            className="form-select"
-                            name="hemocentro_id"
-                            value={agendamentoForm.hemocentro_id}
-                            onChange={handleInputChange}
-                            required
-                          >
-                            <option value="">Selecione</option>
-                            {hemocentros.map((hemocentro) => (
-                              <option key={hemocentro.id} value={hemocentro.id}>
-                                {hemocentro.nome}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      </div>
-                      <div className="d-grid">
-                        <button type="submit" className="btn btn-danger">
-                          <i className="fas fa-calendar-check me-2"></i>
-                          Confirmar Agendamento
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-
-              {/* Últimas Doações */}
               <div className="card border-0 shadow-sm mb-4">
                 <div className="card-header bg-white">
                   <div className="d-flex justify-content-between align-items-center">
@@ -620,9 +437,7 @@ const HomeDoador = () => {
               </div>
             </div>
 
-            {/* Coluna Direita - Informações e Campanhas */}
             <div className="col-lg-4">
-              {/* Próxima Doação */}
               <div className="card border-0 shadow-sm mb-4">
                 <div className="card-header bg-white">
                   <h5 className="mb-0">
@@ -683,47 +498,7 @@ const HomeDoador = () => {
                   )}
                   <button
                     className="btn btn-outline-danger btn-sm w-100"
-                    onClick={() => {
-                      if (proximaDoacao) {
-                        // modo reagendar
-                        setIsEditMode(true);
-
-                        // preencher o form com o agendamento atual
-                        setAgendamentoForm({
-                          data: proximaDoacao.data
-                            .split("/")
-                            .reverse()
-                            .join("-"), // dd/mm/yyyy -> yyyy-mm-dd
-                          horario: proximaDoacao.horario || "",
-                          tipo_doacao:
-                            proximaDoacao.tipo_doacao || "sangue_total",
-                          hemocentro_id: proximaDoacao.hemocentro_id || "",
-                          agendamento_id: proximaDoacao.id, // <- MUITO IMPORTANTE
-                        });
-                      } else {
-                        // modo criar novo
-                        setIsEditMode(false);
-                        setAgendamentoForm({
-                          data: "",
-                          horario: "",
-                          tipo_doacao: "sangue_total",
-                          hemocentro_id: "",
-                          agendamento_id: null,
-                        });
-                      }
-
-                      // abrir o collapse
-                      const collapseElement =
-                        document.getElementById("formAgendamento");
-                      if (
-                        collapseElement &&
-                        !collapseElement.classList.contains("show")
-                      ) {
-                        // se já fez o import { Collapse } from "bootstrap"
-                        const { Collapse } = require("bootstrap");
-                        new Collapse(collapseElement, { toggle: true });
-                      }
-                    }}
+                    onClick={() => navigate("/doador/agendamento")}
                   >
                     <i className="fas fa-bell me-1"></i>
                     {proximaDoacao ? "Alterar Agendamento" : "Agendar Doação"}
@@ -731,7 +506,6 @@ const HomeDoador = () => {
                 </div>
               </div>
 
-              {/* Campanhas em Destaque */}
               <div className="card border-0 shadow-sm">
                 <div className="card-header bg-white">
                   <h5 className="mb-0">

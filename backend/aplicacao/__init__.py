@@ -10,10 +10,15 @@ import os
 def criar_app(testing=False):
     app = Flask(__name__)
     
-    print("📦 DB_USER:", os.getenv("DB_USER"))
-    print("📦 DB_NAME:", os.getenv("DB_NAME"))
-    print("📂 URI:", Config.SQLALCHEMY_DATABASE_URI)
+    DB_USER = os.getenv("DB_USER", "root")
+    DB_PASSWORD = os.getenv("DB_PASSWORD", "Viny200804!")
+    DB_HOST = os.getenv("DB_HOST", "localhost")
+    DB_NAME = os.getenv("DB_NAME", "doacao_sangue")
 
+    SQLALCHEMY_DATABASE_URI = os.getenv("SQLALCHEMY_DATABASE_URI") or (
+        f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}?charset=utf8mb4"
+    )
+    
     # Config
     if testing:
         app.config.from_object(TestConfig)
@@ -24,20 +29,15 @@ def criar_app(testing=False):
     logger = configurar_logging()
     logger.info("Iniciando aplicação...")
 
-    # CORS para o frontend React
-    # CORS para o frontend React
     CORS(app, resources={r"/*": {"origins": [
-        "http://localhost:3000",                # para desenvolvimento
-        "https://tcc-front-m03e.onrender.com"     # domínio do Render (frontend)
+        "http://localhost:3000",              
     ]}}, supports_credentials=True)
 
 
-    # Extensões
     db.init_app(app)
     configurar_bcrypt(app)
     configurar_jwt(app)
 
-    # Registrar blueprints
     from aplicacao.autenticacao.rotas import bp_autenticacao
     from aplicacao.doador.rotas import bp_doador
     from aplicacao.hemocentro.rotas import bp_hemocentro
@@ -46,7 +46,6 @@ def criar_app(testing=False):
     app.register_blueprint(bp_doador, url_prefix="/doador")
     app.register_blueprint(bp_hemocentro, url_prefix="/hemocentro")
 
-    # Garantir tabelas
     with app.app_context():
         verificar_e_criar_tabelas(logger)
 

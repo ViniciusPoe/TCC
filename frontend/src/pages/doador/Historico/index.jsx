@@ -10,8 +10,7 @@ const Historico = () => {
   const [estatisticas, setEstatisticas] = useState({
     totalDoacoes: 0,
     volumeTotal: 0,
-    statusDoador: "Iniciante",
-    metaAnual: 10,
+    metaAnual: 3,
     vidasSalvas: 0,
   });
 
@@ -36,24 +35,16 @@ const Historico = () => {
   const calcularEstatisticas = (doacoes) => {
     const totalDoacoes = doacoes.length;
     const volumeTotal = doacoes.reduce(
-      (total, doacao) => total + (doacao.volume || 450),
+      (total, doacao) => total + (doacao.volume || 0),
       0
     );
 
-    // Calcular vidas salvas (cada 350ml pode salvar até 1 vida)
     const vidasSalvas = Math.round(volumeTotal / 350);
-
-    // Determinar status do doador baseado no número de doações
-    let statusDoador = "Iniciante";
-    if (totalDoacoes >= 10) statusDoador = "Doador Ouro";
-    else if (totalDoacoes >= 5) statusDoador = "Doador Prata";
-    else if (totalDoacoes >= 2) statusDoador = "Doador Bronze";
 
     setEstatisticas({
       totalDoacoes,
       volumeTotal,
-      statusDoador,
-      metaAnual: 10,
+      metaAnual: 3,
       vidasSalvas,
     });
   };
@@ -110,7 +101,7 @@ const Historico = () => {
   };
 
   const formatarVolume = (volume) => {
-    return `${volume || 450}ml`;
+    return `${volume}ml`;
   };
 
   const formatarData = (dataString) => {
@@ -119,12 +110,10 @@ const Historico = () => {
     try {
       let data;
 
-      // 📅 Caso venha no formato brasileiro DD/MM/YYYY
       if (dataString.includes("/")) {
         const [dia, mes, ano] = dataString.split("/");
         data = new Date(`${ano}-${mes}-${dia}T00:00:00`);
       }
-      // 📆 Caso venha no formato ISO (YYYY-MM-DD ou com hora)
       else {
         let dataNormalizada = dataString.trim();
         if (dataNormalizada.includes(" ")) {
@@ -149,7 +138,7 @@ const Historico = () => {
     }
   };
   const formatarHora = (dataString, hora) => {
-    if (hora) return hora; // usa se já existir campo "horario"
+    if (hora) return hora;
     try {
       const data = new Date(dataString);
       if (isNaN(data)) return "Horário não informado";
@@ -198,9 +187,8 @@ const Historico = () => {
             </div>
           </div>
 
-          {/* Resumo Estatístico */}
           <div className="row mb-5">
-            <div className="col-md-4 mb-3">
+            <div className="col-md-6 mb-3">
               <div className="card border-0 shadow-sm h-100">
                 <div className="card-body text-center">
                   <h3 className="text-danger">{estatisticas.totalDoacoes}</h3>
@@ -219,7 +207,7 @@ const Historico = () => {
               </div>
             </div>
 
-            <div className="col-md-4 mb-3">
+            <div className="col-md-6 mb-3">
               <div className="card border-0 shadow-sm h-100">
                 <div className="card-body text-center">
                   <h3 className="text-danger">
@@ -236,38 +224,8 @@ const Historico = () => {
                 </div>
               </div>
             </div>
-
-            <div className="col-md-4 mb-3">
-              <div className="card border-0 shadow-sm h-100">
-                <div className="card-body text-center">
-                  <h3 className="text-danger">{estatisticas.statusDoador}</h3>
-                  <p className="text-muted mb-0">Seu Status</p>
-                  <div className="mt-2">
-                    <span
-                      className={`badge ${
-                        estatisticas.statusDoador === "Doador Ouro"
-                          ? "bg-warning text-dark"
-                          : estatisticas.statusDoador === "Doador Prata"
-                          ? "bg-secondary"
-                          : estatisticas.statusDoador === "Doador Bronze"
-                          ? "bg-brown text-white"
-                          : "bg-info"
-                      }`}
-                    >
-                      <i className="fas fa-award me-1"></i>
-                      {estatisticas.totalDoacoes >= 5
-                        ? "Frequente"
-                        : estatisticas.totalDoacoes >= 2
-                        ? "Regular"
-                        : "Iniciante"}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
 
-          {/* Lista de Doações */}
           <div className="card border-0 shadow-sm">
             <div className="card-header bg-white">
               <h5 className="mb-0">
@@ -295,7 +253,6 @@ const Historico = () => {
                         <th>Data</th>
                         <th>Local</th>
                         <th>Volume</th>
-                        <th>Tipo</th>
                         <th>Status</th>
                       </tr>
                     </thead>
@@ -336,11 +293,6 @@ const Historico = () => {
                             </div>
                           </td>
                           <td>{formatarVolume(doacao.volume)}</td>
-                          <td>
-                            {doacao.tipo_doacao ||
-                              doacao.tipo ||
-                              "Sangue Total"}
-                          </td>
                           <td>{getStatusBadge(doacao.status)}</td>
                         </tr>
                       ))}

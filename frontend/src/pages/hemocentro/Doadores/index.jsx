@@ -24,7 +24,6 @@ const Doadores = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // ✅ Verificar autenticação
         if (!api.isAuthenticated()) {
           console.log("❌ Hemocentro não autenticado, redirecionando...");
           navigate("/login/hemocentro");
@@ -42,19 +41,15 @@ const Doadores = () => {
 
         console.log("🔄 Buscando doadores da API...");
 
-        // ✅ Buscar doadores
         const response = await api.getDoadores();
         console.log("📊 Resposta COMPLETA da API:", response);
 
         if (response.success) {
-          // Compatibilidade: data.doadores OU doadores direto
           const lista = response.data?.doadores || response.doadores || [];
 
-          // ✅ Atualiza lista principal
           setDoadores(lista);
           console.log("✅ Doadores recebidos:", lista);
 
-          // ✅ Carrega os agendamentos após os doadores
           await carregarAgendamentosPendentesOtimizado();
         } else {
           console.error("❌ API não retornou dados válidos:", response);
@@ -77,15 +72,11 @@ const Doadores = () => {
 
     fetchData();
   }, [navigate]);
-
-  // ✅ NOVA FUNÇÃO OTIMIZADA: Carrega agendamentos pendentes de uma vez
   const carregarAgendamentosPendentesOtimizado = async () => {
     try {
       console.log("🔄 Buscando doadores com agendamentos ativos...");
       const response = await api.getDoadoresComAgendamento();
       console.log("📅 Resposta doadores com agendamento:", response);
-
-      // ✅ Captura doadores tanto em 'response.doadores' quanto em 'response.data.doadores'
       const lista =
         response.data?.doadores || response.doadores || response.data || [];
 
@@ -119,12 +110,10 @@ const Doadores = () => {
     }
   };
 
-  // ✅ Função para verificar se doador tem agendamento pendente
   const temAgendamentoPendente = (doadorId) => {
     const agendamento = agendamentosPendentes[doadorId];
     if (!agendamento) return false;
 
-    // considerar agendado e pendente como "ativo"
     const ativo = ["agendado", "pendente"].includes(
       agendamento.status?.toLowerCase()
     );
@@ -135,7 +124,6 @@ const Doadores = () => {
     return ativo;
   };
 
-  // ✅ Função para obter texto do tooltip do agendamento
   const getTooltipAgendamento = (doadorId) => {
     const agendamento = agendamentosPendentes[doadorId];
     if (agendamento?.temAgendamento) {
@@ -144,21 +132,17 @@ const Doadores = () => {
     return "Agendar doação";
   };
 
-  // Buscar histórico de doações
   const carregarHistoricoDoacoes = async (doadorId) => {
     try {
       console.log(`📋 Buscando histórico do doador ${doadorId}...`);
 
-      // ✅ Chama o endpoint correto para o hemocentro
       const response = await api.getHistoricoDoacoesDoador(doadorId);
       console.log("📦 Resposta bruta da API de histórico:", response);
 
-      // ✅ Compatibilidade com diferentes formatos de resposta
       const lista =
         response.data?.doacoes || response.doacoes || response.historico || [];
 
       if (response.success && lista.length > 0) {
-        // Normaliza nomes para o React
         const doacoesFormatadas = lista.map((d) => ({
           id: d.id,
           data: d.data || d.data_doacao,
@@ -180,21 +164,18 @@ const Doadores = () => {
     }
   };
 
-  // Abrir modal de histórico
   const handleAbrirHistorico = async (doador) => {
     setDoadorSelecionado(doador);
     await carregarHistoricoDoacoes(doador.id);
     setShowModalHistorico(true);
   };
 
-  // Abrir modal de agendamento
   const handleAbrirAgendar = (doador) => {
     if (!doador.apto) {
       alert("Este doador não está apto para doação no momento.");
       return;
     }
 
-    // ✅ Verificação com feedback detalhado
     if (temAgendamentoPendente(doador.id)) {
       const agendamento = agendamentosPendentes[doador.id];
       alert(
@@ -211,7 +192,6 @@ const Doadores = () => {
     setShowModalAgendar(true);
   };
 
-  // Abrir WhatsApp
   const handleAbrirWhatsApp = (doador) => {
     const numero = doador.telefone.replace(/\D/g, "");
     const currentUser = api.getCurrentUser();
@@ -225,7 +205,6 @@ const Doadores = () => {
     window.open(url, "_blank");
   };
 
-  // Confirmar agendamento
   const handleConfirmarAgendamento = async () => {
     if (!doadorSelecionado || !agendamentoData.data) {
       alert("Por favor, selecione uma data para o agendamento.");
@@ -254,11 +233,10 @@ const Doadores = () => {
           `Agendamento confirmado para ${doadorSelecionado.nome} no dia ${agendamentoData.data}`
         );
 
-        // ✅ Atualizar lista e agendamentos pendentes
         const updatedResponse = await api.getDoadores();
         if (updatedResponse.success) {
           setDoadores(updatedResponse.doadores);
-          await carregarAgendamentosPendentesOtimizado(); // ✅ Atualiza agendamentos
+          await carregarAgendamentosPendentesOtimizado();
         }
 
         setShowModalAgendar(false);
@@ -272,7 +250,6 @@ const Doadores = () => {
     }
   };
 
-  // Filtrar doadores
   const doadoresFiltrados = doadores.filter((doador) => {
     if (filtro === "todos") return true;
     if (filtro === "aptos") return doador.apto;
@@ -280,7 +257,6 @@ const Doadores = () => {
     return true;
   });
 
-  // Calcular estatísticas
   const estatisticas = {
     total: doadores.length,
     aptos: doadores.filter((d) => d.apto).length,
@@ -321,7 +297,6 @@ const Doadores = () => {
     }
   };
 
-  // ✅ Nova função para badge de agendamento
   const getAgendamentoBadge = (doadorId) => {
     if (temAgendamentoPendente(doadorId)) {
       return "badge bg-warning";
@@ -350,7 +325,6 @@ const Doadores = () => {
 
       <div className="container-fluid px-4 py-5">
         <div className="container">
-          {/* Header */}
           <div className="row mb-5">
             <div className="col-12">
               <div className="text-center">
@@ -364,7 +338,6 @@ const Doadores = () => {
             </div>
           </div>
 
-          {/* Estatísticas */}
           <div className="row mb-4">
             <div className="col-md-4 mb-3">
               <div className="card border-0 shadow-sm h-100">
@@ -395,7 +368,6 @@ const Doadores = () => {
             </div>
           </div>
 
-          {/* Filtros */}
           <div className="row mb-4">
             <div className="col-12">
               <div className="card border-0 shadow-sm">
@@ -447,7 +419,6 @@ const Doadores = () => {
             </div>
           </div>
 
-          {/* Tabela de Doadores */}
           <div className="row">
             <div className="col-12">
               <div className="card border-0 shadow-sm">
@@ -498,7 +469,6 @@ const Doadores = () => {
                                       {doador.email}
                                     </small>
                                     <br />
-                                    {/* ✅ Badge de agendamento pendente */}
                                     {temAgendamentoPendente(doador.id) && (
                                       <span
                                         className={getAgendamentoBadge(
@@ -601,7 +571,6 @@ const Doadores = () => {
           </div>
         </div>
       </div>
-      {/* Modal de Histórico */}
       {showModalHistorico && doadorSelecionado && (
         <div
           className="modal fade show d-block"
@@ -749,7 +718,6 @@ const Doadores = () => {
         </div>
       )}
 
-      {/* Modal de Agendamento */}
       {showModalAgendar && doadorSelecionado && (
         <div
           className="modal fade show d-block"
@@ -808,23 +776,6 @@ const Doadores = () => {
                   <small className="text-muted">
                     O horário será definido automaticamente pelo hemocentro
                   </small>
-                </div>
-
-                <div className="mb-3">
-                  <label className="form-label">Tipo de Doação</label>
-                  <select
-                    className="form-select"
-                    value={agendamentoData.tipo_doacao}
-                    onChange={(e) =>
-                      setAgendamentoData({
-                        ...agendamentoData,
-                        tipo_doacao: e.target.value,
-                      })
-                    }
-                  >
-                    <option value="sangue_total">Sangue Total</option>
-                    <option value="plaquetas">Plaquetas</option>
-                  </select>
                 </div>
 
                 <div className="alert alert-info">

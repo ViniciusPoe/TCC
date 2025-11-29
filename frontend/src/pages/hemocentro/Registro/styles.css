@@ -1,7 +1,3 @@
-/* ===============================
-   REGISTRO DE DOAÇÕES - HEMOCENTRO
-   =============================== */
-
 .registro-doacoes {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f4f7fc;
@@ -9,7 +5,6 @@
   color: #333;
 }
 
-/* ===== HEADER ===== */
 h1.display-5 {
   color: #0d6efd;
   font-weight: 700;
@@ -19,7 +14,6 @@ h1.display-5 {
   color: #6c757d;
 }
 
-/* ===== CARDS ===== */
 .card {
   border-radius: 16px;
   border: none;
@@ -38,7 +32,6 @@ h1.display-5 {
   border-radius: 16px 16px 0 0;
 }
 
-/* ===== FORMULÁRIO ===== */
 .form-label {
   font-weight: 600;
   color: #0d6efd;
@@ -63,7 +56,6 @@ h1.display-5 {
   border-color: #e9ecef;
 }
 
-/* ===== BOTÕES ===== */
 .btn {
   border-radius: 10px;
   font-weight: 500;
@@ -79,7 +71,6 @@ h1.display-5 {
   color: #0d6efd;
 }
 
-/* ===== TABELA ===== */
 .table-responsive {
   border-radius: 12px;
   background: #fff;
@@ -110,7 +101,6 @@ h1.display-5 {
   transition: all 0.25s ease;
 }
 
-/* ===== BADGES ===== */
 .badge {
   font-size: 0.75rem;
   padding: 0.45rem 0.8rem;
@@ -128,7 +118,6 @@ h1.display-5 {
   color: #0d6efd !important;
 }
 
-/* ===== ESTADO VAZIO ===== */
 .text-center.py-5 {
   background: linear-gradient(135deg, #ffffff 0%, #f3f7ff 100%);
   border-radius: 15px;
@@ -136,7 +125,6 @@ h1.display-5 {
   margin: 2rem 0;
 }
 
-/* ===== INDICADORES MÉDICOS ===== */
 .text-success {
   color: #198754 !important;
 }
@@ -145,7 +133,6 @@ h1.display-5 {
   color: #dc3545 !important;
 }
 
-/* ===== FORMULÁRIO CLÍNICO ===== */
 .medical-form .form-control {
   border-left: 4px solid #0d6efd;
 }
@@ -154,7 +141,6 @@ h1.display-5 {
   border-left-color: #0d6efd;
 }
 
-/* ===== RESPONSIVIDADE ===== */
 @media (max-width: 768px) {
   .table-responsive {
     font-size: 0.85rem;
@@ -176,7 +162,6 @@ h1.display-5 {
   }
 }
 
-/* ===== ANIMAÇÕES ===== */
 @keyframes fadeIn {
   from {
     opacity: 0;

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./styles.css";
-const API_BASE_URL = process.env.REACT_APP_API_URL || "https://tcc-34y4.onrender.com";
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
 const CadastroHemocentro = () => {
   const [formData, setFormData] = useState({
@@ -25,9 +25,6 @@ const CadastroHemocentro = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // =======================================================
-  // 🧩 Atualização de campos do formulário
-  // =======================================================
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
@@ -36,9 +33,6 @@ const CadastroHemocentro = () => {
     });
   };
 
-  // =======================================================
-  // 🔍 Buscar endereço via CEP (API ViaCEP)
-  // =======================================================
   const buscarCEP = async (cep) => {
     if (cep.length === 9) {
       try {
@@ -61,15 +55,11 @@ const CadastroHemocentro = () => {
     }
   };
 
-  // =======================================================
-  // 🚀 Envio do formulário
-  // =======================================================
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    // Validações básicas
     if (formData.senha !== formData.confirmar_senha) {
       setError("As senhas não coincidem");
       setLoading(false);
@@ -82,7 +72,6 @@ const CadastroHemocentro = () => {
       return;
     }
 
-    // Validação extra: horários obrigatórios
     if (!formData.horario_inicio || !formData.horario_fim) {
       setError("Defina o horário de funcionamento completo.");
       setLoading(false);
@@ -130,9 +119,6 @@ const CadastroHemocentro = () => {
     }
   };
 
-  // =======================================================
-  // 🧱 Estrutura visual
-  // =======================================================
   return (
     <div className="hemocentro-register-container">
       <div className="hemocentro-register-card">
@@ -147,9 +133,7 @@ const CadastroHemocentro = () => {
         {error && <div className="alert alert-primary">{error}</div>}
 
         <form onSubmit={handleSubmit}>
-          {/* ==========================
-              DADOS DO HEMOCENTRO
-          ========================== */}
+
           <div className="mb-4">
             <h5 className="text-primary">Dados do Hemocentro</h5>
             <div className="row">
@@ -178,9 +162,6 @@ const CadastroHemocentro = () => {
             </div>
           </div>
 
-          {/* ==========================
-              ENDEREÇO
-          ========================== */}
           <div className="mb-4">
             <h5 className="text-primary">Endereço</h5>
             <div className="row">
@@ -266,9 +247,6 @@ const CadastroHemocentro = () => {
             </div>
           </div>
 
-          {/* ==========================
-              HORÁRIOS
-          ========================== */}
           <div className="mb-4">
             <h5 className="text-primary">Horário de Funcionamento</h5>
             <div className="row">
@@ -297,9 +275,6 @@ const CadastroHemocentro = () => {
             </div>
           </div>
 
-          {/* ==========================
-              CONTATO
-          ========================== */}
           <div className="mb-4">
             <h5 className="text-primary">Contato</h5>
             <div className="row">
@@ -328,9 +303,6 @@ const CadastroHemocentro = () => {
             </div>
           </div>
 
-          {/* ==========================
-              SENHA
-          ========================== */}
           <div className="mb-4">
             <h5 className="text-primary">Acesso</h5>
             <div className="row">
@@ -359,9 +331,6 @@ const CadastroHemocentro = () => {
             </div>
           </div>
 
-          {/* ==========================
-              TERMOS
-          ========================== */}
           <div className="form-check mb-4">
             <input
               className="form-check-input"
@@ -377,7 +346,6 @@ const CadastroHemocentro = () => {
             </label>
           </div>
 
-          {/* BOTÃO */}
           <button
             type="submit"
             className="btn btn-primary btn-block"

@@ -12,7 +12,6 @@ def parse_data_iso(data_str):
         return datetime.strptime(data_str, "%Y-%m-%d").date()
     except ValueError:
         try:
-            # fallback caso venha com hora
             return datetime.fromisoformat(data_str).date()
         except Exception:
             print(f"⚠️ parse_data_iso: formato inválido -> {data_str}")

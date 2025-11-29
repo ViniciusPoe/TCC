@@ -25,14 +25,12 @@ const CampanhasHemocentro = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // ✅ Verificar autenticação primeiro
         if (!api.isAuthenticated()) {
           console.log("❌ Hemocentro não autenticado, redirecionando...");
           navigate("/login/hemocentro");
           return;
         }
 
-        // ✅ Buscar dados do hemocentro atual da memória
         const currentUser = api.getCurrentUser();
         console.log("🏥 DEBUG - Hemocentro atual:", currentUser);
 
@@ -44,7 +42,6 @@ const CampanhasHemocentro = () => {
 
         console.log("🔄 Buscando campanhas da API...");
 
-        // ✅ Buscar campanhas SEM passar ID - a API usa o usuário logado
         const response = await api.getCampanhas();
         console.log("📊 Resposta COMPLETA da API:", response);
 
@@ -60,7 +57,6 @@ const CampanhasHemocentro = () => {
       } catch (error) {
         console.error("💥 Erro ao carregar campanhas:", error);
 
-        // ✅ Se erro de autenticação, redirecionar
         if (
           error.message.includes("token") ||
           error.message.includes("autenticação")
@@ -88,7 +84,6 @@ const CampanhasHemocentro = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // ✅ Verificar autenticação
       if (!api.isAuthenticated()) {
         alert("Sessão expirada. Faça login novamente.");
         navigate("/login/hemocentro");
@@ -106,16 +101,25 @@ const CampanhasHemocentro = () => {
       };
 
       if (campanhaEditando) {
-        // ✅ Editar campanha existente
         const response = await api.editarCampanha(
           campanhaEditando.id,
           campanhaData
         );
+
         if (response.success) {
-          setCampanhas(
-            campanhas.map((camp) =>
+          setCampanhas((prev) =>
+            prev.map((camp) =>
               camp.id === campanhaEditando.id
-                ? { ...campanhaData, id: campanhaEditando.id }
+                ? {
+                    ...camp,
+                    ...campanhaData,
+                    data_inicio:
+                      campanhaData.dataInicio ||
+                      camp.data_inicio ||
+                      camp.dataInicio,
+                    data_fim:
+                      campanhaData.dataFim || camp.data_fim || camp.dataFim,
+                  }
                 : camp
             )
           );
@@ -124,12 +128,11 @@ const CampanhasHemocentro = () => {
           alert("Erro ao atualizar campanha: " + response.message);
         }
       } else {
-        // ✅ Criar nova campanha
         const response = await api.criarCampanha(campanhaData);
 
         if (response.success && response.data?.campanha) {
           console.log("✅ Campanha criada:", response.data.campanha);
-          setCampanhas([response.data.campanha, ...campanhas]);
+          setCampanhas((prev) => [response.data.campanha, ...prev]);
           alert("Campanha criada com sucesso!");
         } else {
           console.error("❌ Falha ao criar:", response);
@@ -140,7 +143,6 @@ const CampanhasHemocentro = () => {
         }
       }
 
-      // Limpar formulário
       setFormData({
         titulo: "",
         descricao: "",
@@ -158,11 +160,11 @@ const CampanhasHemocentro = () => {
 
   const handleEditar = (campanha) => {
     setFormData({
-      titulo: campanha.titulo,
-      descricao: campanha.descricao,
-      dataInicio: campanha.dataInicio,
-      dataFim: campanha.dataFim,
-      status: campanha.status,
+      titulo: campanha.titulo || "",
+      descricao: campanha.descricao || "",
+      dataInicio: campanha.dataInicio || campanha.data_inicio || "",
+      dataFim: campanha.dataFim || campanha.data_fim || "",
+      status: campanha.status || "ativa",
     });
     setCampanhaEditando(campanha);
     setShowForm(true);
@@ -171,7 +173,6 @@ const CampanhasHemocentro = () => {
   const handleExcluir = async (campanhaId) => {
     if (window.confirm("Tem certeza que deseja excluir esta campanha?")) {
       try {
-        // ✅ Verificar autenticação
         if (!api.isAuthenticated()) {
           alert("Sessão expirada. Faça login novamente.");
           navigate("/login/hemocentro");
@@ -279,7 +280,6 @@ const CampanhasHemocentro = () => {
 
       <div className="container-fluid px-4 py-5">
         <div className="container">
-          {/* Header da Página */}
           <div className="row mb-5">
             <div className="col-12">
               <div className="d-flex justify-content-between align-items-center">
@@ -301,7 +301,6 @@ const CampanhasHemocentro = () => {
             </div>
           </div>
 
-          {/* Filtros */}
           <div className="row mb-4">
             <div className="col-12">
               <div className="card border-0 shadow-sm">
@@ -353,7 +352,6 @@ const CampanhasHemocentro = () => {
             </div>
           </div>
 
-          {/* Formulário de Campanha */}
           {showForm && (
             <div className="row mb-5">
               <div className="col-12">
@@ -438,7 +436,7 @@ const CampanhasHemocentro = () => {
                             value={formData.dataInicio}
                             onChange={handleInputChange}
                             required
-                            min={new Date().toISOString().split("T")[0]} // 🔒 impede dias anteriores
+                            min={new Date().toISOString().split("T")[0]}
                           />
                         </div>
 
@@ -453,7 +451,7 @@ const CampanhasHemocentro = () => {
                             value={formData.dataFim}
                             onChange={handleInputChange}
                             required
-                            min={new Date().toISOString().split("T")[0]} // 🔒 idem aqui
+                            min={new Date().toISOString().split("T")[0]}
                           />
                         </div>
                       </div>
@@ -480,7 +478,6 @@ const CampanhasHemocentro = () => {
             </div>
           )}
 
-          {/* Lista de Campanhas */}
           <div className="row">
             <div className="col-12">
               <div className="card border-0 shadow-sm">
@@ -594,7 +591,6 @@ const CampanhasHemocentro = () => {
             </div>
           </div>
 
-          {/* Estatísticas */}
           <div className="row mt-5">
             <div className="col-12">
               <div className="card border-0 shadow-sm">

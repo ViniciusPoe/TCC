@@ -31,7 +31,6 @@ const HomeHemocentro = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Verificar autenticação
         if (!api.isAuthenticated()) {
           navigate("/login/hemocentro");
           return;
@@ -45,7 +44,6 @@ const HomeHemocentro = () => {
           return;
         }
 
-        // Info do hemocentro
         const hemocentroInfoResponse = await api.getHemocentroInfo();
         console.log("🏥 INFO HEMOCENTRO:", hemocentroInfoResponse);
 
@@ -69,7 +67,6 @@ const HomeHemocentro = () => {
           });
         }
 
-        // Doadores
         let doadoresData = [];
         try {
           const doadoresResponse = await api.getDoadores();
@@ -82,7 +79,6 @@ const HomeHemocentro = () => {
         }
         setDoadores(doadoresData);
 
-        // Agendamentos
         const agendamentosResponse = await api.getAgendamentosHemocentro();
         console.log("📅 RESPOSTA COMPLETA DA API:", agendamentosResponse);
 
@@ -96,7 +92,6 @@ const HomeHemocentro = () => {
         console.log("✅ Agendamentos ativos filtrados:", agendamentosAtivos);
         setAgendamentos(agendamentosAtivos);
 
-        // Campanhas
         let campanhasData = [];
         try {
           console.log("📢 Buscando campanhas do hemocentro...");
@@ -157,7 +152,6 @@ const HomeHemocentro = () => {
         console.log("📢 Campanhas dinâmicas FINAIS:", campanhasData);
         setCampanhas(campanhasData);
 
-        // Estatísticas
         const hoje = new Date();
         const hojeFormatado = hoje.toLocaleDateString("pt-BR");
 
@@ -202,7 +196,6 @@ const HomeHemocentro = () => {
     fetchData();
   }, [navigate]);
 
-  // criar campanha
   const handleCriarCampanha = async (e) => {
     e.preventDefault();
     try {
@@ -267,7 +260,6 @@ const HomeHemocentro = () => {
     }
   };
 
-  // atualizar campo do form nova campanha
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNovaCampanha({
@@ -276,7 +268,6 @@ const HomeHemocentro = () => {
     });
   };
 
-  // formatador de data
   const formatarData = (dataString) => {
     if (!dataString) return "Data não definida";
 
@@ -308,7 +299,6 @@ const HomeHemocentro = () => {
     }
   };
 
-  // agendamentos ordenados
   const agendamentosOrdenados = [...agendamentos]
     .filter((ag) => {
       try {
@@ -371,7 +361,6 @@ const HomeHemocentro = () => {
 
       <div className="container-fluid px-4 py-5">
         <div className="container">
-          {/* Header Bem-vindo */}
           <div className="row mb-5">
             <div className="col-12">
               <div className="welcome-card card border-0 shadow-lg">
@@ -405,10 +394,6 @@ const HomeHemocentro = () => {
                         <div className="avatar-lg-doador mx-auto bg-light-primary text-danger rounded-circle d-flex align-items-center justify-content-center mb-3">
                           <i className="fas fa-id-card-alt fs-1"></i>
                         </div>
-                        <p className="text-muted small">Tipo Sanguíneo</p>
-                        <h4 className="text-danger fw-bold">
-                          {dados?.tipo_sanguineo || "—"}
-                        </h4>
                       </div>
                     </div>
                   </div>
@@ -418,9 +403,7 @@ const HomeHemocentro = () => {
           </div>
 
           <div className="row">
-            {/* Coluna Esquerda - Dashboard Principal */}
             <div className="col-lg-8">
-              {/* Cards de Estatísticas */}
               <div className="row mb-4">
                 {[
                   {
@@ -476,7 +459,6 @@ const HomeHemocentro = () => {
                 ))}
               </div>
 
-              {/* Campanhas Ativas */}
               <div id="campanhas" className="card border-0 shadow-sm mb-4">
                 <div className="card-header bg-white">
                   <div className="d-flex justify-content-between align-items-center">
@@ -570,9 +552,7 @@ const HomeHemocentro = () => {
               </div>
             </div>
 
-            {/* Coluna Direita - Informações Rápidas */}
             <div className="col-lg-4">
-              {/* Próximos Agendamentos */}
               <div className="card border-0 shadow-sm mb-4">
                 <div className="card-header bg-white">
                   <div className="d-flex justify-content-between align-items-center">
@@ -647,7 +627,6 @@ const HomeHemocentro = () => {
                 </div>
               </div>
 
-              {/* Doadores Ativos */}
               <div className="card border-0 shadow-sm mb-4">
                 <div className="card-header bg-white">
                   <div className="d-flex justify-content-between align-items-center">
@@ -674,7 +653,6 @@ const HomeHemocentro = () => {
                     </div>
                   ) : (
                     doadores.slice(0, 3).map((doador, index) => {
-                      // Verificar se o doador tem agendamento aberto
                       const agendamentoAberto = agendamentos.some(
                         (ag) =>
                           ag.doador_id === doador.id &&
@@ -755,7 +733,6 @@ const HomeHemocentro = () => {
                 </div>
               </div>
 
-              {/* Ações Rápidas */}
               <div className="card border-0 shadow-sm">
                 <div className="card-body">
                   <h5 className="card-title mb-3">

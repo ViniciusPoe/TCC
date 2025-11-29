@@ -13,9 +13,6 @@ from datetime import datetime, timedelta
 
 bp_doador = Blueprint("doador", __name__)
 
-# ==========================================================
-# 🧩 Funções auxiliares
-# ==========================================================
 def obter_doador_autenticado():
     """
     Recupera o ID e as claims do doador autenticado a partir do token JWT.
@@ -37,16 +34,11 @@ def obter_doador_autenticado():
 
     return doador, claims
 
-
-# ==========================================================
-# 👤 Perfil do Doador
-# ==========================================================
 @bp_doador.route("/api/perfil", methods=["GET"])
 @jwt_required()
 def get_perfil_doador():
     identidade = get_jwt_identity()
 
-    # ⚡ compatível com tokens antigos (string) e novos (dict)
     doador_id = identidade["id"] if isinstance(identidade, dict) else int(identidade)
 
     doador = Doador.query.get(doador_id)
@@ -61,7 +53,6 @@ def get_perfil_doador():
 def atualizar_perfil_doador():
     try:
         identidade = get_jwt_identity()
-        # ✅ Compatível com tokens antigos e novos
         doador_id = identidade["id"] if isinstance(identidade, dict) else int(identidade)
 
         doador = Doador.query.get(doador_id)
@@ -70,7 +61,6 @@ def atualizar_perfil_doador():
 
         dados = request.get_json() or {}
 
-        # Campos permitidos para atualização
         campos_editaveis = [
             "email", "sexo", "tipo_sanguineo", "telefone",
             "cep", "logradouro", "numero", "complemento", "bairro",
@@ -83,7 +73,6 @@ def atualizar_perfil_doador():
 
         db.session.commit()
 
-        # ✅ Retorna os dados atualizados já no formato da carteira
         return success_response(
             "Perfil atualizado com sucesso.",
             data={"carteira": montar_perfil_doador(doador)}
@@ -94,9 +83,6 @@ def atualizar_perfil_doador():
         db.session.rollback()
         return error_response(f"Erro ao atualizar perfil: {e}", 500)
 
-# ==========================================================
-# 🩸 Histórico de Doações
-# ==========================================================
 @bp_doador.route("/api/historico", methods=["GET"])
 @jwt_required()
 def api_historico_doacoes():
@@ -110,9 +96,6 @@ def api_historico_doacoes():
     return success_response(data={"doacoes": historico})
 
 
-# ==========================================================
-# 🏥 Lista de Hemocentros
-# ==========================================================
 @bp_doador.route("/api/hemocentros", methods=["GET"])
 @jwt_required()
 def api_lista_hemocentros():
@@ -127,13 +110,9 @@ def api_lista_hemocentros():
 
     return success_response(
         message="Lista de hemocentros obtida com sucesso.",
-        data=lista  # 👈 diretamente a lista, não {"hemocentros": lista}
+        data=lista 
     )
 
-
-# ==========================================================
-# 📅 Agendamentos do Doador
-# ==========================================================
 @bp_doador.route("/api/agendamentos/doador", methods=["GET"])
 @jwt_required()
 def api_agendamentos_doador():
@@ -146,9 +125,7 @@ def api_agendamentos_doador():
     agendamentos = listar_agendamentos_doador(doador.id)
     return success_response(data={"agendamentos": agendamentos})
 
-# ==========================================================
-# 🆕 Criar Agendamento de Doação
-# ==========================================================
+
 @bp_doador.route("/api/agendamento", methods=["POST"])
 @jwt_required()
 def api_criar_agendamento():
@@ -157,29 +134,25 @@ def api_criar_agendamento():
     """
 
     try:
-        # Verificar token e obter doador autenticado
         resultado = obter_doador_autenticado()
         if isinstance(resultado, tuple):
             doador, _ = resultado
         else:
-            return resultado  # já é uma resposta de erro
+            return resultado
 
         dados = request.get_json() or {}
         hemocentro_id = dados.get("hemocentro_id")
         data_str = dados.get("data")
         tipo_doacao = dados.get("tipo_doacao", "sangue_total")
 
-        # Validação básica
         if not hemocentro_id or not data_str:
             return error_response("Campos obrigatórios ausentes.", 400)
 
-        # Converter data
         try:
             data_agendamento = datetime.strptime(data_str, "%Y-%m-%d").date()
         except ValueError:
             return error_response("Formato de data inválido. Use YYYY-MM-DD.", 400)
 
-        # Criar novo agendamento
         novo = Agendamento(
             doador_id=doador.id,
             hemocentro_id=hemocentro_id,
@@ -209,9 +182,6 @@ def api_criar_agendamento():
         db.session.rollback()
         return error_response("Erro interno ao criar agendamento.", 500)
 
-# ==========================================================
-# ❌ Cancelar Agendamento
-# ==========================================================
 @bp_doador.route("/api/agendamento/<int:agendamento_id>/cancelar", methods=["PUT"])
 @jwt_required()
 def api_cancelar_agendamento(agendamento_id):
@@ -222,7 +192,6 @@ def api_cancelar_agendamento(agendamento_id):
     from aplicacao.models import db, Agendamento
 
     try:
-        # Autenticação do doador
         resultado = obter_doador_autenticado()
         if isinstance(resultado, tuple):
             doador, _ = resultado
@@ -236,7 +205,6 @@ def api_cancelar_agendamento(agendamento_id):
         if agendamento.doador_id != doador.id:
             return error_response("Acesso negado: este agendamento não pertence a você.", 403)
 
-        # Atualiza status
         agendamento.status = "cancelado"
         agendamento.data_cancelamento = datetime.utcnow()
 
@@ -259,9 +227,6 @@ def api_cancelar_agendamento(agendamento_id):
         return error_response("Erro interno ao cancelar agendamento.", 500)
 
 
-# ==========================================================
-# 🎯 Campanhas Disponíveis
-# ==========================================================
 @bp_doador.route("/api/campanhas", methods=["GET"])
 @jwt_required()
 def api_campanhas_doador():
@@ -273,36 +238,7 @@ def api_campanhas_doador():
 
     campanhas = listar_campanhas_publicas()
     return success_response(data={"campanhas": campanhas})
-
-
-# ==========================================================
-# 🧾 Registro de Interesse em Campanha
-# ==========================================================
-@bp_doador.route("/api/campanhas/participar", methods=["POST"])
-@jwt_required()
-def api_participar_campanha():
-    resultado = obter_doador_autenticado()
-    if isinstance(resultado, tuple):
-        doador, _ = resultado
-    else:
-        return resultado
-
-    dados = request.get_json() or {}
-    campanha_id = dados.get("campanha_id")
-
-    if not campanha_id:
-        return error_response("ID da campanha é obrigatório.", 400)
-
-    # Aqui você pode chamar um serviço que relacione o doador à campanha
-    # Exemplo: registrar_participacao_campanha(doador.id, campanha_id)
-    # Por enquanto, simulação:
-    return success_response(
-        f"Doador {doador.nome} manifestou interesse na campanha {campanha_id}."
-    )
     
-# ==========================================================
-# 💳 Carteira do Doador
-# ==========================================================
 @bp_doador.route("/api/carteira", methods=["GET"])
 @jwt_required()
 def api_carteira_doador():
@@ -314,13 +250,11 @@ def api_carteira_doador():
     if isinstance(resultado, tuple):
         doador, _ = resultado
     else:
-        return resultado  # erro_response retornado
+        return resultado 
 
     try:
-        # Perfil básico
         perfil = montar_perfil_doador(doador)
 
-        # 🔹 Última doação
         ultima_doacao = (
             Doacao.query
             .filter_by(doador_id=doador.id)
@@ -328,16 +262,14 @@ def api_carteira_doador():
             .first()
         )
 
-        # 🔹 Próxima doação sugerida (60 dias após a última)
         proxima_doacao = None
         if ultima_doacao and ultima_doacao.data_doacao:
-            proxima_doacao = ultima_doacao.data_doacao + timedelta(days=60)
+            proxima_doacao = ultima_doacao.data_doacao + timedelta(days=90)
 
-        # 🔹 Estatísticas gerais
         todas_doacoes = Doacao.query.filter_by(doador_id=doador.id).all()
         total_doacoes = len(todas_doacoes)
         volume_total = sum([d.volume or 0 for d in todas_doacoes])
-        vidas_salvas = total_doacoes * 3  # estimativa: cada doação pode salvar 3 vidas
+        vidas_salvas = total_doacoes * 3
 
         if total_doacoes >= 20:
             categoria = "Herói"
@@ -350,7 +282,6 @@ def api_carteira_doador():
         else:
             categoria = "Iniciante"
 
-        # 🔹 Montagem da carteira completa
         carteira = {
             **perfil,
             "ultima_doacao": (
@@ -384,9 +315,6 @@ def api_carteira_doador():
         return error_response("Erro ao gerar carteira digital.", 500)
 
 
-# ==========================================================
-# 🩺 Endpoint de Teste / Status
-# ==========================================================
 @bp_doador.route("/api/status", methods=["GET"])
 def api_status():
     return success_response("API de doador operacional.")

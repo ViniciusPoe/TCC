@@ -8,7 +8,7 @@ import "./styles.css";
 const CampanhasDoador = () => {
   const [campanhas, setCampanhas] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate(); // ✅ Hook para navegação
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCampanhas = async () => {
@@ -66,7 +66,15 @@ const CampanhasDoador = () => {
   };
 
   const formatarData = (data) => {
-    return new Date(data).toLocaleDateString("pt-BR");
+    if (!data) return "—";
+
+    const date = new Date(data);
+    if (isNaN(date)) {
+      console.warn("⚠️ Data inválida em CampanhasDoador:", data);
+      return "—";
+    }
+
+    return date.toLocaleDateString("pt-BR", { timeZone: "UTC" });
   };
 
   if (loading) {
@@ -89,7 +97,7 @@ const CampanhasDoador = () => {
       <NavigationDoador />
       <div className="container-fluid px-4 py-5">
         <div className="container">
-          {/* Header da Página */}
+
           <div className="row mb-5">
             <div className="col-12 text-center">
               <h1 className="display-5 fw-bold text-danger mb-3">
@@ -101,12 +109,13 @@ const CampanhasDoador = () => {
             </div>
           </div>
 
-          {/* Lista de Campanhas */}
           <div className="row">
             {campanhas.length === 0 ? (
               <div className="text-center py-5">
                 <i className="fas fa-bullhorn fa-4x text-muted mb-3"></i>
-                <h5 className="text-muted">Nenhuma campanha ativa no momento</h5>
+                <h5 className="text-muted">
+                  Nenhuma campanha ativa no momento
+                </h5>
                 <p className="text-muted">
                   Em breve teremos novas campanhas para você participar.
                 </p>
@@ -145,7 +154,6 @@ const CampanhasDoador = () => {
                         </small>
                       </div>
 
-                      {/* ✅ Botão redirecionando para /doador/agendamento */}
                       <div className="d-flex mt-auto">
                         <button
                           className="btn btn-danger btn-sm w-100"
@@ -161,30 +169,6 @@ const CampanhasDoador = () => {
               ))
             )}
           </div>
-
-          {/* Estatísticas */}
-          {campanhas.length > 0 && (
-            <div className="row mt-5">
-              <div className="col-12">
-                <div className="card border-0 shadow-sm">
-                  <div className="card-body">
-                    <div className="row text-center">
-                      <div className="col-md-4">
-                        <h3 className="text-danger">{campanhas.length}</h3>
-                        <p className="text-muted mb-0">Total de Campanhas</p>
-                      </div>
-                      <div className="col-md-4">
-                        <h3 className="text-success">
-                          {campanhas.filter((c) => c.status === "ativa").length}
-                        </h3>
-                        <p className="text-muted mb-0">Campanhas Ativas</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
       <Footer />

@@ -24,7 +24,6 @@ const HomeCentral = () => {
 
   return (
     <div className="home-central">
-      {/* Navegação Integrada */}
       <nav
         className={`navbar navbar-expand-lg navigation-integrada ${
           isScrolled ? "scrolled" : ""
@@ -76,7 +75,6 @@ const HomeCentral = () => {
         </div>
       </nav>
 
-      {/* Hero Section Simples */}
       <section id="inicio" className="hero-simple">
         <div className="container">
           <div className="row align-items-center hero-content">
@@ -109,7 +107,6 @@ const HomeCentral = () => {
         </div>
       </section>
 
-      {/* Para Doadores */}
       <section id="doadores" className="section-doadores py-5">
         <div className="container">
           <div className="row align-items-center">
@@ -170,7 +167,6 @@ const HomeCentral = () => {
         </div>
       </section>
 
-      {/* Para Hemocentros */}
       <section id="hemocentros" className="section-hemocentros py-5">
         <div className="container">
           <div className="row align-items-center">
@@ -235,7 +231,6 @@ const HomeCentral = () => {
         </div>
       </section>
 
-      {/* CTA Final */}
       <section className="cta-simple py-5">
         <div className="container text-center">
           <h2 className="cta-title">Pronto para fazer a diferença?</h2>

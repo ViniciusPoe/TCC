@@ -110,7 +110,6 @@ def api_cadastro_doador():
     data = request.get_json() or {}
     logger.info(f"Cadastro de doador recebido: {data}")
 
-    # 🔹 Campos obrigatórios (incluindo ultima_doacao_tipo)
     campos_obrigatorios = [
         'nome', 'data_nascimento', 'cpf', 'rg', 'sexo', 'tipo_sanguineo',
         'email', 'telefone', 'cep', 'cidade', 'logradouro', 'numero',
@@ -121,13 +120,11 @@ def api_cadastro_doador():
     if erro:
         return error_response(erro, 400)
 
-    # 🔹 Verificações de duplicidade
     if Doador.query.filter_by(cpf=data['cpf']).first():
         return error_response("CPF já cadastrado", 400)
     if Doador.query.filter_by(email=data['email']).first():
         return error_response("E-mail já cadastrado", 400)
 
-    # 🔹 Lógica para datas de doação
     ultima_doacao = None
     proxima_doacao = None
     
@@ -144,7 +141,6 @@ def api_cadastro_doador():
         else:
             return error_response("Data da última doação é obrigatória para doadores", 400)
 
-    # 🔹 Criação do novo doador
     novo_doador = Doador(
         nome=data['nome'],
         data_nascimento=datetime.strptime(data['data_nascimento'], '%Y-%m-%d').date(),
@@ -163,7 +159,7 @@ def api_cadastro_doador():
         estado=data['estado'],
         peso=float(data['peso']),
         altura=int(data['altura']),
-        ultima_doacao_tipo=data['ultima_doacao_tipo'],  # ← AGORA ESTE CAMPO EXISTE
+        ultima_doacao_tipo=data['ultima_doacao_tipo'],
         ultima_doacao=ultima_doacao,
         proxima_doacao=proxima_doacao
     )
@@ -187,7 +183,6 @@ def api_cadastro_hemocentro():
     data = request.get_json() or {}
     logger.info(f"Cadastro de hemocentro recebido: {data}")
 
-    # 🔹 Campos obrigatórios atualizados conforme o modelo novo
     campos_obrigatorios = [
         'nome_instituicao', 'cnpj', 'logradouro', 'numero',
         'cidade', 'estado', 'cep', 'horario_inicio', 'horario_fim',
@@ -197,13 +192,11 @@ def api_cadastro_hemocentro():
     if erro:
         return error_response(erro, 400)
 
-    # 🔹 Verificações de duplicidade
     if Hemocentro.query.filter_by(cnpj=data['cnpj']).first():
         return error_response("CNPJ já cadastrado", 400)
     if Hemocentro.query.filter_by(email=data['email']).first():
         return error_response("E-mail já cadastrado", 400)
-
-    # 🔹 Criação do novo hemocentro
+    
     novo_hemo = Hemocentro(
         nome_instituicao=data['nome_instituicao'],
         cnpj=data['cnpj'],
@@ -248,12 +241,10 @@ def alterar_senha():
         if not senha_atual or not nova_senha:
             return error_response("Campos obrigatórios não informados.", 400)
 
-        # ✅ Captura tipo e id do token
         claims = get_jwt()
         tipo_usuario = claims.get("tipo")
         user_id = int(get_jwt_identity())
 
-        # Busca correta
         if tipo_usuario == "doador":
             usuario = Doador.query.get(user_id)
         elif tipo_usuario == "hemocentro":
@@ -264,7 +255,6 @@ def alterar_senha():
         if not usuario:
             return error_response("Usuário não encontrado.", 404)
 
-        # Verifica e altera senha
         if not usuario.verificar_senha(senha_atual):
             return error_response("Senha atual incorreta.", 401)
 

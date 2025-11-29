@@ -24,52 +24,45 @@ const CadastroDoador = () => {
     altura: "",
     senha: "",
     confirmar_senha: "",
-    ultima_doacao_tipo: "", // nunca / doador
+    ultima_doacao_tipo: "",
     ultima_doacao: "",
     proxima_doacao: "",
     termos: false,
   });
 
   const [error, setError] = useState("");
-
-  // Função para calcular próxima doação (60 dias após última)
   useEffect(() => {
     if (formData.ultima_doacao_tipo === "nunca") {
-      // Nunca doou → grava datas zeradas
       setFormData((prev) => ({
         ...prev,
-        ultima_doacao: "0000-00-00",
-        proxima_doacao: "0000-00-00",
+        ultima_doacao: "",
+        proxima_doacao: "",
       }));
       return;
     }
 
-    // Se for doador mas não escolheu a data ainda, zera próxima doação
     if (
       formData.ultima_doacao_tipo === "doador" &&
       (!formData.ultima_doacao || formData.ultima_doacao === "0000-00-00")
     ) {
       setFormData((prev) => ({
         ...prev,
-        proxima_doacao: "0000-00-00",
+        proxima_doacao: "",
       }));
       return;
     }
 
-    // Se há uma data válida, calcula +60 dias
     if (formData.ultima_doacao_tipo === "doador" && formData.ultima_doacao) {
       const dataUltima = new Date(formData.ultima_doacao);
 
-      // Só calcula se for uma data válida
       if (!isNaN(dataUltima.getTime())) {
         const dataProxima = new Date(dataUltima);
-        dataProxima.setDate(dataUltima.getDate() + 60);
+        dataProxima.setDate(dataUltima.getDate() + 90);
 
         const formatada = dataProxima.toISOString().split("T")[0];
         setFormData((prev) => ({ ...prev, proxima_doacao: formatada }));
       } else {
-        // Se a data for inválida (0000-00-00, etc)
-        setFormData((prev) => ({ ...prev, proxima_doacao: "0000-00-00" }));
+        setFormData((prev) => ({ ...prev, proxima_doacao: "" }));
       }
     }
   }, [formData.ultima_doacao, formData.ultima_doacao_tipo]);
@@ -87,14 +80,10 @@ const CadastroDoador = () => {
       setError("Você deve aceitar os termos e condições");
       return;
     }
-
-    // 🔹 Prepara os dados para envio
     const dadosParaEnvio = {
       ...formData,
-      // Remove campos que não devem ir para o backend
       confirmar_senha: undefined,
       termos: undefined,
-      // Garante que as datas sejam enviadas corretamente
       ultima_doacao:
         formData.ultima_doacao_tipo === "doador"
           ? formData.ultima_doacao
@@ -140,7 +129,6 @@ const CadastroDoador = () => {
         )}
 
         <form onSubmit={handleSubmit}>
-          {/* DADOS PESSOAIS */}
           <div className="mb-4">
             <h5 className="text-danger">Dados Pessoais</h5>
             <div className="row">
@@ -233,7 +221,6 @@ const CadastroDoador = () => {
             </div>
           </div>
 
-          {/* CONTATO */}
           <div className="mb-4">
             <h5 className="text-danger">Informações de Contato</h5>
             <div className="mb-3">
@@ -262,8 +249,6 @@ const CadastroDoador = () => {
               </div>
             </div>
           </div>
-
-          {/* ENDEREÇO */}
           <div className="mb-4">
             <h5 className="text-danger">Endereço</h5>
             <div className="row">
@@ -363,7 +348,6 @@ const CadastroDoador = () => {
             </div>
           </div>
 
-          {/* SAÚDE / DOAÇÕES / SENHA */}
           <div className="mb-4">
             <h5 className="text-danger">Saúde e Acesso</h5>
             <div className="row">
@@ -394,7 +378,6 @@ const CadastroDoador = () => {
               </div>
             </div>
 
-            {/* Ultima e Próxima Doação */}
             <div className="row">
               <div className="col-md-6 mb-3">
                 <label className="form-label">Situação de Doação *</label>
@@ -436,11 +419,9 @@ const CadastroDoador = () => {
                 disabled
               />
               <small className="text-muted">
-                Calculada automaticamente (+60 dias)
+                Calculada automaticamente (+90 dias)
               </small>
             </div>
-
-            {/* Senha */}
             <div className="row">
               <div className="col-md-6 mb-3">
                 <label className="form-label">Senha *</label>

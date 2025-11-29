@@ -9,30 +9,23 @@ import os
 
 def criar_app(testing=False):
     app = Flask(__name__)
-    
-    DB_USER = os.getenv("DB_USER", "root")
-    DB_PASSWORD = os.getenv("DB_PASSWORD", "Viny200804!")
-    DB_HOST = os.getenv("DB_HOST", "localhost")
-    DB_NAME = os.getenv("DB_NAME", "doacao_sangue")
 
-    SQLALCHEMY_DATABASE_URI = os.getenv("SQLALCHEMY_DATABASE_URI") or (
-        f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}?charset=utf8mb4"
-    )
-    
-    # Config
     if testing:
         app.config.from_object(TestConfig)
     else:
         app.config.from_object(Config)
 
-    # Logging
     logger = configurar_logging()
     logger.info("Iniciando aplicação...")
 
-    CORS(app, resources={r"/*": {"origins": [
-        "http://localhost:3000",              
-    ]}}, supports_credentials=True)
-
+    CORS(
+        app,
+        resources={r"/*": {"origins": [
+            "http://localhost:3000",
+            "https://tcc-front-m03e.onrender.com",
+        ]}},
+        supports_credentials=True,
+    )
 
     db.init_app(app)
     configurar_bcrypt(app)

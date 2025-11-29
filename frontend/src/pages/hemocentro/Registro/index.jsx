@@ -61,7 +61,12 @@ const RegistroDoacoes = () => {
         console.log("👥 Doadores com agendamento response:", doadoresResponse);
 
         if (doadoresResponse.success) {
-          setDoadoresComAgendamento(doadoresResponse.doadores || []);
+          setDoadoresComAgendamento(
+            doadoresResponse.data?.doadores ||
+              doadoresResponse.doadores ||
+              doadoresResponse.data ||
+              []
+          );
         } else {
           setDoadoresComAgendamento([]);
         }
@@ -131,9 +136,7 @@ const RegistroDoacoes = () => {
 
         if (doacoesResponse.success) {
           setDoacoes(
-            doacoesResponse.data?.doacoes ||
-              doacoesResponse.doacoes ||
-              []
+            doacoesResponse.data?.doacoes || doacoesResponse.doacoes || []
           );
         }
 

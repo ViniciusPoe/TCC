@@ -82,7 +82,7 @@ class Agendamento(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     data = db.Column(db.Date, nullable=False)
     horario = db.Column(db.String(8))
-    status = db.Column(db.String(20), default='agendado')
+    status = db.Column(db.String(20), default='pendente')
     tipo_doacao = db.Column(db.String(20), default='sangue_total')
     doador_id = db.Column(db.Integer, db.ForeignKey('doadores.id'), nullable=False)
     hemocentro_id = db.Column(db.Integer, db.ForeignKey('hemocentros.id'), nullable=False)

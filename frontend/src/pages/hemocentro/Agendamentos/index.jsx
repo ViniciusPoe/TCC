@@ -157,7 +157,7 @@ const AgendamentosHemocentro = () => {
 
   const getStatusBadge = (status) => {
     switch (status) {
-      case "agendado":
+      case "pendente":
         return "badge bg-warning";
       case "confirmado":
         return "badge bg-success";
@@ -208,7 +208,7 @@ const AgendamentosHemocentro = () => {
 
   const estatisticas = {
     todos: agendamentos.length,
-    agendado: agendamentos.filter((a) => a.status === "pendente").length,
+    pendente: agendamentos.filter((a) => a.status === "pendente").length,
     confirmado: agendamentos.filter((a) => a.status === "confirmado").length,
     realizado: agendamentos.filter((a) => a.status === "realizado").length,
   };
@@ -258,7 +258,7 @@ const AgendamentosHemocentro = () => {
               },
               {
                 titulo: "Agendados",
-                valor: estatisticas.agendado,
+                valor: estatisticas.pendente,
                 cor: "warning",
                 icone: "fa-clock",
               },
@@ -299,12 +299,12 @@ const AgendamentosHemocentro = () => {
                         count: estatisticas.todos,
                       },
                       {
-                        key: "agendado",
+                        key: "pendente",
                         label: "Agendados",
-                        count: estatisticas.pedente,
+                        count: estatisticas.pendente,
                       },
                       {
-                        key: "concluido",
+                        key: "realizado",
                         label: "Realizados",
                         count: estatisticas.realizado,
                       },
@@ -342,7 +342,9 @@ const AgendamentosHemocentro = () => {
                       ? "Todos"
                       : filtroStatus === "pendente"
                       ? "Pendentes"
-                      : "Realizados"}
+                      : filtroStatus === "realizado"
+                      ? "Realizados"
+                      : filtroStatus}
                   </small>
                 </div>
                 <div className="card-body p-0">

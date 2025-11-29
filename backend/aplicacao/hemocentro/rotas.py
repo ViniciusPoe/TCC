@@ -141,7 +141,7 @@ def api_reagendar_agendamento(agendamento_id):
             return error_response("Agendamento não encontrado.", 404)
 
         agendamento.data = nova_data
-        agendamento.status = "agendado"
+        agendamento.status = "pendente"
         db.session.commit()
 
         print(f"🔁 Agendamento {agendamento.id} reagendado para {nova_data}")
@@ -243,10 +243,6 @@ def listar_hemocentros():
 @bp_hemocentro.route("/api/doadores-com-agendamento", methods=["GET"])
 @jwt_required()
 def api_doadores_com_agendamento():
-    """
-    Lista todos os doadores com agendamentos ativos (não cancelados)
-    para o hemocentro autenticado.
-    """
     try:
         resultado = obter_hemocentro_autenticado()
         if isinstance(resultado, tuple):
@@ -256,7 +252,7 @@ def api_doadores_com_agendamento():
 
         agendamentos = Agendamento.query.filter(
             Agendamento.hemocentro_id == hemocentro.id,
-            Agendamento.status.in_(["agendado"])
+            Agendamento.status.in_(["pendente"])  # 👈 aqui
         ).all()
 
         lista = []

@@ -156,7 +156,7 @@ def listar_doacoes(hemocentro_id):
 def listar_doadores_com_agendamento(hemocentro_id):
     ags = Agendamento.query.filter_by(
         hemocentro_id=hemocentro_id,
-        status='agendado'
+        status='pendente'     # 👈 em vez de 'agendado'
     ).all()
 
     lista = []
@@ -226,19 +226,19 @@ def registrar_doacao(hemocentro_id, dados):
             .filter(
                 Agendamento.doador_id == doador_id,
                 Agendamento.hemocentro_id == hemocentro_id,
-                Agendamento.status == "agendado"
+                Agendamento.status == "pendente"   # 👈 antes: "agendado"
             )
             .order_by(Agendamento.data.desc())
             .first()
-        )
+            )
 
         if agendamento:
-            agendamento.status = "concluido"
+            agendamento.status = "realizado"      # 👈 antes: "concluido"
             agendamento.data_realizacao = datetime.now()
-            print(f"🩸 Agendamento {agendamento.id} marcado como concluído.")
+            print(f"🩸 Agendamento {agendamento.id} marcado como realizado.")
         else:
             print(
-                f"⚠️ Nenhum agendamento 'agendado' encontrado para doador {doador_id} "
+                f"⚠️ Nenhum agendamento 'pendente' encontrado para doador {doador_id} "
                 f"no hemocentro {hemocentro_id}."
             )
 

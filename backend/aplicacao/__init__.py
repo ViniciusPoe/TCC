@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from sqlalchemy import inspect
-from aplicacao.config import Config, TestConfig
+from aplicacao.config import Config
 from aplicacao.core.database import db
 from aplicacao.core.security import configurar_jwt, configurar_bcrypt
 from aplicacao.core.utils import configurar_logging

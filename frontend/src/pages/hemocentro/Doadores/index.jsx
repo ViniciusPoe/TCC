@@ -74,14 +74,17 @@ const Doadores = () => {
   }, [navigate]);
   const carregarAgendamentosPendentesOtimizado = async () => {
     try {
-      console.log("🔄 Buscando doadores com agendamentos ativos...");
-      const response = await api.getDoadoresComAgendamento();
-      console.log("📅 Resposta doadores com agendamento:", response);
+      console.log("🔄 Buscando doadores com agendamentos ativos (GLOBAL)...");
+      const response = await api.getDoadoresComAgendamentoGlobal();
+      console.log("📅 Resposta doadores com agendamento GLOBAL:", response);
+
       const lista =
         response.data?.doadores || response.doadores || response.data || [];
 
       if (!response.success || lista.length === 0) {
-        console.log("ℹ️ Nenhum doador com agendamento ativo encontrado");
+        console.log(
+          "ℹ️ Nenhum doador com agendamento ativo encontrado (GLOBAL)"
+        );
         setAgendamentosPendentes({});
         return;
       }
@@ -98,12 +101,12 @@ const Doadores = () => {
 
       setAgendamentosPendentes(agendamentosMap);
       console.log(
-        "✅ Agendamentos pendentes carregados (corrigido):",
+        "✅ Agendamentos pendentes GLOBAL carregados:",
         agendamentosMap
       );
     } catch (error) {
       console.error(
-        "❌ Erro ao carregar agendamentos pendentes (otimizado):",
+        "❌ Erro ao carregar agendamentos pendentes GLOBAL:",
         error
       );
       setAgendamentosPendentes({});
@@ -218,10 +221,20 @@ const Doadores = () => {
         return;
       }
 
+      // 👇 pega o hemocentro logado
+      const currentUser = api.getCurrentUser();
+      const hemocentroId = currentUser?.id;
+
+      if (!hemocentroId) {
+        alert("Não foi possível identificar o hemocentro logado.");
+        return;
+      }
+
       const agendamentoDataEnvio = {
         data: agendamentoData.data,
-        tipo_doacao: agendamentoData.tipo_doacao,
+        tipo_doacao: agendamentoData.tipo_doacao || "sangue_total",
         doador_id: doadorSelecionado.id,
+        hemocentro_id: hemocentroId,
       };
 
       console.log("📤 Enviando agendamento:", agendamentoDataEnvio);

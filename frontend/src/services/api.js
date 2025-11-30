@@ -352,6 +352,30 @@ export const api = {
       doadores: data.data?.doadores || [],
     };
   },
+
+  async getDoadoresComAgendamentoGlobal() {
+    const token = authManager.getToken();
+    if (!token) throw new Error("Token ausente");
+
+    const response = await fetch(
+      `${API_BASE_URL}/hemocentro/api/doadores-com-agendamento-global`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+    return {
+      success: data.success,
+      message: data.message,
+      doadores: data.data?.doadores || [],
+    };
+  },
+
   async getDoacoes() {
     const token = authManager.getToken();
     if (!token) throw new Error("Token ausente");

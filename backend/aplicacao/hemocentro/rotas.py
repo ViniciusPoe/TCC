@@ -17,7 +17,8 @@ from aplicacao.hemocentro.servicos import (
     editar_campanha,
     concluir_campanha,
     montar_historico_doacoes,
-    atualizar_campanhas_expiradas
+    atualizar_campanhas_expiradas,
+    listar_doadores_com_agendamento_global
 )
 from aplicacao import db
 
@@ -271,6 +272,27 @@ def api_doadores_com_agendamento():
     except Exception as e:
         print("❌ Erro ao listar doadores com agendamento:", e)
         return error_response("Erro interno ao listar doadores com agendamento.", 500)
+    
+@bp_hemocentro.route("/api/doadores-com-agendamento-global", methods=["GET"])
+@jwt_required()
+def api_doadores_com_agendamento_global():
+    """
+    Retorna doadores que possuem AGENDAMENTO PENDENTE
+    em QUALQUER hemocentro.
+    Serve para BLOQUEAR novos agendamentos na tela de doadores.
+    """
+    try:
+        resultado = obter_hemocentro_autenticado()
+        if isinstance(resultado, Response):
+            return resultado
+
+        doadores = listar_doadores_com_agendamento_global()
+        return success_response(data={"doadores": doadores})
+    except Exception as e:
+        print("❌ Erro ao listar doadores com agendamento global:", e)
+        return error_response(
+            "Erro interno ao listar doadores com agendamento global.", 500
+        )
 
 @bp_hemocentro.route("/api/registrar-doacao", methods=["POST"])
 @jwt_required()

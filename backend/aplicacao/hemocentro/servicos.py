@@ -174,6 +174,42 @@ def listar_doadores_com_agendamento(hemocentro_id):
         })
     return lista
 
+def listar_doadores_com_agendamento_global():
+    """
+    Lista doadores que possuem QUALQUER agendamento pendente
+    em qualquer hemocentro.
+    Usado apenas para BLOQUEAR novos agendamentos.
+    """
+    ags = Agendamento.query.filter(
+        Agendamento.status.in_(["pendente"])
+    ).all()
+
+    mapa = {}
+    for ag in ags:
+        d = ag.doador
+        if not d:
+            continue
+
+        existente = mapa.get(d.id)
+        if not existente or ag.data < existente["data_obj"]:
+            mapa[d.id] = {
+                "id": d.id,
+                "nome": d.nome,
+                "tipo_sanguineo": d.tipo_sanguineo,
+                "email": d.email,
+                "telefone": d.telefone,
+                "data_agendamento": ag.data.strftime("%d/%m/%Y"),
+                "tipo_doacao_agendada": ag.tipo_doacao,
+                "agendamento_id": ag.id,
+                "data_obj": ag.data,
+            }
+
+    lista = []
+    for v in mapa.values():
+        v.pop("data_obj", None)
+        lista.append(v)
+    return lista
+
 
 def registrar_doacao(hemocentro_id, dados):
     try:

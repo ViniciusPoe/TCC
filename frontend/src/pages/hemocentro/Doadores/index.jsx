@@ -451,6 +451,7 @@ const Doadores = () => {
                             <th>Contato</th>
                             <th>Frequência</th>
                             <th>Status</th>
+                            <th>Agendamento</th>
                             <th>Ações</th>
                           </tr>
                         </thead>
@@ -513,11 +514,24 @@ const Doadores = () => {
                                   {doador.frequencia}
                                 </span>
                               </td>
+
                               <td>
                                 <span className={getAptoBadge(doador.apto)}>
                                   {getAptoText(doador.apto)}
                                 </span>
                               </td>
+
+                              {/* NOVA COLUNA - "Agendamento" */}
+                              <td>
+                                {temAgendamentoPendente(doador.id) ? (
+                                  <span className="badge bg-warning">Sim</span>
+                                ) : (
+                                  <span className="badge bg-secondary">
+                                    Não
+                                  </span>
+                                )}
+                              </td>
+
                               <td>
                                 <div className="btn-group">
                                   <button
@@ -707,7 +721,15 @@ const Doadores = () => {
                     setShowModalHistorico(false);
                     handleAbrirAgendar(doadorSelecionado);
                   }}
-                  disabled={!doadorSelecionado.apto}
+                  disabled={
+                    !doadorSelecionado.apto ||
+                    temAgendamentoPendente(doadorSelecionado.id) // 👈 aqui entra a trava
+                  }
+                  title={
+                    temAgendamentoPendente(doadorSelecionado.id)
+                      ? "Doador já possui agendamento ativo"
+                      : "Agendar nova doação"
+                  }
                 >
                   <i className="fas fa-calendar-plus me-1"></i>
                   Agendar Doação

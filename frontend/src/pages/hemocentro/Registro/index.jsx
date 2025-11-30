@@ -383,14 +383,6 @@ const RegistroDoacoes = () => {
                             value={formData.data_doacao}
                             onChange={handleInputChange}
                             required
-                            min={
-                              new Date(
-                                Date.now() -
-                                  new Date().getTimezoneOffset() * 60000
-                              )
-                                .toISOString()
-                                .split("T")[0]
-                            }
                           />
                         </div>
                         <div className="col-md-4 mb-3">

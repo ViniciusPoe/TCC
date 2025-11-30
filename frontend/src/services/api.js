@@ -243,11 +243,20 @@ export const api = {
   },
 
   async fazerAgendamento(dados) {
-    const response = await fetch(`${API_BASE_URL}/doador/api/agendamento`, {
+    const user = authManager.getUserData();
+    const tipo = user?.tipo;
+
+    const url =
+      tipo === "hemocentro"
+        ? `${API_BASE_URL}/hemocentro/api/agendamento`
+        : `${API_BASE_URL}/doador/api/agendamento`;
+
+    const response = await fetch(url, {
       method: "POST",
       headers: getAuthHeaders(),
       body: JSON.stringify(dados),
     });
+
     return handleResponse(response);
   },
 

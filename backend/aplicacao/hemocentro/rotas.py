@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt, get_jwt_identity
 from aplicacao.utils.responses import success_response, error_response
-from aplicacao.models import Hemocentro, db, Agendamento
+from aplicacao.models import Hemocentro, db, Agendamento, Doador
 from datetime import datetime
 from flask import Response
 from aplicacao.hemocentro.servicos import (
@@ -159,6 +159,86 @@ def api_reagendar_agendamento(agendamento_id):
         print("❌ Erro ao reagendar agendamento:", e)
         db.session.rollback()
         return error_response("Erro interno ao reagendar agendamento.", 500)
+
+@bp_hemocentro.route("/api/agendamento", methods=["POST"])
+@jwt_required()
+def api_criar_agendamento_hemocentro():
+    """
+    Hemocentro cria um agendamento para um doador específico.
+    """
+    try:
+        resultado = obter_hemocentro_autenticado()
+        if isinstance(resultado, tuple):
+            hemocentro, _ = resultado
+        else:
+            # Se for error_response, só retorna
+            return resultado
+
+        dados = request.get_json() or {}
+        data_str = dados.get("data")
+        doador_id = dados.get("doador_id")
+        tipo_doacao = dados.get("tipo_doacao", "sangue_total")
+
+        if not data_str or not doador_id:
+            return error_response("Data e doador são obrigatórios.", 400)
+
+        # data vem no formato YYYY-MM-DD
+        try:
+            data = datetime.strptime(data_str, "%Y-%m-%d").date()
+        except ValueError:
+            return error_response(
+                "Formato de data inválido. Use YYYY-MM-DD.",
+                400
+            )
+
+        doador = Doador.query.get(doador_id)
+        if not doador:
+            return error_response("Doador não encontrado.", 404)
+
+        # ❗ Bloqueia se o doador já tiver qualquer agendamento pendente
+        agendamento_existente = Agendamento.query.filter(
+            Agendamento.doador_id == doador_id,
+            Agendamento.status.in_(["pendente"])
+        ).first()
+
+        if agendamento_existente:
+            return error_response(
+                "Este doador já possui um agendamento pendente.",
+                400
+            )
+
+        novo = Agendamento(
+            data=data,
+            status="pendente",
+            tipo_doacao=tipo_doacao,
+            doador_id=doador_id,
+            hemocentro_id=hemocentro.id,
+        )
+
+        db.session.add(novo)
+        db.session.commit()
+
+        print(
+            f"✅ Agendamento criado pelo hemocentro {hemocentro.id} "
+            f"para o doador {doador_id} em {data}"
+        )
+
+        return success_response(
+            "Agendamento criado com sucesso!",
+            data={
+                "id": novo.id,
+                "data": novo.data.strftime("%Y-%m-%d"),
+                "status": novo.status,
+                "tipo_doacao": novo.tipo_doacao,
+            },
+            code=201,
+        )
+
+    except Exception as e:
+        print("❌ Erro ao criar agendamento (hemocentro):", e)
+        db.session.rollback()
+        return error_response("Erro interno ao criar agendamento.", 500)    
+
 
 @bp_hemocentro.route("/api/doadores", methods=["GET"])
 @jwt_required()

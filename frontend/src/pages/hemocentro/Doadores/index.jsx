@@ -264,12 +264,21 @@ const Doadores = () => {
   };
 
   const doadoresFiltrados = doadores.filter((doador) => {
+    const temAgendamento = temAgendamentoPendente(doador.id);
+
     if (filtro === "todos") return true;
-    if (filtro === "aptos") return doador.apto;
-    if (filtro === "inaptos") return !doador.apto;
+
+    if (filtro === "aptos") {
+      return doador.apto && !temAgendamento;
+    }
+
+    if (filtro === "inaptos") {
+      return !doador.apto || temAgendamento;
+    }
+
     return true;
   });
-
+  
   const estatisticas = {
     total: doadores.length,
     aptos: doadores.filter((d) => d.apto).length,

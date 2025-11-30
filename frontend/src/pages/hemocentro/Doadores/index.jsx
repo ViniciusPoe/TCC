@@ -278,13 +278,17 @@ const Doadores = () => {
 
     return true;
   });
-  
+
   const estatisticas = {
     total: doadores.length,
-    aptos: doadores.filter((d) => d.apto).length,
-    inaptos: doadores.filter((d) => !d.apto).length,
-  };
 
+    aptos: doadores.filter((d) => d.apto && !temAgendamentoPendente(d.id))
+      .length,
+
+    inaptos: doadores.filter((d) => !d.apto || temAgendamentoPendente(d.id))
+      .length,
+  };
+  
   const getFrequenciaBadge = (frequencia) => {
     switch (frequencia) {
       case "Frequente":

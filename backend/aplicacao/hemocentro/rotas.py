@@ -258,7 +258,6 @@ def api_doadores_aptos():
 def api_doacoes_registradas():
     try:
         identidade = get_jwt_identity()
-        print("🔍 Identidade no token:", identidade)
 
         resultado = obter_hemocentro_autenticado()
         if isinstance(resultado, tuple):
@@ -402,8 +401,6 @@ def api_registrar_doacao():
         "hemoglobina": dados.get("hemoglobina"),
         "observacoes": dados.get("observacoes"),
     }
-
-    print("📦 Dados recebidos para registrar doação:", payload)
 
     nova_doacao = registrar_doacao(hemocentro.id, payload)
 

@@ -1,9 +1,10 @@
 from flask import Flask
+from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_cors import CORS
 from sqlalchemy import inspect
 from aplicacao.config import Config
 from aplicacao.core.database import db
-from aplicacao.core.security import configurar_jwt, configurar_bcrypt
+from aplicacao.core.security import configurar_jwt, configurar_bcrypt, configurar_limiter
 from aplicacao.core.utils import configurar_logging
 import os
 
@@ -15,21 +16,22 @@ def criar_app(testing=False):
     else:
         app.config.from_object(Config)
 
+    # Atrás do proxy (Render), usa o IP real do cliente para o rate limit
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1)
+
     logger = configurar_logging()
     logger.info("Iniciando aplicação...")
 
     CORS(
         app,
-        resources={r"/*": {"origins": [
-            "http://localhost:3000",
-            "https://tcc-front-m03e.onrender.com",
-        ]}},
+        resources={r"/*": {"origins": app.config["CORS_ORIGINS"]}},
         supports_credentials=True,
     )
 
     db.init_app(app)
     configurar_bcrypt(app)
     configurar_jwt(app)
+    configurar_limiter(app)
 
     from aplicacao.autenticacao.rotas import bp_autenticacao
     from aplicacao.doador.rotas import bp_doador

@@ -1,6 +1,9 @@
 import re
 from flask_jwt_extended import create_access_token
 from aplicacao.models import Doador, db, Hemocentro
+import logging
+
+logger = logging.getLogger(__name__)
 
 def autenticar_doador(cpf, senha):
     """
@@ -10,22 +13,7 @@ def autenticar_doador(cpf, senha):
     if not cpf or not senha:
         return None
 
-    print("🔎 CPF recebido:", cpf)
     cpf_limpo = re.sub(r'\D', '', cpf)
-    print("🔎 CPF limpo:", cpf_limpo)
-
-    doador = (
-        Doador.query.filter(
-            db.func.replace(
-                db.func.replace(db.func.replace(Doador.cpf, '.', ''), '-', ''), '/', ''
-            ) == cpf_limpo
-        ).first()
-    )
-
-    print("🔎 Doador encontrado?", bool(doador))
-    if doador:
-        print("🧑 Nome:", doador.nome)
-        print("🪪 CPF armazenado:", doador.cpf)
 
     doador = (
         Doador.query.filter(
@@ -36,7 +24,7 @@ def autenticar_doador(cpf, senha):
     )
 
     if not doador or not doador.verificar_senha(senha):
-        print("⚠️ Falha no login - CPF ou senha incorretos.")
+        logger.warning("Falha no login de doador")
         return None
 
     token = create_access_token(

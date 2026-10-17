@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from aplicacao.core.database import db
+from aplicacao.core.security import limiter
 from aplicacao.models import Doador, Hemocentro
 from aplicacao.autenticacao.servicos import autenticar_doador, autenticar_hemocentro
 from aplicacao.utils.responses import success_response, error_response
@@ -14,14 +15,12 @@ logger = logging.getLogger(__name__)
 
 
 @bp_autenticacao.route("/api/login/doador", methods=["POST"])
+@limiter.limit("10 per minute; 100 per hour")
 def api_login_doador():
     data = request.get_json() or {}
-    print("🟡 Dados recebidos do React:", data)
 
     cpf = data.get("cpf")
     senha = data.get("senha")
-    print(f"🟢 CPF recebido: {cpf}")
-    print(f"🟢 SENHA recebida: '{senha}' (len={len(senha) if senha else 0})")
 
     if not cpf or not senha:
         return error_response("CPF e senha são obrigatórios", 400)
@@ -37,6 +36,7 @@ def api_login_doador():
     )
 
 @bp_autenticacao.route("/api/login/hemocentro", methods=["POST"])
+@limiter.limit("10 per minute; 100 per hour")
 def api_login_hemocentro():
     data = request.get_json() or {}
     cnpj = data.get("cnpj")
@@ -108,7 +108,7 @@ def check_auth():
 @bp_autenticacao.route('/api/cadastro/doador', methods=['POST'])
 def api_cadastro_doador():
     data = request.get_json() or {}
-    logger.info(f"Cadastro de doador recebido: {data}")
+    logger.info("Cadastro de doador recebido")
 
     campos_obrigatorios = [
         'nome', 'data_nascimento', 'cpf', 'rg', 'sexo', 'tipo_sanguineo',
@@ -176,12 +176,12 @@ def api_cadastro_doador():
     except Exception as e:
         db.session.rollback()
         logger.error(f"Erro ao cadastrar doador: {e}")
-        return error_response(f"Erro no cadastro: {str(e)}", 500)
+        return error_response("Erro ao realizar o cadastro. Tente novamente mais tarde.", 500)
     
 @bp_autenticacao.route('/api/cadastro/hemocentro', methods=['POST'])
 def api_cadastro_hemocentro():
     data = request.get_json() or {}
-    logger.info(f"Cadastro de hemocentro recebido: {data}")
+    logger.info("Cadastro de hemocentro recebido")
 
     campos_obrigatorios = [
         'nome_instituicao', 'cnpj', 'logradouro', 'numero',
@@ -224,7 +224,7 @@ def api_cadastro_hemocentro():
     except Exception as e:
         db.session.rollback()
         logger.error(f"Erro ao cadastrar hemocentro: {e}")
-        return error_response(f"Erro no cadastro: {str(e)}", 500)
+        return error_response("Erro ao realizar o cadastro. Tente novamente mais tarde.", 500)
 
 @bp_autenticacao.route("/api/alterar_senha", methods=["PUT"])
 @jwt_required()

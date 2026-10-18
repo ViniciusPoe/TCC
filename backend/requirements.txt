@@ -8,3 +8,5 @@ gunicorn==22.0.0
 psycopg2-binary==2.9.9
 mysql-connector-python==9.0.0
 Flask-Limiter==3.8.0
+
+PyMySQL==1.1.1
